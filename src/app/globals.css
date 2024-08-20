@@ -3,6 +3,85 @@
 @tailwind utilities;
 
 :root {
+  --black-color: black;
+  --gray-dark-color: rgb(58, 58, 58);
+  --gray-light-color: rgb(228, 228, 228);
+  --red-dark-color: rgb(178, 15, 15);
+  --red-light-color: rgb(239, 182, 182);
+  --blue-light-color: rgb(207, 217, 254);
+  --blue-dark-color: rgb(1, 32, 144);
+  --blue-darker-color: rgb(0, 14, 63);
+}
+
+.app-area {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--gray-light-color);
+  font-size: 18px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  padding: 20px;
+
+  margin: 30px;
+  width: 92%;
+  height: 90%;
+  background-color: white;
+  box-shadow: 2px 2px 20px rgb(148, 148, 148);
+}
+
+/* ----------- Form Styles ------------*/
+
+.form-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  margin: 0 40px;
+}
+
+.form-item {
+  display: flex;
+  margin: 10px 0;
+}
+
+.radio-item {
+  display: flex;
+}
+
+.form-radio {
+  margin: 10px;
+  width: 20px;
+}
+
+.form-label {
+  text-align: left;
+  margin: 5px 15px 0 0;
+}
+
+.form-input, .form-textarea, .form-select {
+  width: 100%;
+  padding: 5px;
+  border-radius: 5px;
+  border: 2px solid #b4b4b4;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.form-buttons-area {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
@@ -30,4 +109,4 @@ body {
   .text-balance {
     text-wrap: balance;
   }
-}
+} */

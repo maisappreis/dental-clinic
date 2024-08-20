@@ -1,0 +1,33 @@
+.footer {
+    position: fixed;
+    top: 94vh;
+    left: 230px;
+
+    width: 85vw;
+    height: 50px;
+    padding: 10px;
+    background-color: rgb(188, 188, 188);
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .text {
+    color: black;
+    font-size: 16px;
+    text-align: left;
+    margin-right: 45px;
+  }
+
+  .red {
+    color: red;
+    font-size: 20px;
+  }
+
+  @media only screen and (max-width: 1300px) {
+    .footer {
+        left: 100px;
+        width: 90vw;
+    }
+  }

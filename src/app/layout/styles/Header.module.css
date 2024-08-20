@@ -1,0 +1,37 @@
+.hearder {
+    position: fixed;
+    top: 0;
+    background-color: rgb(235, 235, 235);
+    box-shadow: 0 8px 6px -6px rgb(99, 99, 99);
+    height: 90px;
+    width: 100%;
+    z-index: 9;
+  }
+
+  .text {
+    text-align: left;
+    margin-left: 240px;
+  }
+
+  .title {
+    font-weight: bold;
+    font-size: 22px;
+    margin: 15px 0 6px 0;
+  }
+
+  .icon {
+    margin: 15px 12px 10px 12px;
+    font-size: 30px;
+  }
+
+  .subtitle {
+    font-size: 18px;
+    margin: 2px 0 5px 15px;
+  }
+
+  @media only screen and (max-width: 1300px) {
+    .text {
+        text-align: left;
+        margin-left: 110px;
+    }
+  }
