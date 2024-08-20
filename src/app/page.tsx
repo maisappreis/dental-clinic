@@ -7,20 +7,20 @@ import Content from "@/app/layout/content";
 import Footer from "@/app/layout/footer";
 
 export default function Home() {
-  // const [selectedOption, setSelectedOption] = useState<string>("calendar");
+  const [selectedOption, setSelectedOption] = useState<string>("calendar");
 
-  // const handleOptionClick = (option: string) => {
-  //   setSelectedOption(option);
-  // };
+  const handleOptionClick = (option: string) => {
+    setSelectedOption(option);
+  };
 
   return (
     <main className="app-area">
-      <Header />
+      {/* <Header />
       <Sidebar />
-      <Content />
-      {/* <Header selectedOption={selectedOption} />
+      <Content /> */}
+      <Header selectedOption={selectedOption} />
       <Sidebar onOptionClick={handleOptionClick} />
-      <Content selectedOption={selectedOption} /> */}
+      <Content selectedOption={selectedOption} />
       <Footer />
     </main>
   );
