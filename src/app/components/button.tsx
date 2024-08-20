@@ -2,8 +2,8 @@
 
 // import React, { useState, useEffect } from "react";
 import styles from './styles/Button.module.css';
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 interface ButtonProps {
   onClick: () => void;
@@ -19,7 +19,7 @@ export default function Button({ onClick, disabled, children }: ButtonProps) {
           onClick={onClick}
           disabled={disabled}
         >
-          {/* <FontAwesomeIcon icon={faPlus} className={styles.icon} /> */}
+          <FontAwesomeIcon icon={faPlus} className={styles.icon} />
           {children}
         </button>
     </div>

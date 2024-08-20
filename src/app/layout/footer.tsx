@@ -1,5 +1,5 @@
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { Dancing_Script } from 'next/font/google';
 import style from "./styles/Footer.module.css";
 
@@ -16,7 +16,7 @@ export default function Footer() {
   return (
       <div className={style.footer}>
         <span className={style.text}>
-          {/* Desenvolvido com <FontAwesomeIcon icon={faHeart} className={style.red} /> por */}
+          Desenvolvido com <FontAwesomeIcon icon={faHeart} className={style.red} /> por
           <span className={dancing.className} style={fontStyle}> Maisa</span>.
         </span>
       </div>

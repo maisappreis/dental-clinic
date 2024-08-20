@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import styles from './styles/Table.module.css'
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faPenToSquare, faTrashCan, faCircleInfo, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrashCan, faCircleInfo, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 interface Data {
   [key: string]: any;
@@ -77,18 +77,18 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
                         `R$ ${parseFloat(row[column.key]).toFixed(2).replace('.', ',')}`
                         : column.key === 'actions' ?
                           <div>
-                            {/* <FontAwesomeIcon icon={faCircleInfo} className={styles.icon} />
+                            <FontAwesomeIcon icon={faCircleInfo} className={styles.icon} />
                             <FontAwesomeIcon icon={faPenToSquare} className={styles.icon} />
-                            <FontAwesomeIcon icon={faTrashCan} className={styles.icon} /> */}
+                            <FontAwesomeIcon icon={faTrashCan} className={styles.icon} />
                           </div>
                           : column.key === 'nf' ?
                             <div>
-                              {/* {
+                              {
                                 (row[column.key] ?
                                   <FontAwesomeIcon icon={faCheck} className={styles.icon} /> :
                                   <FontAwesomeIcon icon={faXmark} className={styles.icon} />
                                 )
-                              } */}
+                              }
                             </div>
                             : column.key === 'date' || column.key === 'dueDate' ?
                               formatDate(row[column.key])
