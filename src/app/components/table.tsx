@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import styles from './styles/Table.module.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan, faCircleInfo, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
+import Tooltip from './tooltip'
 
 interface Data {
   [key: string]: any;
@@ -27,6 +28,8 @@ const formatDate = (dateString: string): string => {
 export default function Table({ columns, data, searchedNames }: TableProps) {
   const [filteredData, setFilteredData] = useState<Data[]>([]);
   const [statusClasses, setStatusClasses] = useState<string[]>([]);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
     const sorted = [...data].sort((a, b) => {
@@ -50,11 +53,19 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
   }, [data, searchedNames]);
 
   useEffect(() => {
-    const classes = filteredData.map(row => 
+    const classes = filteredData.map(row =>
       `${styles.status} ${row.status ? styles.paid : styles.pay}`
     );
     setStatusClasses(classes);
   }, [filteredData]);
+
+  const openNotes = (e: React.MouseEvent) => {
+    setShowTooltip(!showTooltip)
+    setTooltipPosition({
+      top: e.clientY - 20,
+      left: e.clientX - 150,
+    });
+  }
 
   return (
     <div>
@@ -77,7 +88,9 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
                         `R$ ${parseFloat(row[column.key]).toFixed(2).replace('.', ',')}`
                         : column.key === 'actions' ?
                           <div>
-                            <FontAwesomeIcon icon={faCircleInfo} className={styles.icon} />
+                            {row['notes'] !== "" &&
+                              <FontAwesomeIcon icon={faCircleInfo} className={styles.icon} onClick={openNotes} />
+                            }
                             <FontAwesomeIcon icon={faPenToSquare} className={styles.icon} />
                             <FontAwesomeIcon icon={faTrashCan} className={styles.icon} />
                           </div>
@@ -93,11 +106,6 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
                             : column.key === 'date' || column.key === 'dueDate' ?
                               formatDate(row[column.key])
                               : column.key === 'status' ?
-                                // <button
-                                //   className={`${styles.status} ${row[column.key] ? styles.paid : styles.pay}`}
-                                // >
-                                //   {row[column.key] ? "Pago" : "À pagar"}
-                                // </button>
                                 <button
                                   className={statusClasses[rowIndex]}
                                 >
@@ -113,6 +121,11 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
           : <div className={styles.none}>Nenhum resultado encontrado.</div>
         }
       </div >
+      {showTooltip && (
+        <Tooltip top={tooltipPosition.top} left={tooltipPosition.left}>
+          Teste nde exempo
+        </Tooltip>
+      )}
     </div >
   )
 }

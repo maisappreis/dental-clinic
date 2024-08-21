@@ -1,0 +1,17 @@
+.tooltip {
+  background-color: var(--gray-dark-color);
+  color: white;
+  padding: 10px 20px;
+  z-index: 500;
+  border-radius: 10px;
+  line-height: 1.8;
+  text-align: center;
+}
+
+@media only screen and (max-width: 1000px) {
+  .tooltip {
+    padding: 5px 10px;
+    max-height: 40px;
+    overflow: auto;
+  }
+}

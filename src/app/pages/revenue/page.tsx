@@ -48,18 +48,19 @@ export default function Revenue() {
     cpf: string | null;
     nf: boolean;
     procedure: string;
-    value: number;
     payment: string;
     installments: number | null;
+    value: number;
+    notes: string;
     actions: string;
   }[] = [
-      { id: 1, date: '2024-04-01', name: 'John Doe', cpf: '058.159.592-10', nf: true, procedure: 'Restauração', value: 180, payment: 'Débito', installments: null, actions: '' },
-      { id: 1, date: '2024-04-05', name: 'Maria Silva', cpf: null, nf: false, procedure: 'Profilaxia', value: 200, payment: 'Crédito à prazo', installments: 3, actions: '' },
-      { id: 1, date: '2024-05-25', name: 'Antonie All', cpf: null, nf: false, procedure: 'Restauração', value: 250, payment: 'Dinheiro', installments: null, actions: '' },
-      { id: 1, date: '2024-08-05', name: 'Joah Moé', cpf: '058.159.592-10', nf: true, procedure: 'Exodontia', value: 320, payment: 'Dinheiro', installments: null, actions: '' },
-      { id: 1, date: '2024-07-31', name: 'Will Smith', cpf: '058.159.592-10', nf: true, procedure: 'Endodontia', value: 240, payment: 'Crédito à prazo', installments: 2, actions: '' },
-      { id: 1, date: '2024-05-10', name: 'Clau Davi', cpf: '058.159.592-10', nf: true, procedure: 'Clareamento', value: 190, payment: 'PIX', installments: null, actions: '' },
-      { id: 1, date: '2024-06-09', name: 'Petro Atoa', cpf: null, nf: false, procedure: 'Prótese', value: 230, payment: 'Débito', installments: null, actions: '' },
+      { id: 1, date: '2024-04-01', name: 'John Doe', cpf: '058.159.592-10', nf: true, procedure: 'Restauração', value: 180, payment: 'Débito', installments: null, notes: "Nota de teste", actions: '' },
+      { id: 1, date: '2024-04-05', name: 'Maria Silva', cpf: null, nf: false, procedure: 'Profilaxia', value: 200, payment: 'Crédito à prazo', installments: 3, notes: "", actions: '' },
+      { id: 1, date: '2024-05-25', name: 'Antonie All', cpf: null, nf: false, procedure: 'Restauração', value: 250, payment: 'Dinheiro', installments: null, notes: "Nota de teste", actions: '' },
+      { id: 1, date: '2024-08-05', name: 'Joah Moé', cpf: '058.159.592-10', nf: true, procedure: 'Exodontia', value: 320, payment: 'Dinheiro', installments: null, notes: "", actions: '' },
+      { id: 1, date: '2024-07-31', name: 'Will Smith', cpf: '058.159.592-10', nf: true, procedure: 'Endodontia', value: 240, payment: 'Crédito à prazo', installments: 2, notes: "Nota de teste", actions: '' },
+      { id: 1, date: '2024-05-10', name: 'Clau Davi', cpf: '058.159.592-10', nf: true, procedure: 'Clareamento', value: 190, payment: 'PIX', installments: null, notes: "", actions: '' },
+      { id: 1, date: '2024-06-09', name: 'Petro Atoa', cpf: null, nf: false, procedure: 'Prótese', value: 230, payment: 'Débito', installments: null, notes: "Nota de teste", actions: '' },
     ];
 
   return (
