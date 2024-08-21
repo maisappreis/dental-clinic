@@ -2,7 +2,8 @@
 import React, { useState } from "react";
 import Table from "@/app/components/table";
 import Button from "@/app/components/button";
-import Filter from "@/app/components/filter";
+import MonthFilter from "@/app/components/monthFilter";
+import StatusFilter from "@/app/components/statusFilter";
 import Search from "@/app/components/search";
 
 export default function Expense() {
@@ -51,7 +52,8 @@ export default function Expense() {
           Nova Despesa
         </Button>
         <div className="flex justify-end" style={{marginBottom: 15}}>
-          <Filter />
+          <MonthFilter />
+          <StatusFilter />
           <Search updateSearchNames={updateSearchNames} />
         </div>
       </div>
