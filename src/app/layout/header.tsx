@@ -1,9 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChartLine, faCalendar, faHandHoldingDollar, faMoneyBillTransfer, faBook, faRightToBracket } from '@fortawesome/free-solid-svg-icons';
 import styles from "./styles/Header.module.css"
+import { useState } from "react";
 
 
 export default function Header({ selectedOption }: { selectedOption: string }) {
+  const [showDropdownLogout, setShowDropdownLogout] = useState(false);
   let title;
   let subtitle;
   let icon;
@@ -41,6 +43,14 @@ export default function Header({ selectedOption }: { selectedOption: string }) {
       icon = null;
   }
 
+  const handleLogout = () => {
+    setShowDropdownLogout(!showDropdownLogout);
+  }
+
+  const logoutUser = () => {
+    console.log("Logout");
+  }
+
   return (
     <div className={styles.hearder}>
       <div className={styles.text}>
@@ -53,8 +63,14 @@ export default function Header({ selectedOption }: { selectedOption: string }) {
             {subtitle}
           </p>
         </div>
-        <FontAwesomeIcon icon={faRightToBracket} className={styles.login} />
+        <FontAwesomeIcon icon={faRightToBracket} className={styles.login} onClick={handleLogout} />
       </div>
+      {showDropdownLogout && (
+        <button className={styles.dropdown} onClick={logoutUser}>
+          <FontAwesomeIcon icon={faRightToBracket} className={styles.logout} />
+          Logout
+        </button>
+      )}
     </div>
   )
 }
