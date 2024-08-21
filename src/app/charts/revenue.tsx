@@ -1,7 +1,8 @@
 export default function RevenueExpensesChart() {
   return (
     <div>
-      Gráfico de Receitas e Despesas
+      Em desenvolvimento.... 
+      Gráfico de Receitas e Despesas... 
     </div>
   )
 }

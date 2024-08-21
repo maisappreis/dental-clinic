@@ -14,24 +14,26 @@ interface ButtonProps {
 export default function Button({ onClick, disabled, children }: ButtonProps) {
   return (
     <div>
-        <button
-          className={`${styles.button} ${disabled ? styles.disabled : styles.green}`}
-          onClick={onClick}
-          disabled={disabled}
-        >
+      <button
+        className={`${styles.button} ${disabled ? styles.disabled : styles.green}`}
+        onClick={onClick}
+        disabled={disabled}
+      >
+        <div className="flex justify-center">
           <FontAwesomeIcon icon={faPlus} className={styles.icon} />
-          {children}
-        </button>
+          <div className={`${styles.text}`}>{children}</div>
+        </div>
+      </button>
     </div>
   );
 };
 
 // export default function Button({ onClick, disabled, children }: ButtonProps) {
-  // const [clientDisabled, setClientDisabled] = useState(disabled);
+// const [clientDisabled, setClientDisabled] = useState(disabled);
 
-  // useEffect(() => {
-  //   setClientDisabled(disabled);
-  // }, [disabled]);
+// useEffect(() => {
+//   setClientDisabled(disabled);
+// }, [disabled]);
 
 //   return (
 //     <div>
@@ -46,4 +48,3 @@ export default function Button({ onClick, disabled, children }: ButtonProps) {
 //     </div>
 //   );
 // };
-

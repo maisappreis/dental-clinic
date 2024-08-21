@@ -1,15 +1,10 @@
-import Image from 'next/image';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTooth } from '@fortawesome/free-solid-svg-icons';
 
 export default function Logotype() {
   return (
     <div className="flex justify-center mt-5 mb-3">
-      <Image
-        priority={true}
-        src="/images/logo.png"
-        alt="logotype"
-        width={60}
-        height={60}
-      />
+      <FontAwesomeIcon icon={faTooth} style={{color: "#86cafe", zoom: 4}} />
     </div>
   )
 }

@@ -8,7 +8,6 @@ import MonthEndClosing from "@/app/pages/monthclosing/page";
 import style from "./styles/Content.module.css";
 
 export default function Content({ selectedOption }: { selectedOption: string}) {
-// export default function Content() {
   let contentComponent: React.ReactNode;
 
   switch (selectedOption) {

@@ -13,9 +13,9 @@ const daysOfWeek = [
 // TODO: Receive the full name from the backend, and create a function to add a short name.
 
 const appointments = [
-  { time: "09:00", patients: ["", "", "Luis Silva", "", "Amanda L.", ""] },
-  { time: "10:00", patients: ["", "Renan B.", "", "", "", ""] },
-  { time: "11:00", patients: ["", "", "Luis Silva", "", "Amanda L.", ""] },
+  { time: "09:00", patients: ["", "", "Luis Silva", "", "Amanda Lop", ""] },
+  { time: "10:00", patients: ["", "Renan B.", "", "Beatriz Silva", "", ""] },
+  { time: "11:00", patients: ["", "", "Luis Silva", "", "Amanda Lopes", ""] },
   { time: "13:00", patients: ["Bianca", "", "Paulo", "", "", ""] },
   { time: "14:00", patients: ["", "", "", "", "", ""] },
   { time: "15:00", patients: ["", "", "Luis Silva", "", "Amanda L.", ""] },

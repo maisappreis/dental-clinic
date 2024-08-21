@@ -1,7 +1,7 @@
 .grid {
     display: grid;
     grid-template-columns: auto repeat(6, 1fr);
-    gap: 10px; 
+    gap: 10px;
 }
 
 .week {
@@ -9,7 +9,7 @@
     padding: 5px 30px;
     text-align: center;
     border-radius: 30px;
-    font-size: 17px;
+    font-size: 15px;
 }
 
 .blue {
@@ -61,6 +61,38 @@
     width: 20px;
 }
 
-.font {
-    font-size: 15px;
+.text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+}
+
+@media only screen and (max-width: 1000px) {
+  .week {
+    padding: 5px;
+    border-radius: 15px;
+    font-size: 14px;
+  }
+
+  .time {
+    width: fit-content;
+  }
+
+  .schedule {
+    padding: 6px;
+    border-radius: 15px;
+ }
+
+ .info {
+   display: none;
+  }
+
+  .font {
+    font-size: 12px;
+  }
+
+  .text {
+    font-size: 12px;
+  }
 }

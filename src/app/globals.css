@@ -13,11 +13,14 @@
   --blue-darker-color: rgb(0, 14, 63);
 }
 
+body {
+  background-color: var(--gray-light-color);
+}
+
 .app-area {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  background-color: var(--gray-light-color);
+  min-height: 90vh;
   font-size: 18px;
 }
 
@@ -29,9 +32,29 @@
 
   margin: 30px;
   width: 92%;
-  height: 90%;
+  height: fit-content;
+  min-height: 70vh;
   background-color: white;
   box-shadow: 2px 2px 20px rgb(148, 148, 148);
+}
+
+@media only screen and (max-width: 1000px) {
+  body {
+    min-height: 500px;
+  }
+
+  .app-area {
+    min-height: 100px;
+    font-size: 14px;
+    overflow-y: auto;
+  }
+
+  .content {
+    padding: 15px;
+    margin: 15px;
+    width: 95%;
+    min-height: 300px;
+  }
 }
 
 /* ----------- Form Styles ------------*/

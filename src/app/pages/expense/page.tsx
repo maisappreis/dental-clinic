@@ -50,9 +50,9 @@ export default function Expense() {
         <Button onClick={addExpense} disabled={false} >
           Nova Despesa
         </Button>
-        <div className="flex justify-end">
-          <Search updateSearchNames={updateSearchNames} />
+        <div className="flex justify-end" style={{marginBottom: 15}}>
           <Filter />
+          <Search updateSearchNames={updateSearchNames} />
         </div>
       </div>
       <Table columns={columns} data={data} searchedNames={searchedNames} />

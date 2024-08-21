@@ -7,7 +7,7 @@ import Content from "@/app/layout/content";
 import Footer from "@/app/layout/footer";
 
 export default function Home() {
-  const [selectedOption, setSelectedOption] = useState<string>("calendar");
+  const [selectedOption, setSelectedOption] = useState<string>("revenue");
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
@@ -15,9 +15,6 @@ export default function Home() {
 
   return (
     <main className="app-area">
-      {/* <Header />
-      <Sidebar />
-      <Content /> */}
       <Header selectedOption={selectedOption} />
       <Sidebar onOptionClick={handleOptionClick} />
       <Content selectedOption={selectedOption} />

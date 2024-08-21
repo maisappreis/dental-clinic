@@ -1,37 +1,77 @@
 .hearder {
-    position: fixed;
-    top: 0;
-    background-color: rgb(235, 235, 235);
-    box-shadow: 0 8px 6px -6px rgb(99, 99, 99);
-    height: 90px;
-    width: 100%;
-    z-index: 9;
+  position: fixed;
+  top: 0;
+  background-color: rgb(235, 235, 235);
+  box-shadow: 0 8px 6px -6px rgb(99, 99, 99);
+  height: 90px;
+  width: 100%;
+  z-index: 9;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+}
+
+.text {
+  display: flex;
+  justify-content: space-between;
+  text-align: left;
+  margin-left: 240px;
+}
+
+.title { 
+  font-weight: bold;
+  font-size: 23px;
+  margin: 15px 0 6px 0;
+}
+
+.icon {
+  margin: 15px 12px 10px 12px;
+  font-size: 30px;
+}
+
+.login {
+  margin: 30px;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.subtitle {
+  font-size: 18px;
+  margin: 2px 0 5px 15px;
+}
+
+@media only screen and (max-width: 1300px) {
+  .text {
+      text-align: left;
+      margin-left: 110px;
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .hearder {
+    height: 50px;
   }
 
   .text {
-    text-align: left;
-    margin-left: 240px;
-  }
+    margin-left: 70px;
+}
 
   .title {
-    font-weight: bold;
-    font-size: 22px;
-    margin: 15px 0 6px 0;
+    margin: 8px 0 6px 0;
   }
 
   .icon {
-    margin: 15px 12px 10px 12px;
-    font-size: 30px;
+    margin: 8px 12px 10px 12px;
   }
 
   .subtitle {
-    font-size: 18px;
-    margin: 2px 0 5px 15px;
+    display: none;
   }
 
-  @media only screen and (max-width: 1300px) {
-    .text {
-        text-align: left;
-        margin-left: 110px;
-    }
+  .login {
+    margin: 12px 15px;
+    font-size: 25px;
   }
+}

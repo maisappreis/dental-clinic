@@ -42,7 +42,7 @@ export default function Filter() {
       >
         <option disabled value="">Mês:</option>
         {months.map((month, index) => (
-          <option key={index} value={month}>
+          <option key={index} value={month} className={styles.font}>
             {month}
           </option>
         ))}

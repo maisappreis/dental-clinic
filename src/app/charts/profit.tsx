@@ -1,7 +1,7 @@
 export default function ProfitChart() {
   return (
     <div>
-      Gráfico de Lucro
+      Gráfico de Lucro... 
     </div>
   )
 }

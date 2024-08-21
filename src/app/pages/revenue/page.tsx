@@ -21,9 +21,9 @@ export default function Revenue() {
     { key: "name", name: "Paciente" },
     { key: "cpf", name: "CPF" },
     { key: "nf", name: "NF"},
-    { key: "procedure", name: "Procedimento" },
-    { key: "payment", name: "Forma de pgto" },
-    { key: "installments", name: "Nº parcelas" },
+    { key: "procedure", name: "Proced." },
+    { key: "payment", name: "Pagamento" },
+    { key: "installments", name: "Parcelas" },
     { key: "value", name: "Valor" },
     { key: "actions", name: "" },
   ];
@@ -55,9 +55,9 @@ export default function Revenue() {
         <Button onClick={addRevenue} disabled={false} >
           Nova Receita
         </Button>
-        <div className="flex justify-end">
-          <Search updateSearchNames={updateSearchNames} />
+        <div className="flex justify-end" style={{marginBottom: 15}}>
           <Filter />
+          <Search updateSearchNames={updateSearchNames} />
         </div>
       </div>
       <Table columns={columns} data={data} searchedNames={searchedNames} />

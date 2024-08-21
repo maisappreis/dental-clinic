@@ -58,10 +58,10 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
 
   return (
     <div>
-      <div>
+      <div className={styles.overflow}>
         {filteredData.length > 0 ?
           <table className={styles.table}>
-            <thead>
+            <thead className={styles.thead}>
               <tr className={styles.tr}>
                 {columns.map((column) => (
                   <th className={styles.th} key={column.key}>{column.name}</th>

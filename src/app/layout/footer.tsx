@@ -9,7 +9,7 @@ const dancing = Dancing_Script({
 
 const fontStyle = {
   color: "red",
-  fontSize: "25px"
+  fontSize: "20px"
 }
 
 export default function Footer() {

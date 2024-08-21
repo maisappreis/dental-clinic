@@ -1,5 +1,5 @@
 .content {
-  position: fixed;
+  position: absolute;
   top: 90px;
   left: 230px;
 
@@ -12,5 +12,14 @@
   .content {
     left: 100px;
     width: 92vw;
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .content {
+    top: 50px;
+    left: 70px;
+    width: 90vw;
+    height: 100vh;
   }
 }
