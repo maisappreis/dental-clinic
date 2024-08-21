@@ -1,0 +1,42 @@
+.form-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  margin: 20px 0;
+}
+
+.form-item {
+  display: flex;
+  margin: 10px 0;
+}
+
+.form-radio {
+  margin: 10px;
+  width: 20px;
+}
+
+.form-label {
+  margin: 5px 15px 0 0;
+  min-width: fit-content;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  padding: 5px;
+  border-radius: 5px;
+  border: 2px solid #b4b4b4;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.autocomplete-list {
+  position: fixed;
+  z-index: 10;
+  background-color: rgb(255, 255, 255);
+  padding: 10px;
+  border: rgb(141, 141, 141) solid 1px;
+  border-radius: 10px;
+  cursor: pointer;
+}

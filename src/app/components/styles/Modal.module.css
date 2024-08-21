@@ -1,0 +1,40 @@
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #00000094;
+  width: 100vw;
+  height: 100vh;
+  z-index: 3;
+}
+
+.modal {
+  position: absolute;
+  top: 10vh;
+  left: 35vw;
+  background-color: white;
+  height: fit-content;
+  width: 40vw;
+  border-radius: 10px;
+  padding: 30px 40px;
+  z-index: 4;
+  max-height: 550px;
+  overflow-y: auto;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+@media only screen and (max-width: 1000px) {
+  .modal {
+    top: 15vh;
+    left: 20vw;
+    width: 55vw;
+    overflow: auto;
+    max-height: 240px;
+    padding: 30px;
+  }
+}

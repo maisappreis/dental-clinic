@@ -1,0 +1,42 @@
+.btn {
+  border: none;
+  padding: 12px 20px;
+  color: white;
+  height: 50px;
+  font-weight: bold;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.size {
+  width: 200px;
+}
+
+.green {
+  background-color: green;
+}
+
+.red {
+  background-color: red;
+}
+
+@media only screen and (max-width: 1300px) {
+  .btn {
+    padding: 10px 15px;
+    height: 50px;
+    font-size: 16px;
+  }
+
+  .size {
+    width: 150px;
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .btn {
+    padding: 10px 15px;
+    height: 50px;
+    font-size: 16px;
+  }
+}
