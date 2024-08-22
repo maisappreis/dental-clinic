@@ -189,7 +189,7 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
       )}
       {showUpdateModal && selectedRow &&
         <Modal title={modalTitle}>
-          <RevenueForm selectedRow={selectedRow} onSubmit={updateRevenue} />
+          {/* <RevenueForm selectedRow={selectedRow} onSubmit={updateRevenue} /> */}
           <div className="flex justify-around">
             <button onClick={closeModal} className="btn green size">
               Salvar
