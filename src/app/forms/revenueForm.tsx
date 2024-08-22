@@ -126,6 +126,7 @@ export default function RevenueForm({ selectedRow, onSubmit, formRef }: RevenueF
           <label htmlFor="procedure" className="form-label">Procedimento:</label>
           <select id="procedure" name="procedure" className="form-select"
             value={formData.procedure} onChange={handleInputChange}>
+            <option value="" disabled>Selecione:</option>
             {procedureOptions.map((option, i) => (
               <option key={i} value={option}>{option}</option>
             ))}
@@ -136,6 +137,7 @@ export default function RevenueForm({ selectedRow, onSubmit, formRef }: RevenueF
           <label htmlFor="payment" className="form-label">Pagamento:</label>
           <select id="payment"name="payment" className="form-select"
             value={formData.payment} onChange={handleInputChange}>
+            <option value="" disabled>Selecione:</option>
             {paymentOptions.map((option, i) => (
               <option key={i} value={option}>{option}</option>
             ))}

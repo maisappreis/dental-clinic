@@ -42,7 +42,6 @@ const formatDate = (dateString: string): string => {
 export default function Table({ columns, data, searchedNames }: TableProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [filteredData, setFilteredData] = useState<Data[]>([]);
-  const [statusClasses, setStatusClasses] = useState<string[]>([]);
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
   const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -83,8 +82,9 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
     }
   }, [data, searchedNames]);
 
-  const openNotes = (e: React.MouseEvent) => {
-    setShowTooltip(!showTooltip)
+  const openNotes = (row: RowProps, e: React.MouseEvent): void => {
+    setSelectedRow(row);
+    setShowTooltip(!showTooltip);
     setTooltipPosition({
       top: e.clientY - 20,
       left: e.clientX - 150,
@@ -157,19 +157,13 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
                             </div>
                             : column.key === 'date' ?
                               formatDate(row[column.key])
-                              : column.key === 'status' ?
-                                <button
-                                  className={statusClasses[rowIndex]}
-                                >
-                                  {row[column.key] ? "Pago" : "À pagar"}
-                                </button>
-                                : row[column.key]}
+                              : row[column.key]}
                     </td>
                   ))}
                   <td>
                     <div>
                       {row['notes'] !== "" &&
-                        <FontAwesomeIcon icon={faCircleInfo} className="table-icon" onClick={openNotes} />
+                        <FontAwesomeIcon icon={faCircleInfo} className="table-icon" onClick={(e) => openNotes(row, e)} />
                       }
                       <FontAwesomeIcon icon={faPenToSquare} className="table-icon" onClick={() => openUpdateModal(row)} />
                       <FontAwesomeIcon icon={faTrashCan} className="table-icon" onClick={() => openDeleteModal(row)} />
@@ -182,9 +176,9 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
           : <div className="no-data">Nenhum resultado encontrado.</div>
         }
       </div >
-      {showTooltip && (
+      {showTooltip && selectedRow && (
         <Tooltip top={tooltipPosition.top} left={tooltipPosition.left}>
-          Teste nde exempo
+          {selectedRow.notes}
         </Tooltip>
       )}
       {showUpdateModal && selectedRow &&

@@ -19,13 +19,13 @@ const data: {
   value: number | null;
   notes: string;
 }[] = [
-    { id: 1, date: '2024-04-01', name: 'John Doe', cpf: '058.159.592-10', nf: 'yes', procedure: 'Restauração', value: 180, payment: 'Débito', installments: 0, notes: "Nota de teste" },
+    { id: 1, date: '2024-04-01', name: 'John Doe', cpf: '058.159.592-10', nf: 'yes', procedure: 'Restauração', value: 180, payment: 'Débito', installments: 0, notes: "Nota XXX" },
     { id: 1, date: '2024-04-05', name: 'Maria Silva', cpf: "", nf: 'no', procedure: 'Profilaxia', value: 200, payment: 'Crédito à prazo', installments: 3, notes: "" },
-    { id: 1, date: '2024-05-25', name: 'Antonie All', cpf: "", nf: 'no', procedure: 'Restauração', value: 250.55, payment: 'Dinheiro', installments: 0, notes: "Nota de teste" },
+    { id: 1, date: '2024-05-25', name: 'Antonie All', cpf: "", nf: 'no', procedure: 'Restauração', value: 250.55, payment: 'Dinheiro', installments: 0, notes: "Nota YYYY" },
     { id: 1, date: '2024-08-05', name: 'Joah Moé', cpf: '058.159.592-10', nf: 'yes', procedure: 'Exodontia', value: 320, payment: 'Dinheiro', installments: 0, notes: "" },
-    { id: 1, date: '2024-07-31', name: 'Will Smith', cpf: '058.159.592-10', nf: 'yes', procedure: 'Endodontia', value: 240, payment: 'Crédito à prazo', installments: 2, notes: "Nota de teste" },
+    { id: 1, date: '2024-07-31', name: 'Will Smith', cpf: '058.159.592-10', nf: 'yes', procedure: 'Endodontia', value: 240, payment: 'Crédito à prazo', installments: 2, notes: "Nota ZZZZ" },
     { id: 1, date: '2024-05-10', name: 'Clau Davi', cpf: '058.159.592-10', nf: 'yes', procedure: 'Clareamento', value: 190, payment: 'PIX', installments: 0, notes: "" },
-    { id: 1, date: '2024-06-09', name: 'Petro Atoa', cpf: "", nf: 'no', procedure: 'Prótese', value: 230, payment: 'Débito', installments: 0, notes: "Nota de teste" },
+    { id: 1, date: '2024-06-09', name: 'Petro Atoa', cpf: "", nf: 'no', procedure: 'Prótese', value: 230, payment: 'Débito', installments: 0, notes: "Nota OOOOO" },
   ];
 
 const getCurrentDate = (): string => {
@@ -68,7 +68,7 @@ export default function Revenue() {
 
   const updateSearchNames = (names: string[]) => {
     setSearchNames(names);
-  }
+  };
 
   const handleSubmit = (formData: any) => {
     setFormData(formData);
@@ -95,7 +95,7 @@ export default function Revenue() {
       notes: ""
     })
     setShowModal(true);
-    setModalTitle("Adicionar Paciente");
+    setModalTitle("Adicionar Receita");
   };
 
   const closeModal = () => {
