@@ -1,33 +1,59 @@
 "use client";
-import React, { useState } from "react";
-import Table from "@/app/components/table";
+import React, { useState, useRef } from "react";
+import Table from "./table";
 import Button from "@/app/components/button";
 import MonthFilter from "@/app/components/monthFilter";
 import Search from "@/app/components/search";
 import Modal from "@/app/components/modal";
 import RevenueForm from "@/app/forms/revenueForm";
 
+const data: {
+  id: number;
+  date: string;
+  name: string;
+  cpf: string | null;
+  nf: string;
+  procedure: string;
+  payment: string;
+  installments: number | null;
+  value: number | null;
+  notes: string;
+}[] = [
+    { id: 1, date: '2024-04-01', name: 'John Doe', cpf: '058.159.592-10', nf: 'yes', procedure: 'Restauração', value: 180, payment: 'Débito', installments: 0, notes: "Nota de teste" },
+    { id: 1, date: '2024-04-05', name: 'Maria Silva', cpf: "", nf: 'no', procedure: 'Profilaxia', value: 200, payment: 'Crédito à prazo', installments: 3, notes: "" },
+    { id: 1, date: '2024-05-25', name: 'Antonie All', cpf: "", nf: 'no', procedure: 'Restauração', value: 250.55, payment: 'Dinheiro', installments: 0, notes: "Nota de teste" },
+    { id: 1, date: '2024-08-05', name: 'Joah Moé', cpf: '058.159.592-10', nf: 'yes', procedure: 'Exodontia', value: 320, payment: 'Dinheiro', installments: 0, notes: "" },
+    { id: 1, date: '2024-07-31', name: 'Will Smith', cpf: '058.159.592-10', nf: 'yes', procedure: 'Endodontia', value: 240, payment: 'Crédito à prazo', installments: 2, notes: "Nota de teste" },
+    { id: 1, date: '2024-05-10', name: 'Clau Davi', cpf: '058.159.592-10', nf: 'yes', procedure: 'Clareamento', value: 190, payment: 'PIX', installments: 0, notes: "" },
+    { id: 1, date: '2024-06-09', name: 'Petro Atoa', cpf: "", nf: 'no', procedure: 'Prótese', value: 230, payment: 'Débito', installments: 0, notes: "Nota de teste" },
+  ];
+
+const getCurrentDate = (): string => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+};
+
 export default function Revenue() {
+  const formRef = useRef<HTMLFormElement>(null);
   const [searchedNames, setSearchNames] = useState<string[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState('')
-
-  const openModal: () => void = () => {
-    setShowModal(true);
-    setModalTitle("Adicionar Paciente");
-  };
-
-  const updateSearchNames = (names: string[]) => {
-    setSearchNames(names);
-  }
-
-  const saveRevenue = () => {
-    console.log('Salvar receita...')
-  }
-
-  const closeModal = () => {
-    setShowModal(false);
-  }
+  const [modalTitle, setModalTitle] = useState('');
+  const [formData, setFormData] = useState({
+    id: 0,
+    name: "",
+    date: "",
+    cpf: "",
+    nf: "no",
+    procedure: "",
+    payment: "",
+    installments: 0,
+    value: 0,
+    notes: ""
+  });
 
   const columns: { key: string; name: string; }[] = [
     { key: "date", name: "Data" },
@@ -37,31 +63,45 @@ export default function Revenue() {
     { key: "procedure", name: "Proced." },
     { key: "payment", name: "Pagamento" },
     { key: "installments", name: "Parcelas" },
-    { key: "value", name: "Valor" },
-    { key: "actions", name: "" },
+    { key: "value", name: "Valor" }
   ];
 
-  const data: {
-    id: number;
-    date: string;
-    name: string;
-    cpf: string | null;
-    nf: boolean;
-    procedure: string;
-    payment: string;
-    installments: number | null;
-    value: number;
-    notes: string;
-    actions: string;
-  }[] = [
-      { id: 1, date: '2024-04-01', name: 'John Doe', cpf: '058.159.592-10', nf: true, procedure: 'Restauração', value: 180, payment: 'Débito', installments: null, notes: "Nota de teste", actions: '' },
-      { id: 1, date: '2024-04-05', name: 'Maria Silva', cpf: null, nf: false, procedure: 'Profilaxia', value: 200, payment: 'Crédito à prazo', installments: 3, notes: "", actions: '' },
-      { id: 1, date: '2024-05-25', name: 'Antonie All', cpf: null, nf: false, procedure: 'Restauração', value: 250, payment: 'Dinheiro', installments: null, notes: "Nota de teste", actions: '' },
-      { id: 1, date: '2024-08-05', name: 'Joah Moé', cpf: '058.159.592-10', nf: true, procedure: 'Exodontia', value: 320, payment: 'Dinheiro', installments: null, notes: "", actions: '' },
-      { id: 1, date: '2024-07-31', name: 'Will Smith', cpf: '058.159.592-10', nf: true, procedure: 'Endodontia', value: 240, payment: 'Crédito à prazo', installments: 2, notes: "Nota de teste", actions: '' },
-      { id: 1, date: '2024-05-10', name: 'Clau Davi', cpf: '058.159.592-10', nf: true, procedure: 'Clareamento', value: 190, payment: 'PIX', installments: null, notes: "", actions: '' },
-      { id: 1, date: '2024-06-09', name: 'Petro Atoa', cpf: null, nf: false, procedure: 'Prótese', value: 230, payment: 'Débito', installments: null, notes: "Nota de teste", actions: '' },
-    ];
+  const updateSearchNames = (names: string[]) => {
+    setSearchNames(names);
+  }
+
+  const handleSubmit = (formData: any) => {
+    setFormData(formData);
+    setShowModal(false);
+  };
+
+  const saveRevenue = () => {
+    if (formRef.current) {
+      formRef.current.requestSubmit();
+    }
+  };
+
+  const openModal: () => void = () => {
+    setFormData({
+      id: 0,
+      name: "",
+      date: getCurrentDate(),
+      cpf: "",
+      nf: "no",
+      procedure: "",
+      payment: "",
+      installments: 0,
+      value: 0,
+      notes: ""
+    })
+    setShowModal(true);
+    setModalTitle("Adicionar Paciente");
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+  
 
   return (
     <div className="content">
@@ -77,9 +117,9 @@ export default function Revenue() {
       <Table columns={columns} data={data} searchedNames={searchedNames} />
       {showModal &&
         <Modal title={modalTitle}>
-          <RevenueForm />
+          <RevenueForm selectedRow={formData} onSubmit={handleSubmit} formRef={formRef} />
           <div className="flex justify-around">
-            <button onClick={saveRevenue} className="btn green size">
+            <button onClick={saveRevenue} className="btn green size" type="submit">
               Salvar
             </button>
             <button onClick={closeModal} className="btn red size">
