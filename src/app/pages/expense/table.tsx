@@ -1,10 +1,10 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan, faCircleInfo, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from "@/app/components/tooltip"
 import Modal from "@/app/components/modal";
-import RevenueForm from "@/app/forms/revenueForm";
+import ExpenseForm from "@/app/forms/expenseForm";
 
 interface Data {
   [key: string]: any;
@@ -23,14 +23,13 @@ interface TableProps {
 
 interface RowProps {
   id: number;
-  date: string;
+  year: number;
+  month: string;
   name: string;
-  cpf: string;
-  nf: boolean;
-  procedure: string;
-  payment: string;
-  installments: number;
+  installments: string;
+  date: string;
   value: number;
+  status: boolean;
   notes: string;
 }
 
@@ -39,16 +38,8 @@ const formatDate = (dateString: string): string => {
   return `${day}/${month}/${year}`;
 };
 
-const getCurrentDate = (): string => {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0');
-  const day = String(today.getDate()).padStart(2, '0');
-
-  return `${year}-${month}-${day}`;
-};
-
 export default function Table({ columns, data, searchedNames }: TableProps) {
+  const formRef = useRef<HTMLFormElement>(null);
   const [filteredData, setFilteredData] = useState<Data[]>([]);
   const [statusClasses, setStatusClasses] = useState<string[]>([]);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -65,7 +56,7 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
     nf: "",
     procedure: "",
     payment: "",
-    installments: 0,
+    installments: "",
     value: 0,
     notes: ""
   });
@@ -98,8 +89,9 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
     setStatusClasses(classes);
   }, [filteredData]);
 
-  const openNotes = (e: React.MouseEvent) => {
-    setShowTooltip(!showTooltip)
+  const openNotes = (row: RowProps, e: React.MouseEvent): void => {
+    setSelectedRow(row);
+    setShowTooltip(!showTooltip);
     setTooltipPosition({
       top: e.clientY - 20,
       left: e.clientX - 150,
@@ -108,26 +100,31 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
 
   const openUpdateModal = (row: RowProps): void => {
     setShowUpdateModal(true);
-    setModalTitle("Atualizar Receita");
+    setModalTitle("Atualizar Despesa");
     setSelectedRow(row);
     console.log('row', row)
   };
 
   const openDeleteModal = (row: RowProps): void => {
     setShowDeleteModal(true);
-    setModalTitle("Excluir Receita");
+    setModalTitle("Excluir Despesa");
     setSelectedRow(row);
     console.log('row', row)
   };
 
-  const updateRevenue = (data: any) => {
+  const handleSubmit = (formData: any) => {
+    setFormData(formData);
+    setShowUpdateModal(false);
+  };
+
+  const updateExpense = (data: any) => {
     setFormData(data);
-    console.log('Dados do formulário recebidos >> updateRevenue:', data);
+    console.log('Dados do formulário recebidos >> updateExpense:', data);
     // setShowUpdateModal(false);
   }
 
-  const deleteRevenue = () => {
-    console.log('Deletar receita...')
+  const deleteExpense = () => {
+    console.log('Deletar despesa...')
   }
 
   const closeModal = () => {
@@ -169,7 +166,7 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
                   <td>
                     <div>
                       {row['notes'] !== "" &&
-                        <FontAwesomeIcon icon={faCircleInfo} className="table-icon" onClick={openNotes} />
+                        <FontAwesomeIcon icon={faCircleInfo} className="table-icon" onClick={(e) => openNotes(row, e)} />
                       }
                       <FontAwesomeIcon icon={faPenToSquare} className="table-icon" onClick={() => openUpdateModal(row)} />
                       <FontAwesomeIcon icon={faTrashCan} className="table-icon" onClick={() => openDeleteModal(row)} />
@@ -182,16 +179,16 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
           : <div className="no-data">Nenhum resultado encontrado.</div>
         }
       </div >
-      {showTooltip && (
+      {showTooltip && selectedRow && (
         <Tooltip top={tooltipPosition.top} left={tooltipPosition.left}>
-          Teste nde exempo
+          {selectedRow.notes}
         </Tooltip>
       )}
       {showUpdateModal && selectedRow &&
         <Modal title={modalTitle}>
-          {/* <RevenueForm selectedRow={selectedRow} onSubmit={updateRevenue} /> */}
+          <ExpenseForm selectedRow={selectedRow} onSubmit={handleSubmit} formRef={formRef} />
           <div className="flex justify-around">
-            <button onClick={closeModal} className="btn green size">
+            <button onClick={updateExpense} className="btn green size">
               Salvar
             </button>
             <button onClick={closeModal} className="btn red size">
@@ -203,9 +200,11 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
       {showDeleteModal && selectedRow &&
         <Modal title={modalTitle}>
           <h4 className="my-5 text-center">Tem certeza que deseja excluir o valor de
-            <strong> R$ {selectedRow.value}</strong> do paciente <strong>{selectedRow.name}</strong>?</h4>
+            <strong> R$ {selectedRow.value.toFixed(2).replace('.', ',')}
+            </strong> referente a despesa de <strong>{selectedRow.name}</strong>?
+          </h4>
           <div className="flex justify-around">
-            <button onClick={deleteRevenue} className="btn red size">
+            <button onClick={deleteExpense} className="btn red size">
               Excluir
             </button>
             <button onClick={closeModal} className="btn red size blue">
