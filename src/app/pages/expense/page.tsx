@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Table from "@/app/components/table";
+import Table from "./table";
 import Button from "@/app/components/button";
 import MonthFilter from "@/app/components/monthFilter";
 import StatusFilter from "@/app/components/statusFilter";
@@ -23,8 +23,7 @@ export default function Expense() {
     { key: "name", name: "Conta" },
     { key: "date", name: "Data de Venc." },
     { key: "value", name: "Valor" },
-    { key: "status", name: "Status" },
-    { key: "actions", name: "" },
+    { key: "status", name: "Status" }
   ];
 
   const data: {
@@ -35,14 +34,13 @@ export default function Expense() {
     date: string;
     value: number;
     status: boolean;
-    actions: string;
   }[] = [
-      { id: 1, year: 2024, month: "Março", name: 'Aluguel', date: '2024-03-15', value: 800, status: true, actions: '' },
-      { id: 3, year: 2024, month: "Março", name: 'Energia elétrica', date: '2024-03-01', value: 128.56, status: false, actions: '' },
-      { id: 2, year: 2024, month: "Março", name: 'ISS', date: '2024-05-01', value: 156.23, status: false, actions: '' },
-      { id: 2, year: 2024, month: "Março", name: 'Alvará', date: '2024-04-30', value: 169.95, status: false, actions: '' },
-      { id: 2, year: 2024, month: "Março", name: 'Colix', date: '2024-04-12', value: 65, status: true, actions: '' },
-      { id: 2, year: 2024, month: "Março", name: 'Internet', date: '2024-05-16', value: 99.9, status: false, actions: '' },
+      { id: 1, year: 2024, month: "Março", name: 'Aluguel', date: '2024-03-15', value: 800, status: true },
+      { id: 3, year: 2024, month: "Março", name: 'Energia elétrica', date: '2024-03-01', value: 128.56, status: false },
+      { id: 2, year: 2024, month: "Março", name: 'ISS', date: '2024-05-01', value: 156.23, status: false },
+      { id: 2, year: 2024, month: "Março", name: 'Alvará', date: '2024-04-30', value: 169.95, status: false },
+      { id: 2, year: 2024, month: "Março", name: 'Colix', date: '2024-04-12', value: 65, status: true },
+      { id: 2, year: 2024, month: "Março", name: 'Internet', date: '2024-05-16', value: 99.9, status: false },
     ];
 
   return (
