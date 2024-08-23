@@ -1,15 +1,18 @@
 "use client";
 import styles from "./styles/Filter.module.css";
-import React, { useState, ChangeEvent  } from "react";
+import React, { ChangeEvent  } from "react";
 
-export default function StatusFilter() {
-  const [paymentStatus, setPaymentStatus] = useState("");
+interface StatusFilterProps {
+  statusPayment: string;
+  onStatusChange: (params: { selectedMonth?: string; selectedYear?: string; selectedStatus: string }) => void;
+}
 
-  const statusList = ["À pagar", "Pago"];
+export default function StatusFilter({ statusPayment, onStatusChange }: StatusFilterProps) {
+  const statusList = ["À pagar", "Pago", "Todos"];
 
   const handleStatusChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const selectedStatus = event.target.value;
-    setPaymentStatus(selectedStatus);
+    onStatusChange({selectedStatus: selectedStatus});
   };
 
   return (
@@ -18,7 +21,7 @@ export default function StatusFilter() {
         className="form-select font status"
         id="status"
         name="status"
-        value={paymentStatus}
+        value={statusPayment}
         onChange={handleStatusChange}
         required
       >

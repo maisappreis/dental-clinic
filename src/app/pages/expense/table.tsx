@@ -29,7 +29,7 @@ interface RowProps {
   installments: string;
   date: string;
   value: number;
-  status: boolean;
+  is_paid: boolean;
   notes: string;
 }
 
@@ -84,7 +84,7 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
 
   useEffect(() => {
     const classes = filteredData.map(row =>
-      `t-status ${row.status ? 't-paid' : 't-pay'}`
+      `t-status ${row.is_paid ? 't-paid' : 't-pay'}`
     );
     setStatusClasses(classes);
   }, [filteredData]);
@@ -154,7 +154,7 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
                         `R$ ${parseFloat(row[column.key]).toFixed(2).replace('.', ',')}`
                         : column.key === 'date' ?
                               formatDate(row[column.key])
-                              : column.key === 'status' ?
+                              : column.key === 'is_paid' ?
                                 <button
                                   className={statusClasses[rowIndex]}
                                 >

@@ -1,25 +1,25 @@
 "use client";
 import styles from "./styles/Filter.module.css";
-import React, { useState, ChangeEvent  } from "react";
+import React, { ChangeEvent } from "react";
+import { months, years } from '@/assets/data';
 
-export default function MonthFilter() {
-  const [month, setMonth] = useState("");
-  const [year, setYear] = useState("");
 
-  const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro", "Todos os meses"];
-  const years = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037, 2038, "Todos"];
+interface MonthFilterProps {
+  month: string;
+  year: string;
+  onFilterChange: (params: { selectedMonth: string; selectedYear: string; selectedStatus?: string }) => void;
+}
+
+export default function MonthFilter({ month, year, onFilterChange}: MonthFilterProps) {
 
   const handleMonthChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const selectedMonth = event.target.value;
-    console.log("selectedMonth", selectedMonth)
-    setMonth(selectedMonth);
-    // props.getMonth(selectedMonth);
+    onFilterChange({ selectedMonth: selectedMonth, selectedYear: year});
   };
 
   const handleYearChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const selectedYear = event.target.value;
-    setYear(selectedYear);
-    // props.getYear(selectedYear);
+    onFilterChange({selectedMonth: month, selectedYear: selectedYear});
   };
 
   return (

@@ -9,7 +9,7 @@ interface ExpenseRow {
   installments: string;
   date: string;
   value: number;
-  status: boolean;
+  is_paid: boolean;
   notes: string;
 }
 
@@ -30,7 +30,7 @@ export default function ExpenseForm({ selectedRow, onSubmit, formRef }: ExpenseF
     installments: selectedRow?.installments,
     date: selectedRow?.date,
     value: selectedRow?.value,
-    status: selectedRow?.status,
+    is_paid: selectedRow?.is_paid,
     notes: selectedRow?.notes
   });
 
@@ -71,7 +71,7 @@ export default function ExpenseForm({ selectedRow, onSubmit, formRef }: ExpenseF
         installments: selectedRow.installments,
         date: selectedRow.date,
         value: selectedRow.value,
-        status: selectedRow?.status,
+        is_paid: selectedRow?.is_paid,
         notes: selectedRow.notes
       });
     }

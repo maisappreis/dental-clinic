@@ -1,13 +1,25 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Table from "./table";
 import Button from "@/app/components/button";
 import MonthFilter from "@/app/components/monthFilter";
 import StatusFilter from "@/app/components/statusFilter";
 import Search from "@/app/components/search";
 import Modal from "@/app/components/modal";
-import RevenueForm from "@/app/forms/revenueForm";
 import ExpenseForm from "@/app/forms/expenseForm";
+import { getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
+
+interface DataProps {
+  id: number;
+  year: number;
+  month: string;
+  name: string;
+  installments: string;
+  date: string;
+  value: number;
+  is_paid: boolean;
+  notes: string;
+}
 
 const data: {
   id: number;
@@ -17,28 +29,23 @@ const data: {
   installments: string;
   date: string;
   value: number;
-  status: boolean;
+  is_paid: boolean;
   notes: string;
 }[] = [
-    { id: 1, year: 2024, month: "Março", name: 'Aluguel', installments: "", date: '2024-03-15', value: 800, status: true, notes: "" },
-    { id: 3, year: 2024, month: "Março", name: 'Energia elétrica', installments: "", date: '2024-03-01', value: 128.56, status: false, notes: "Nota XXX" },
-    { id: 2, year: 2024, month: "Março", name: 'ISS', installments: "2/6", date: '2024-05-01', value: 156.23, status: false, notes: "Nota YYYY" },
-    { id: 2, year: 2024, month: "Março", name: 'Alvará', installments: "3/10", date: '2024-04-30', value: 169.95, status: false, notes: "" },
-    { id: 2, year: 2024, month: "Março", name: 'Colix', installments: "", date: '2024-04-12', value: 65, status: true, notes: "Nota EEEE" },
-    { id: 2, year: 2024, month: "Março", name: 'Internet', installments: "", date: '2024-05-16', value: 99.9, status: false, notes: "Nota VVVVVV" },
+    { id: 1, year: 2025, month: "Março", name: 'Aluguel', installments: "", date: '2024-03-15', value: 800, is_paid: true, notes: "" },
+    { id: 3, year: 2024, month: "Março", name: 'Energia elétrica', installments: "", date: '2024-03-01', value: 128.56, is_paid: false, notes: "Nota XXX" },
+    { id: 2, year: 2024, month: "Agosto", name: 'ISS', installments: "2/6", date: '2024-05-01', value: 156.23, is_paid: false, notes: "Nota YYYY" },
+    { id: 2, year: 2024, month: "Setembro", name: 'Alvará', installments: "3/10", date: '2024-04-30', value: 169.95, is_paid: false, notes: "" },
+    { id: 2, year: 2024, month: "Setembro", name: 'Colix', installments: "", date: '2024-04-12', value: 65, is_paid: true, notes: "Nota EEEE" },
+    { id: 2, year: 2024, month: "Agosto", name: 'Internet', installments: "", date: '2024-05-16', value: 99.9, is_paid: false, notes: "Nota VVVVVV" },
   ];
-
-// const getCurrentDate = (): string => {
-//   const today = new Date();
-//   const year = today.getFullYear();
-//   const month = String(today.getMonth() + 1).padStart(2, '0');
-//   const day = String(today.getDate()).padStart(2, '0');
-
-//   return `${year}-${month}-${day}`;
-// };
 
 export default function Expense() {
   const formRef = useRef<HTMLFormElement>(null);
+  const [filteredData, setFilteredData] = useState(data);
+  const [month, setMonth] = useState(getCurrentMonth());
+  const [year, setYear] = useState(getCurrentYear());
+  const [statusPayment, setStatusPayment] = useState("Todos");
   const [searchedNames, setSearchNames] = useState<string[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -50,7 +57,7 @@ export default function Expense() {
     installments: "",
     date: "",
     value: 0,
-    status: false,
+    is_paid: false,
     notes: ""
   });
 
@@ -61,8 +68,36 @@ export default function Expense() {
     { key: "installments", name: "Parcelas" },
     { key: "date", name: "Data de Venc." },
     { key: "value", name: "Valor" },
-    { key: "status", name: "Status" },
+    { key: "is_paid", name: "Status" },
   ];
+
+  const filterData = useCallback(({
+    selectedMonth = month, 
+    selectedYear = year, 
+    selectedStatus = statusPayment
+  }) => {
+    setMonth(selectedMonth)
+    setYear(selectedYear)
+    setStatusPayment(selectedStatus);
+
+    let isPaid = false;
+
+    if (selectedStatus === "À pagar") isPaid = false;
+    if (selectedStatus === "Pago") isPaid = true;
+
+    const filtered = data.filter(item => {
+      if (selectedMonth === "Todos os meses" && selectedYear === "Todos" && selectedStatus === "Todos") return true;
+      if (selectedMonth === "Todos os meses" && selectedStatus === "Todos") return item.year.toString() === selectedYear;
+      if (selectedMonth === "Todos os meses" && selectedYear === "Todos") return item.is_paid === isPaid;
+      if (selectedYear === "Todos" && selectedStatus === "Todos") return item.month === selectedMonth;
+
+      if (selectedMonth === "Todos os meses") return item.year.toString() === selectedYear && item.is_paid === isPaid;
+      if (selectedYear === "Todos") return item.month === selectedMonth && item.is_paid === isPaid;
+      if (selectedStatus === "Todos") return item.month === selectedMonth && item.year.toString() === selectedYear;
+      return item.month === selectedMonth && item.year.toString() === selectedYear && item.is_paid === isPaid;
+    });
+    setFilteredData(filtered);
+  }, [month, year, statusPayment]);
 
   const updateSearchNames = (names: string[]) => {
     setSearchNames(names);
@@ -88,7 +123,7 @@ export default function Expense() {
       installments: "",
       date: "",
       value: 0,
-      status: false,
+      is_paid: false,
       notes: ""
     })
     setShowModal(true);
@@ -99,6 +134,9 @@ export default function Expense() {
     setShowModal(false);
   };
 
+  useEffect(() => {
+    filterData({ selectedMonth: month, selectedYear: year, selectedStatus: statusPayment });
+  }, [filterData, month, year, statusPayment]);
 
   return (
     <div className="content">
@@ -107,12 +145,12 @@ export default function Expense() {
           Nova Despesa
         </Button>
         <div className="flex justify-end" style={{marginBottom: 15}}>
-          <MonthFilter />
-          <StatusFilter />
+          <MonthFilter month={month} year={year} onFilterChange={filterData} />
+          <StatusFilter statusPayment={statusPayment} onStatusChange={filterData} />
           <Search updateSearchNames={updateSearchNames} />
         </div>
       </div>
-      <Table columns={columns} data={data} searchedNames={searchedNames} />
+      <Table columns={columns} data={filteredData} searchedNames={searchedNames} />
       {showModal &&
         <Modal title={modalTitle}>
           <ExpenseForm selectedRow={formData} onSubmit={handleSubmit} formRef={formRef} />

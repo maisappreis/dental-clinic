@@ -1,11 +1,13 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Table from "./table";
 import Button from "@/app/components/button";
 import MonthFilter from "@/app/components/monthFilter";
 import Search from "@/app/components/search";
 import Modal from "@/app/components/modal";
 import RevenueForm from "@/app/forms/revenueForm";
+import { getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
+
 
 const data: {
   id: number;
@@ -26,6 +28,7 @@ const data: {
     { id: 1, date: '2024-07-31', name: 'Will Smith', cpf: '058.159.592-10', nf: 'yes', procedure: 'Endodontia', value: 240, payment: 'Crédito à prazo', installments: 2, notes: "Nota ZZZZ" },
     { id: 1, date: '2024-05-10', name: 'Clau Davi', cpf: '058.159.592-10', nf: 'yes', procedure: 'Clareamento', value: 190, payment: 'PIX', installments: 0, notes: "" },
     { id: 1, date: '2024-06-09', name: 'Petro Atoa', cpf: "", nf: 'no', procedure: 'Prótese', value: 230, payment: 'Débito', installments: 0, notes: "Nota OOOOO" },
+    { id: 1, date: '2025-06-09', name: 'Petro Atoa', cpf: "", nf: 'no', procedure: 'Prótese', value: 230, payment: 'Débito', installments: 0, notes: "Nota OOOOO" },
   ];
 
 const getCurrentDate = (): string => {
@@ -39,6 +42,9 @@ const getCurrentDate = (): string => {
 
 export default function Revenue() {
   const formRef = useRef<HTMLFormElement>(null);
+  const [filteredData, setFilteredData] = useState(data);
+  const [month, setMonth] = useState(getCurrentMonth());
+  const [year, setYear] = useState(getCurrentYear());
   const [searchedNames, setSearchNames] = useState<string[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -65,6 +71,22 @@ export default function Revenue() {
     { key: "installments", name: "Parcelas" },
     { key: "value", name: "Valor" }
   ];
+
+  const filterData = useCallback(({selectedMonth = month, selectedYear = year,}) => {
+    setMonth(selectedMonth)
+    setYear(selectedYear)
+    
+    const filtered = data.filter(item => {
+      const [month, year] = getMonthAndYear(item.date);
+      if (selectedMonth === "Todos os meses" && selectedYear === "Todos") return data
+      if (selectedMonth === "Todos os meses") return year.toString() === selectedYear
+      if (selectedYear === "Todos") return month === selectedMonth
+      return (
+        month === selectedMonth && year.toString() === selectedYear
+      );
+    });
+    setFilteredData(filtered);
+  },[month, year])
 
   const updateSearchNames = (names: string[]) => {
     setSearchNames(names);
@@ -102,6 +124,9 @@ export default function Revenue() {
     setShowModal(false);
   };
   
+  useEffect(() => {
+    filterData({ selectedMonth: month, selectedYear: year });
+  }, [filterData, month, year]);
 
   return (
     <div className="content">
@@ -110,11 +135,11 @@ export default function Revenue() {
           Nova Receita
         </Button>
         <div className="flex justify-end" style={{ marginBottom: 15 }}>
-          <MonthFilter />
+          <MonthFilter month={month} year={year} onFilterChange={filterData} />
           <Search updateSearchNames={updateSearchNames} />
         </div>
       </div>
-      <Table columns={columns} data={data} searchedNames={searchedNames} />
+      <Table columns={columns} data={filteredData} searchedNames={searchedNames} />
       {showModal &&
         <Modal title={modalTitle}>
           <RevenueForm selectedRow={formData} onSubmit={handleSubmit} formRef={formRef} />
