@@ -18,7 +18,7 @@ export default function StatusFilter({ statusPayment, onStatusChange }: StatusFi
   return (
     <div className={styles.filter}>
       <select
-        className="form-select font status"
+        className={styles.select}
         id="status"
         name="status"
         value={statusPayment}

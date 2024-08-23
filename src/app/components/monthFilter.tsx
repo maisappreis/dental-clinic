@@ -25,7 +25,7 @@ export default function MonthFilter({ month, year, onFilterChange}: MonthFilterP
   return (
     <div className={styles.filter}>
       <select
-        className="form-select font month"
+        className={styles.select}
         id="month"
         name="month"
         value={month}
@@ -40,7 +40,7 @@ export default function MonthFilter({ month, year, onFilterChange}: MonthFilterP
         ))}
       </select>
       <select
-        className="form-select font"
+        className={styles.select}
         id="year"
         name="year"
         value={year}
