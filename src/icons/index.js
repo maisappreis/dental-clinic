@@ -1,6 +1,6 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHeart, faTooth } from '@fortawesome/free-solid-svg-icons';
-import { faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faCircleUser } from '@fortawesome/free-solid-svg-icons';
 // import { faChartLine } from '@fortawesome/free-solid-svg-icons';
 // import { faHandHoldingDollar } from '@fortawesome/free-solid-svg-icons';
 import { faMoneyBillTrendUp } from '@fortawesome/free-solid-svg-icons';
@@ -13,7 +13,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { faCircleInfo, faRightToBracket } from '@fortawesome/free-solid-svg-icons';
 
 library.add(faHeart, faTooth)
-library.add(faUsers)
+library.add(faUsers, faCircleUser)
 // library.add(faChartLine)
 library.add(faHandHoldingDollar)
 library.add(faMoneyBillTrendUp)
