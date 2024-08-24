@@ -8,35 +8,12 @@ import Modal from "@/app/components/modal";
 import RevenueForm from "@/app/forms/revenueForm";
 import { getCurrentDate, getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
-
-
-const data: {
-  id: number;
-  date: string;
-  name: string;
-  cpf: string | null;
-  nf: string;
-  procedure: string;
-  payment: string;
-  installments: number | null;
-  value: number | null;
-  notes: string;
-}[] = [
-    { id: 1, date: '2024-04-01', name: 'John Doe', cpf: '058.159.592-10', nf: 'yes', procedure: 'Restauração', value: 180, payment: 'Débito', installments: 0, notes: "Nota XXX" },
-    { id: 1, date: '2024-04-05', name: 'Maria Silva', cpf: "", nf: 'no', procedure: 'Profilaxia', value: 200, payment: 'Crédito à prazo', installments: 3, notes: "" },
-    { id: 1, date: '2024-04-05', name: 'Maria Pereira', cpf: "", nf: 'no', procedure: 'Profilaxia', value: 200, payment: 'Crédito à prazo', installments: 3, notes: "" },
-    { id: 1, date: '2024-05-25', name: 'Antonie All', cpf: "", nf: 'no', procedure: 'Restauração', value: 250.55, payment: 'Dinheiro', installments: 0, notes: "Nota YYYY" },
-    { id: 1, date: '2024-08-05', name: 'Joah Moé', cpf: '058.159.592-10', nf: 'yes', procedure: 'Exodontia', value: 320, payment: 'Dinheiro', installments: 0, notes: "" },
-    { id: 1, date: '2024-07-31', name: 'Will Smith', cpf: '058.159.592-10', nf: 'yes', procedure: 'Endodontia', value: 240, payment: 'Crédito à prazo', installments: 2, notes: "Nota ZZZZ" },
-    { id: 1, date: '2024-05-10', name: 'Clau Davi', cpf: '058.159.592-10', nf: 'yes', procedure: 'Clareamento', value: 190, payment: 'PIX', installments: 0, notes: "" },
-    { id: 1, date: '2024-06-09', name: 'Petro Atoa', cpf: "", nf: 'no', procedure: 'Prótese', value: 230, payment: 'Débito', installments: 0, notes: "Nota OOOOO" },
-    { id: 1, date: '2025-06-09', name: 'Petromira', cpf: "", nf: 'no', procedure: 'Prótese', value: 230, payment: 'Débito', installments: 0, notes: "Nota OOOOO" },
-  ];
-
+import { useData } from "@/app/context/DataContext";
 
 export default function Revenue() {
+  const { revenue, loading } = useData();
   const formRef = useRef<HTMLFormElement>(null);
-  const [filteredData, setFilteredData] = useState(data);
+  const [filteredData, setFilteredData] = useState(revenue);
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());
   const [search, setSearch] = useState("");
@@ -71,9 +48,9 @@ export default function Revenue() {
     setYear(selectedYear)
     setSearch("");
     
-    const filtered = data.filter(item => {
+    const filtered = revenue.filter(item => {
       const [month, year] = getMonthAndYear(item.date);
-      if (selectedMonth === "Todos os meses" && selectedYear === "Todos") return data
+      if (selectedMonth === "Todos os meses" && selectedYear === "Todos") return revenue
       if (selectedMonth === "Todos os meses") return year.toString() === selectedYear
       if (selectedYear === "Todos") return month === selectedMonth
       return (
@@ -81,14 +58,14 @@ export default function Revenue() {
       );
     });
     setFilteredData(filtered);
-  },[month, year])
+  },[month, year, revenue])
 
   const searchData = (search: string) => {
     setSearch(search);
     setMonth("Todos os meses")
     setYear("Todos")
 
-    const filterData = applySearch(data, search)
+    const filterData = applySearch(revenue, search)
     setFilteredData(filterData);
   }
 
@@ -125,14 +102,16 @@ export default function Revenue() {
   };
   
   useEffect(() => {
-    data.sort((a, b) => {
-      const dateA: Date = new Date(a.date);
-      const dateB: Date = new Date(b.date);
-      return dateA.getTime() - dateB.getTime();
-    });
-
-    filterData({ selectedMonth: month, selectedYear: year });
-  }, [filterData, month, year]);
+    if (!loading) {
+      revenue.sort((a, b) => {
+        const dateA: Date = new Date(a.date);
+        const dateB: Date = new Date(b.date);
+        return dateA.getTime() - dateB.getTime();
+      });
+  
+      filterData({ selectedMonth: month, selectedYear: year });
+    }
+  }, [revenue, loading, filterData, month, year]);
 
   return (
     <div className="content">

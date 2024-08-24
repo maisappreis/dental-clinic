@@ -9,42 +9,12 @@ import Modal from "@/app/components/modal";
 import ExpenseForm from "@/app/forms/expenseForm";
 import { getCurrentYear, getCurrentMonth } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
-
-interface DataProps {
-  id: number;
-  year: number;
-  month: string;
-  name: string;
-  installments: string;
-  date: string;
-  value: number;
-  is_paid: boolean;
-  notes: string;
-}
-
-const data: {
-  id: number;
-  year: number;
-  month: string;
-  name: string;
-  installments: string;
-  date: string;
-  value: number;
-  is_paid: boolean;
-  notes: string;
-}[] = [
-    { id: 1, year: 2025, month: "Março", name: 'Aluguel', installments: "", date: '2024-03-15', value: 800, is_paid: true, notes: "" },
-    { id: 1, year: 2025, month: "Março", name: 'Aluguel', installments: "", date: '2024-03-15', value: 800, is_paid: true, notes: "" },
-    { id: 3, year: 2024, month: "Março", name: 'Energia elétrica', installments: "", date: '2024-03-01', value: 128.56, is_paid: false, notes: "Nota XXX" },
-    { id: 2, year: 2024, month: "Agosto", name: 'ISS', installments: "2/6", date: '2024-05-01', value: 156.23, is_paid: false, notes: "Nota YYYY" },
-    { id: 2, year: 2024, month: "Setembro", name: 'Alvará', installments: "3/10", date: '2024-04-30', value: 169.95, is_paid: false, notes: "" },
-    { id: 2, year: 2024, month: "Setembro", name: 'Colix', installments: "", date: '2024-04-12', value: 65, is_paid: true, notes: "Nota EEEE" },
-    { id: 2, year: 2024, month: "Agosto", name: 'Internet', installments: "", date: '2024-05-16', value: 99.9, is_paid: false, notes: "Nota VVVVVV" },
-  ];
+import { useData } from "@/app/context/DataContext";
 
 export default function Expense() {
+  const { expenses, loading } = useData();
   const formRef = useRef<HTMLFormElement>(null);
-  const [filteredData, setFilteredData] = useState(data);
+  const [filteredData, setFilteredData] = useState(expenses);
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());
   const [statusPayment, setStatusPayment] = useState("Todos");
@@ -88,7 +58,7 @@ export default function Expense() {
     if (selectedStatus === "À pagar") isPaid = false;
     if (selectedStatus === "Pago") isPaid = true;
 
-    const filtered = data.filter(item => {
+    const filtered = expenses.filter(item => {
       if (selectedMonth === "Todos os meses" && selectedYear === "Todos" && selectedStatus === "Todos") return true;
       if (selectedMonth === "Todos os meses" && selectedStatus === "Todos") return item.year.toString() === selectedYear;
       if (selectedMonth === "Todos os meses" && selectedYear === "Todos") return item.is_paid === isPaid;
@@ -100,14 +70,14 @@ export default function Expense() {
       return item.month === selectedMonth && item.year.toString() === selectedYear && item.is_paid === isPaid;
     });
     setFilteredData(filtered);
-  }, [month, year, statusPayment]);
+  }, [month, year, statusPayment, expenses]);
 
   const searchData = (search: string) => {
     setSearch(search);
     setMonth("Todos os meses")
     setYear("Todos")
 
-    const filterData = applySearch(data, search)
+    const filterData = applySearch(expenses, search)
     setFilteredData(filterData);
   }
 
@@ -143,14 +113,16 @@ export default function Expense() {
   };
 
   useEffect(() => {
-    data.sort((a, b) => {
-      const dateA: Date = new Date(a.date);
-      const dateB: Date = new Date(b.date);
-      return dateA.getTime() - dateB.getTime();
-    });
-
-    filterData({ selectedMonth: month, selectedYear: year, selectedStatus: statusPayment });
-  }, [filterData, month, year, statusPayment]);
+    if (!loading) {
+      expenses.sort((a, b) => {
+        const dateA: Date = new Date(a.date);
+        const dateB: Date = new Date(b.date);
+        return dateA.getTime() - dateB.getTime();
+      });
+  
+      filterData({ selectedMonth: month, selectedYear: year, selectedStatus: statusPayment });
+    }
+  }, [expenses, loading, filterData, month, year, statusPayment]);
 
   return (
     <div className="content">

@@ -5,7 +5,7 @@ import styles from './Login.module.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTooth } from '@fortawesome/free-solid-svg-icons';
 import Alert from '@/app/components/alert'
-import { apiBase, fetchData } from '@/utils/api'
+import { apiBase, fetchRevenue, fetchExpenses } from '@/utils/api'
 import axios from 'axios';
 
 export default function Login() {
@@ -39,7 +39,8 @@ export default function Login() {
         // setTimeout(() => {
         //   router.push('/')
         // }, 800)
-        await fetchData()
+        await fetchRevenue();
+        await fetchExpenses();
       }      
     } catch (error) {
       setAlertMessage("Erro ao realizar o login.");
