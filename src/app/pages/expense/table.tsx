@@ -18,7 +18,6 @@ interface Columns {
 interface TableProps {
   columns: Columns[];
   data: Data[];
-  searchedNames: String[];
 }
 
 interface RowProps {
@@ -38,9 +37,8 @@ const formatDate = (dateString: string): string => {
   return `${day}/${month}/${year}`;
 };
 
-export default function Table({ columns, data, searchedNames }: TableProps) {
+export default function Table({ columns, data }: TableProps) {
   const formRef = useRef<HTMLFormElement>(null);
-  const [filteredData, setFilteredData] = useState<Data[]>([]);
   const [statusClasses, setStatusClasses] = useState<string[]>([]);
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
@@ -62,32 +60,11 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
   });
 
   useEffect(() => {
-    const sorted = [...data].sort((a, b) => {
-      const dateA: Date = new Date(a.date);
-      const dateB: Date = new Date(b.date);
-      return dateA.getTime() - dateB.getTime();
-    });
-
-    if (searchedNames.length === 0) {
-      setFilteredData(sorted);
-    } else {
-      const filterData = sorted.filter(item => {
-        return searchedNames.some(element => {
-          const searchedFieldName = element.toLowerCase();
-          const listedFieldName = item.name.toLowerCase();
-          return listedFieldName.includes(searchedFieldName);
-        });
-      });
-      setFilteredData(filterData);
-    }
-  }, [data, searchedNames]);
-
-  useEffect(() => {
-    const classes = filteredData.map(row =>
+    const classes = data.map(row =>
       `t-status ${row.is_paid ? 't-paid' : 't-pay'}`
     );
     setStatusClasses(classes);
-  }, [filteredData]);
+  }, [data]);
 
   const openNotes = (row: RowProps, e: React.MouseEvent): void => {
     setSelectedRow(row);
@@ -102,14 +79,12 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
     setShowUpdateModal(true);
     setModalTitle("Atualizar Despesa");
     setSelectedRow(row);
-    console.log('row', row)
   };
 
   const openDeleteModal = (row: RowProps): void => {
     setShowDeleteModal(true);
     setModalTitle("Excluir Despesa");
     setSelectedRow(row);
-    console.log('row', row)
   };
 
   const handleSubmit = (formData: any) => {
@@ -120,7 +95,6 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
   const updateExpense = (data: any) => {
     setFormData(data);
     console.log('Dados do formulário recebidos >> updateExpense:', data);
-    // setShowUpdateModal(false);
   }
 
   const deleteExpense = () => {
@@ -135,7 +109,7 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
   return (
     <div>
       <div className="table-overflow">
-        {filteredData.length > 0 ?
+        {data.length > 0 ?
           <table>
             <thead>
               <tr>
@@ -146,7 +120,7 @@ export default function Table({ columns, data, searchedNames }: TableProps) {
               </tr>
             </thead>
             <tbody>
-              {filteredData.map((row: any, rowIndex: number) => (
+              {data.map((row: any, rowIndex: number) => (
                 <tr key={rowIndex}>
                   {columns.map((column, colIndex) => (
                     <td key={colIndex}>

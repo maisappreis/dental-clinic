@@ -33,6 +33,7 @@ const data: {
   notes: string;
 }[] = [
     { id: 1, year: 2025, month: "Março", name: 'Aluguel', installments: "", date: '2024-03-15', value: 800, is_paid: true, notes: "" },
+    { id: 1, year: 2025, month: "Março", name: 'Aluguel', installments: "", date: '2024-03-15', value: 800, is_paid: true, notes: "" },
     { id: 3, year: 2024, month: "Março", name: 'Energia elétrica', installments: "", date: '2024-03-01', value: 128.56, is_paid: false, notes: "Nota XXX" },
     { id: 2, year: 2024, month: "Agosto", name: 'ISS', installments: "2/6", date: '2024-05-01', value: 156.23, is_paid: false, notes: "Nota YYYY" },
     { id: 2, year: 2024, month: "Setembro", name: 'Alvará', installments: "3/10", date: '2024-04-30', value: 169.95, is_paid: false, notes: "" },
@@ -46,7 +47,7 @@ export default function Expense() {
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());
   const [statusPayment, setStatusPayment] = useState("Todos");
-  const [searchedNames, setSearchNames] = useState<string[]>([]);
+  const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [formData, setFormData] = useState({
@@ -79,6 +80,7 @@ export default function Expense() {
     setMonth(selectedMonth)
     setYear(selectedYear)
     setStatusPayment(selectedStatus);
+    setSearch("");
 
     let isPaid = false;
 
@@ -99,9 +101,22 @@ export default function Expense() {
     setFilteredData(filtered);
   }, [month, year, statusPayment]);
 
-  const updateSearchNames = (names: string[]) => {
-    setSearchNames(names);
-  };
+  const searchData = (search: string) => {
+    setSearch(search);
+    setMonth("Todos os meses")
+    setYear("Todos")
+
+    const searchedList = search.split(",").map(value => value.trim())
+
+    const filterData = data.filter(item => {
+      return searchedList.some(element => {
+        const searchedFieldName = element.toLowerCase();
+        const listedFieldName = item.name.toLowerCase();
+        return listedFieldName.includes(searchedFieldName);
+      });
+    });
+    setFilteredData(filterData);
+  }
 
   const handleSubmit = (formData: any) => {
     setFormData(formData);
@@ -135,6 +150,12 @@ export default function Expense() {
   };
 
   useEffect(() => {
+    data.sort((a, b) => {
+      const dateA: Date = new Date(a.date);
+      const dateB: Date = new Date(b.date);
+      return dateA.getTime() - dateB.getTime();
+    });
+
     filterData({ selectedMonth: month, selectedYear: year, selectedStatus: statusPayment });
   }, [filterData, month, year, statusPayment]);
 
@@ -147,10 +168,10 @@ export default function Expense() {
         <div className="flex justify-end" style={{marginBottom: 15}}>
           <MonthFilter month={month} year={year} onFilterChange={filterData} />
           <StatusFilter statusPayment={statusPayment} onStatusChange={filterData} />
-          <Search updateSearchNames={updateSearchNames} />
+          <Search search={search} onSearchChange={searchData} />
         </div>
       </div>
-      <Table columns={columns} data={filteredData} searchedNames={searchedNames} />
+      <Table columns={columns} data={filteredData} />
       {showModal &&
         <Modal title={modalTitle}>
           <ExpenseForm selectedRow={formData} onSubmit={handleSubmit} formRef={formRef} />
