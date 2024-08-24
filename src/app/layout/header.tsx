@@ -1,10 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChartLine, faCalendar, faHandHoldingDollar, faMoneyBillTransfer, faBook, faRightToBracket } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faCalendar, faHandHoldingDollar, faMoneyBillTransfer, faBook, faRightToBracket, faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import styles from "./styles/Header.module.css"
 import { useState } from "react";
 
 
 export default function Header({ selectedOption }: { selectedOption: string }) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showDropdownLogout, setShowDropdownLogout] = useState(false);
   let title;
   let subtitle;
@@ -47,6 +48,10 @@ export default function Header({ selectedOption }: { selectedOption: string }) {
     setShowDropdownLogout(!showDropdownLogout);
   }
 
+  const loginUser = () => {
+    console.log("Login");
+  }
+
   const logoutUser = () => {
     console.log("Logout");
   }
@@ -63,7 +68,13 @@ export default function Header({ selectedOption }: { selectedOption: string }) {
             {subtitle}
           </p>
         </div>
-        <FontAwesomeIcon icon={faRightToBracket} className={styles.login} onClick={handleLogout} />
+        {isAuthenticated ?
+          <div className={styles.user}>
+            <h2>Olá, Dra Mirian</h2>
+            <FontAwesomeIcon icon={faCircleUser} className="ml-3" style={{ zoom: 1.4 }} />
+          </div> :
+          <FontAwesomeIcon icon={faRightToBracket} className={styles.login} onClick={loginUser} />
+        }
       </div>
       {showDropdownLogout && (
         <button className={styles.dropdown} onClick={logoutUser}>

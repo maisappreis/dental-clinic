@@ -36,6 +36,11 @@
   font-size: 30px;
 }
 
+.user {
+  display: flex;
+  margin: 30px;
+}
+
 .login {
   margin: 30px;
   font-size: 30px;
