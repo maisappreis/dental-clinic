@@ -5,6 +5,7 @@ import { faPenToSquare, faTrashCan, faCircleInfo, faCheck, faXmark } from '@fort
 import Tooltip from "@/app/components/tooltip"
 import Modal from "@/app/components/modal";
 import ExpenseForm from "@/app/forms/expenseForm";
+import { formatDate } from "@/utils/date";
 
 interface Data {
   [key: string]: any;
@@ -31,11 +32,6 @@ interface RowProps {
   is_paid: boolean;
   notes: string;
 }
-
-const formatDate = (dateString: string): string => {
-  const [year, month, day] = dateString.split('-');
-  return `${day}/${month}/${year}`;
-};
 
 export default function Table({ columns, data }: TableProps) {
   const formRef = useRef<HTMLFormElement>(null);

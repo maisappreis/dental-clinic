@@ -7,7 +7,8 @@ import StatusFilter from "@/app/components/statusFilter";
 import Search from "@/app/components/search";
 import Modal from "@/app/components/modal";
 import ExpenseForm from "@/app/forms/expenseForm";
-import { getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
+import { getCurrentYear, getCurrentMonth } from "@/utils/date";
+import { applySearch } from "@/utils/filter";
 
 interface DataProps {
   id: number;
@@ -106,15 +107,7 @@ export default function Expense() {
     setMonth("Todos os meses")
     setYear("Todos")
 
-    const searchedList = search.split(",").map(value => value.trim())
-
-    const filterData = data.filter(item => {
-      return searchedList.some(element => {
-        const searchedFieldName = element.toLowerCase();
-        const listedFieldName = item.name.toLowerCase();
-        return listedFieldName.includes(searchedFieldName);
-      });
-    });
+    const filterData = applySearch(data, search)
     setFilteredData(filterData);
   }
 

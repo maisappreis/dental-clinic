@@ -7,6 +7,7 @@ import Search from "@/app/components/search";
 import Modal from "@/app/components/modal";
 import RevenueForm from "@/app/forms/revenueForm";
 import { getCurrentDate, getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
+import { applySearch } from "@/utils/filter";
 
 
 const data: {
@@ -87,15 +88,7 @@ export default function Revenue() {
     setMonth("Todos os meses")
     setYear("Todos")
 
-    const searchedList = search.split(",").map(value => value.trim())
-
-    const filterData = data.filter(item => {
-      return searchedList.some(element => {
-        const searchedFieldName = element.toLowerCase();
-        const listedFieldName = item.name.toLowerCase();
-        return listedFieldName.includes(searchedFieldName);
-      });
-    });
+    const filterData = applySearch(data, search)
     setFilteredData(filterData);
   }
 
