@@ -28,6 +28,8 @@ export default function RevenueForm({ selectedRow, closeModal }: RevenueFormProp
   const [showCpf, setShowCpf] = useState(false);
   const [showInstallments, setShowInstallments] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+  const [validCPF, setValidCPF] = useState('');
+  const [isFormValid, setIsFormValid] = useState(false);
   const { setRevenue } = useData();
   const [formData, setFormData] = useState({
     id: 0,
@@ -47,14 +49,39 @@ export default function RevenueForm({ selectedRow, closeModal }: RevenueFormProp
   ) => {
     const { name, value } = e.target;
 
+    let newValue = value;
+
+    if (name === "cpf") {
+      newValue = formatCPF(value);
+      if (!isValidCPF(value)) {
+        console.error("CPF inválido");
+        setValidCPF("CPF inválido");
+      } else {
+        setValidCPF("");
+      }
+    }
+
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: newValue,
     }));
   };
 
+  const formatCPF = (cpf: string): string => {
+    const numbers = cpf.replace(/\D/g, '');
+
+    if (numbers.length <= 3) return numbers;
+    if (numbers.length <= 6) return `${numbers.slice(0, 3)}.${numbers.slice(3)}`;
+    if (numbers.length <= 9) return `${numbers.slice(0, 3)}.${numbers.slice(3, 6)}.${numbers.slice(6)}`;
+    return `${numbers.slice(0, 3)}.${numbers.slice(3, 6)}.${numbers.slice(6, 9)}-${numbers.slice(9, 11)}`;
+  };
+
+  const isValidCPF = (cpf: string): boolean => {
+    const numbers = cpf.replace(/\D/g, '');
+    return numbers.length === 11;
+  };
+
   const prepareDataForSubmission = (data: RevenueRow) => {
-    console.log('FormData', formData)
     return {
       ...data,
       nf: data.nf === "yes" ? true : false,
@@ -152,6 +179,28 @@ export default function RevenueForm({ selectedRow, closeModal }: RevenueFormProp
     }
   }, [alertMessage]);
 
+  useEffect(() => {
+    if (
+      formData.date !== "" &&
+      formData.name !== "" &&
+      formData.nf !== "" &&
+      formData.procedure !== "" &&
+      formData.payment !== "" &&
+      formData.value !== 0
+    ) {
+      setIsFormValid(true);
+      if (formData.cpf !== "") {
+        if (isValidCPF(formData.cpf)) {
+          setIsFormValid(true);
+        } else {
+          setIsFormValid(false);
+        }
+      }
+    } else {
+      setIsFormValid(false);
+    }
+  }, [formData])
+
   return (
     <>
       <form className="form-area" onSubmit={saveRevenue}>
@@ -181,8 +230,11 @@ export default function RevenueForm({ selectedRow, closeModal }: RevenueFormProp
           <div className="flex form-item">
             <label htmlFor="cfp" className="form-label">CPF:</label>
             <input id="cfp" name="cpf" type="text" className="form-input" value={formData.cpf}
-              onChange={handleInputChange} />
+              onChange={handleInputChange} maxLength={14} />
           </div>
+        }
+        {validCPF &&
+          <p className="error">{validCPF}</p>
         }
 
         <div className="flex form-item">
@@ -231,7 +283,7 @@ export default function RevenueForm({ selectedRow, closeModal }: RevenueFormProp
             onChange={handleInputChange} />
         </div>
         <div className="flex justify-around">
-          <button className="btn green size" type="submit">
+          <button className="btn green size" type="submit" disabled={!isFormValid}>
             Salvar
           </button>
           <button onClick={closeModal} className="btn red size">

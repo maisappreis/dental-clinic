@@ -27,6 +27,7 @@ export default function ExpenseForm({ selectedRow, closeModal }: ExpenseFormProp
   const [hasInstallments, setHasInstallments] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const { setExpenses } = useData();
+  const [isFormValid, setIsFormValid] = useState(false);
   const [formData, setFormData] = useState({
     id: 0,
     year: 0,
@@ -141,6 +142,25 @@ export default function ExpenseForm({ selectedRow, closeModal }: ExpenseFormProp
     }
   }, [alertMessage]);
 
+  useEffect(() => {
+    if (
+      formData.date !== "" &&
+      formData.name !== "" &&
+      formData.value !== 0
+    ) {
+      setIsFormValid(true);
+      if (hasInstallments) {
+        if (formData.installments !== "") {
+          setIsFormValid(true);
+        } else {
+          setIsFormValid(false);
+        }
+      }
+    } else {
+      setIsFormValid(false);
+    }
+  }, [formData, hasInstallments])
+
   return (
     <>
       <form className="form-area" onSubmit={saveExpense}>
@@ -182,7 +202,7 @@ export default function ExpenseForm({ selectedRow, closeModal }: ExpenseFormProp
             onChange={handleInputChange} />
         </div>
         <div className="flex justify-around">
-          <button className="btn green size" type="submit">
+          <button className="btn green size" type="submit" disabled={!isFormValid}>
             Salvar
           </button>
           <button onClick={closeModal} className="btn red size">

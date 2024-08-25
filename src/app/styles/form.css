@@ -28,7 +28,6 @@
   border-radius: 5px;
   border: 2px solid #b4b4b4;
   font-size: 16px;
-  margin-right: 10px;
 }
 
 .autocomplete-list {
@@ -40,4 +39,11 @@
   border: rgb(141, 141, 141) solid 1px;
   border-radius: 10px;
   cursor: pointer;
+}
+
+.error {
+  font-size: 14px;
+  color: red;
+  text-align: right;
+  font-weight: bold;
 }
