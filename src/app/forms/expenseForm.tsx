@@ -1,85 +1,149 @@
 "use client";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { apiBase, fetchExpenses } from '@/utils/api';
+import { getMonthAndYear } from "@/utils/date";
+import { useData } from "@/app/context/DataContext";
+import Alert from '@/app/components/alert'
+import axios from "axios";
 
 interface ExpenseRow {
-  id: number;
-  year: number;
-  month: string;
-  name: string;
-  installments: string;
-  date: string;
-  value: number;
-  is_paid: boolean;
-  notes: string;
+  id?: number;
+  year?: number;
+  month?: string;
+  name?: string;
+  installments?: string;
+  date?: string;
+  value?: number;
+  is_paid?: boolean;
+  notes?: string;
 }
 
 interface ExpenseFormProps {
   selectedRow?: ExpenseRow;
-  onSubmit: (data: any) => void;
-  formRef: React.RefObject<HTMLFormElement>;
+  closeModal: () => void;
 }
 
-export default function ExpenseForm({ selectedRow, onSubmit, formRef }: ExpenseFormProps) {
+export default function ExpenseForm({ selectedRow, closeModal }: ExpenseFormProps) {
   const [hasInstallments, setHasInstallments] = useState(false);
-
+  const [alertMessage, setAlertMessage] = useState('');
+  const { setExpenses } = useData();
   const [formData, setFormData] = useState({
-    id: selectedRow?.id,
-    year: selectedRow?.year,
-    month: selectedRow?.month,
-    name: selectedRow?.name,
-    installments: selectedRow?.installments,
-    date: selectedRow?.date,
-    value: selectedRow?.value,
-    is_paid: selectedRow?.is_paid,
-    notes: selectedRow?.notes
+    id: 0,
+    year: 0,
+    month: "",
+    name: "",
+    installments: "",
+    date: "",
+    value: 0,
+    is_paid: false,
+    notes: ""
   });
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, type, value } = e.target;
+  
+    if (type === 'checkbox') setHasInstallments(!hasInstallments);
 
-    if (type === 'checkbox') {
-      setHasInstallments(!hasInstallments);
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const prepareDataForSubmission = (data: ExpenseRow) => {
+    if (data.date) {
+      const [month, year] = getMonthAndYear(data.date);
+      return {
+        ...data,
+        month,
+        year: parseInt(year),
+      };
     } else {
-      // Continue tratando os outros tipos de inputs
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
+      return {
+        ...data
+      };
     }
-  };
+  }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const saveExpense = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    // TODO: Não precisamos de um FormData para enviar os dado para a API
-    onSubmit(formData);
-  };
 
-  const setInstallments = () => {
-    setHasInstallments(true);
+    if (selectedRow && selectedRow.id && selectedRow.id > 0) {
+      await updateExpense(selectedRow.id);
+    } else {
+      await createExpense();
+    }
+  }
+
+  const createExpense = async () => {
+    try {
+      const preparedData = prepareDataForSubmission(formData);
+
+      await axios.post(`${apiBase}/expense/create/`, preparedData, {
+        withCredentials: true
+      })
+      setAlertMessage("Despesa criada com sucesso!");
+      const newExpense = await fetchExpenses();
+      setExpenses(newExpense)
+
+      setTimeout(() => {
+        closeModal();
+      }, 1000);
+    } catch (error) {
+      console.error('Erro ao criar despesa.', error)
+      setAlertMessage("Erro ao criar despesa.");
+    }
+  }
+
+  const updateExpense = async (id: number) => {
+    try {
+      const preparedData = prepareDataForSubmission(formData);
+
+      await axios.patch(`${apiBase}/expense/${id}/`, preparedData, {
+        withCredentials: true
+      })
+      setAlertMessage("Despesa atualizada com sucesso!");
+      const newExpense = await fetchExpenses();
+      setExpenses(newExpense)
+
+      setTimeout(() => {
+        closeModal();
+      }, 1000);
+    } catch (error) {
+      console.error('Erro ao atualizar despesa.', error)
+      setAlertMessage("Erro ao atualizar despesa.");
+    }
   }
 
   useEffect(() => {
-    if (selectedRow) {
-      setFormData({
-        id: selectedRow.id,
-        year: selectedRow.year,
-        month: selectedRow.month,
-        name: selectedRow.name,
-        installments: selectedRow.installments,
-        date: selectedRow.date,
-        value: selectedRow.value,
-        is_paid: selectedRow?.is_paid,
-        notes: selectedRow.notes
-      });
-    }
+    setFormData({
+      id: selectedRow?.id || 0,
+      year: selectedRow?.year || 0,
+      month: selectedRow?.month || "",
+      name: selectedRow?.name || "",
+      installments: selectedRow?.installments || "",
+      date: selectedRow?.date || "",
+      value: selectedRow?.value || 0,
+      is_paid: selectedRow?.is_paid || false,
+      notes: selectedRow?.notes || ""
+    });
   }, [selectedRow]);
+
+  useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => {
+        setAlertMessage("")
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [alertMessage]);
 
   return (
     <>
-      <form className="form-area" ref={formRef} onSubmit={handleSubmit}>
+      <form className="form-area" onSubmit={saveExpense}>
         <div className="flex form-item">
           <label htmlFor="name" className="form-label">Nome:</label>
           <input id="name" name="name" type="text" className="form-input" value={formData.name}
@@ -105,11 +169,11 @@ export default function ExpenseForm({ selectedRow, onSubmit, formRef }: ExpenseF
               value={formData.installments} onChange={handleInputChange} />
           </div>
         }
-        
+
         <div className="flex form-item">
           <label htmlFor="value" className="form-label">Valor:</label>
           <input id="value" name="value" type="number" className="form-input"
-          value={formData.value} onChange={handleInputChange} />
+            value={formData.value} onChange={handleInputChange} required />
         </div>
 
         <div className="flex form-item">
@@ -117,7 +181,16 @@ export default function ExpenseForm({ selectedRow, onSubmit, formRef }: ExpenseF
           <textarea id="notes" name="notes" className="form-textarea" value={formData.notes}
             onChange={handleInputChange} />
         </div>
+        <div className="flex justify-around">
+          <button className="btn green size" type="submit">
+            Salvar
+          </button>
+          <button onClick={closeModal} className="btn red size">
+            Cancelar
+          </button>
+        </div>
       </form>
+      <Alert message={alertMessage} />
     </>
   )
 }

@@ -29,6 +29,8 @@ interface ExpenseProps {
 interface DataContextType {
   revenue: RevenueProps[];
   expenses: ExpenseProps[];
+  setRevenue: (newRevenue: any[]) => void;
+  setExpenses: (newExpenses: any[]) => void;
   loading: boolean;
 }
 
@@ -58,7 +60,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <DataContext.Provider value={{ revenue, expenses, loading }}>
+    <DataContext.Provider value={{ revenue, expenses, loading, setRevenue, setExpenses }}>
       {children}
     </DataContext.Provider>
   );

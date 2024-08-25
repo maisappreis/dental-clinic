@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from "@/app/components/tooltip"
@@ -34,7 +34,6 @@ interface RowProps {
 }
 
 export default function Table({ columns, data }: TableProps) {
-  const formRef = useRef<HTMLFormElement>(null);
   const [statusClasses, setStatusClasses] = useState<string[]>([]);
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
@@ -42,18 +41,6 @@ export default function Table({ columns, data }: TableProps) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [selectedRow, setSelectedRow] = useState<RowProps | null>(null);
-  const [formData, setFormData] = useState({
-    id: 0,
-    name: "",
-    date: "",
-    cpf: "",
-    nf: "",
-    procedure: "",
-    payment: "",
-    installments: "",
-    value: 0,
-    notes: ""
-  });
 
   useEffect(() => {
     const classes = data.map(row =>
@@ -82,16 +69,6 @@ export default function Table({ columns, data }: TableProps) {
     setModalTitle("Excluir Despesa");
     setSelectedRow(row);
   };
-
-  const handleSubmit = (formData: any) => {
-    setFormData(formData);
-    setShowUpdateModal(false);
-  };
-
-  const updateExpense = (data: any) => {
-    setFormData(data);
-    console.log('Dados do formulário recebidos >> updateExpense:', data);
-  }
 
   const deleteExpense = () => {
     console.log('Deletar despesa...')
@@ -156,15 +133,7 @@ export default function Table({ columns, data }: TableProps) {
       )}
       {showUpdateModal && selectedRow &&
         <Modal title={modalTitle}>
-          <ExpenseForm selectedRow={selectedRow} onSubmit={handleSubmit} formRef={formRef} />
-          <div className="flex justify-around">
-            <button onClick={updateExpense} className="btn green size">
-              Salvar
-            </button>
-            <button onClick={closeModal} className="btn red size">
-              Cancelar
-            </button>
-          </div>
+          <ExpenseForm selectedRow={selectedRow} closeModal={closeModal} />
         </Modal>
       }
       {showDeleteModal && selectedRow &&

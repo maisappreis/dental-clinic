@@ -13,25 +13,14 @@ import { useData } from "@/app/context/DataContext";
 
 export default function Expense() {
   const { expenses, loading } = useData();
-  const formRef = useRef<HTMLFormElement>(null);
-  const [filteredData, setFilteredData] = useState(expenses);
+  const [filteredData, setFilteredData] = useState(expenses && expenses.length > 0 ? expenses : []);
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());
   const [statusPayment, setStatusPayment] = useState("Todos");
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
-  const [formData, setFormData] = useState({
-    id: 0,
-    year: 0,
-    month: "",
-    name: "",
-    installments: "",
-    date: "",
-    value: 0,
-    is_paid: false,
-    notes: ""
-  });
+  const [formData, setFormData] = useState({});
 
   const columns: { key: string; name: string; }[] = [
     { key: "year", name: "Ano" },
@@ -81,17 +70,6 @@ export default function Expense() {
     setFilteredData(filterData);
   }
 
-  const handleSubmit = (formData: any) => {
-    setFormData(formData);
-    setShowModal(false);
-  };
-
-  const saveExpense = () => {
-    if (formRef.current) {
-      formRef.current.requestSubmit();
-    }
-  };
-
   const openModal: () => void = () => {
     setFormData({
       id: 0,
@@ -113,7 +91,7 @@ export default function Expense() {
   };
 
   useEffect(() => {
-    if (!loading) {
+    if (!loading && expenses && expenses.length > 0) {
       expenses.sort((a, b) => {
         const dateA: Date = new Date(a.date);
         const dateB: Date = new Date(b.date);
@@ -139,15 +117,7 @@ export default function Expense() {
       <Table columns={columns} data={filteredData} />
       {showModal &&
         <Modal title={modalTitle}>
-          <ExpenseForm selectedRow={formData} onSubmit={handleSubmit} formRef={formRef} />
-          <div className="flex justify-around">
-            <button onClick={saveExpense} className="btn green size" type="submit">
-              Salvar
-            </button>
-            <button onClick={closeModal} className="btn red size">
-              Cancelar
-            </button>
-          </div>
+          <ExpenseForm selectedRow={formData} closeModal={closeModal} />
         </Modal>
       }
     </div>
