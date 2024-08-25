@@ -1,11 +1,15 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan, faCircleInfo, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from "@/app/components/tooltip"
 import Modal from "@/app/components/modal";
 import RevenueForm from "@/app/forms/revenueForm";
 import { formatDate } from "@/utils/date";
+import { apiBase, fetchRevenue } from '@/utils/api';
+import { useData } from "@/app/context/DataContext";
+import Alert from '@/app/components/alert'
+import axios from "axios";
 
 interface Data {
   [key: string]: any;
@@ -35,13 +39,14 @@ interface RowProps {
 }
 
 export default function Table({ columns, data }: TableProps) {
-  const formRef = useRef<HTMLFormElement>(null);
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [selectedRow, setSelectedRow] = useState<RowProps | null>(null);
+  const [alertMessage, setAlertMessage] = useState('');
+  const { setRevenue } = useData();
 
   const openNotes = (row: RowProps, e: React.MouseEvent): void => {
     setSelectedRow(row);
@@ -65,14 +70,40 @@ export default function Table({ columns, data }: TableProps) {
   };
 
 
-  const deleteRevenue = () => {
-    console.log('Deletar receita...')
+  const deleteRevenue = async () => {
+    try {
+      if (selectedRow && selectedRow.id) {
+        await axios.delete(`${apiBase}/revenue/${selectedRow.id}/`, {
+          withCredentials: true
+        })
+        setAlertMessage("Receita excluída com sucesso!");
+        const newRevenue = await fetchRevenue();
+        setRevenue(newRevenue)
+
+        setTimeout(() => {
+          closeModal();
+        }, 1000);
+      }
+    } catch (error) {
+      console.error('Erro ao excluir receita.', error)
+      setAlertMessage("Erro ao excluir receita.");
+    }
   }
 
   const closeModal = () => {
     setShowUpdateModal(false);
     setShowDeleteModal(false);
   }
+
+  useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => {
+        setAlertMessage("")
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [alertMessage]);
 
   return (
     <div>
@@ -95,17 +126,17 @@ export default function Table({ columns, data }: TableProps) {
                       {column.key === 'value' ?
                         `R$ ${parseFloat(row[column.key]).toFixed(2).replace('.', ',')}`
                         : column.key === 'nf' ?
-                            <div>
-                              {
-                                (row[column.key] ?
-                                  <FontAwesomeIcon icon={faCheck} className="table-icon" /> :
-                                  <FontAwesomeIcon icon={faXmark} className="table-icon" />
-                                )
-                              }
-                            </div>
-                            : column.key === 'date' ?
-                              formatDate(row[column.key])
-                              : row[column.key]}
+                          <div>
+                            {
+                              (row[column.key] ?
+                                <FontAwesomeIcon icon={faCheck} className="table-icon" /> :
+                                <FontAwesomeIcon icon={faXmark} className="table-icon" />
+                              )
+                            }
+                          </div>
+                          : column.key === 'date' ?
+                            formatDate(row[column.key])
+                            : row[column.key]}
                     </td>
                   ))}
                   <td>
@@ -136,7 +167,7 @@ export default function Table({ columns, data }: TableProps) {
       }
       {showDeleteModal && selectedRow &&
         <Modal title={modalTitle}>
-          <h4 className="my-5 text-center">Tem certeza que deseja excluir o valor de 
+          <h4 className="my-5 text-center">Tem certeza que deseja excluir o valor de
             <strong> R$ {selectedRow.value.toFixed(2).replace('.', ',')} </strong>
             do paciente <strong>{selectedRow.name}</strong>?
           </h4>
@@ -150,6 +181,7 @@ export default function Table({ columns, data }: TableProps) {
           </div>
         </Modal>
       }
+      <Alert message={alertMessage} />
     </div >
   )
 }

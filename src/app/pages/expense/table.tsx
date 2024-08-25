@@ -6,6 +6,10 @@ import Tooltip from "@/app/components/tooltip"
 import Modal from "@/app/components/modal";
 import ExpenseForm from "@/app/forms/expenseForm";
 import { formatDate } from "@/utils/date";
+import { apiBase, fetchExpenses } from '@/utils/api';
+import { useData } from "@/app/context/DataContext";
+import Alert from '@/app/components/alert'
+import axios from "axios";
 
 interface Data {
   [key: string]: any;
@@ -41,13 +45,8 @@ export default function Table({ columns, data }: TableProps) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [selectedRow, setSelectedRow] = useState<RowProps | null>(null);
-
-  useEffect(() => {
-    const classes = data.map(row =>
-      `t-status ${row.is_paid ? 't-paid' : 't-pay'}`
-    );
-    setStatusClasses(classes);
-  }, [data]);
+  const [alertMessage, setAlertMessage] = useState('');
+  const { setExpenses } = useData();
 
   const openNotes = (row: RowProps, e: React.MouseEvent): void => {
     setSelectedRow(row);
@@ -70,14 +69,47 @@ export default function Table({ columns, data }: TableProps) {
     setSelectedRow(row);
   };
 
-  const deleteExpense = () => {
-    console.log('Deletar despesa...')
+  const deleteExpense = async () => {
+    try {
+      if (selectedRow && selectedRow.id) {
+        await axios.delete(`${apiBase}/expense/${selectedRow.id}/`, {
+          withCredentials: true
+        })
+        setAlertMessage("Despesa excluída com sucesso!");
+        const newExpense = await fetchExpenses();
+        setExpenses(newExpense)
+
+        setTimeout(() => {
+          closeModal();
+        }, 1000);
+      }
+    } catch (error) {
+      console.error('Erro ao excluir despesa.', error)
+      setAlertMessage("Erro ao excluir despesa.");
+    }
   }
 
   const closeModal = () => {
     setShowUpdateModal(false);
     setShowDeleteModal(false);
   }
+
+  useEffect(() => {
+    const classes = data.map(row =>
+      `t-status ${row.is_paid ? 't-paid' : 't-pay'}`
+    );
+    setStatusClasses(classes);
+  }, [data]);
+
+  useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => {
+        setAlertMessage("")
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [alertMessage]);
 
   return (
     <div>
@@ -100,14 +132,14 @@ export default function Table({ columns, data }: TableProps) {
                       {column.key === 'value' ?
                         `R$ ${parseFloat(row[column.key]).toFixed(2).replace('.', ',')}`
                         : column.key === 'date' ?
-                              formatDate(row[column.key])
-                              : column.key === 'is_paid' ?
-                                <button
-                                  className={statusClasses[rowIndex]}
-                                >
-                                  {row[column.key] ? "Pago" : "À pagar"}
-                                </button>
-                                : row[column.key]}
+                          formatDate(row[column.key])
+                          : column.key === 'is_paid' ?
+                            <button
+                              className={statusClasses[rowIndex]}
+                            >
+                              {row[column.key] ? "Pago" : "À pagar"}
+                            </button>
+                            : row[column.key]}
                     </td>
                   ))}
                   <td>
@@ -152,6 +184,7 @@ export default function Table({ columns, data }: TableProps) {
           </div>
         </Modal>
       }
+      <Alert message={alertMessage} />
     </div >
   )
 }
