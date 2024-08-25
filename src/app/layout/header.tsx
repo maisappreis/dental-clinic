@@ -2,11 +2,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChartLine, faCalendar, faHandHoldingDollar, faMoneyBillTransfer, faBook, faRightToBracket, faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import styles from "./styles/Header.module.css"
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
 
 
 export default function Header({ selectedOption }: { selectedOption: string }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showDropdownLogout, setShowDropdownLogout] = useState(false);
+  const router = useRouter();
   let title;
   let subtitle;
   let icon;
@@ -49,7 +51,7 @@ export default function Header({ selectedOption }: { selectedOption: string }) {
   }
 
   const loginUser = () => {
-    console.log("Login");
+    router.push('/login');
   }
 
   const logoutUser = () => {

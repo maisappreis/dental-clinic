@@ -6,12 +6,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTooth } from '@fortawesome/free-solid-svg-icons';
 import Alert from '@/app/components/alert'
 import { apiBase, fetchRevenue, fetchExpenses } from '@/utils/api'
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
 export default function Login() {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [alertMessage, setAlertMessage] = useState('');
+  const router = useRouter();
 
   const isFormValid = username !== '' && password !== '';
 
@@ -36,9 +38,9 @@ export default function Login() {
         localStorage.setItem('refreshToken', refreshToken);
         setAlertMessage("Login realizado com sucesso!");
 
-        // setTimeout(() => {
-        //   router.push('/')
-        // }, 800)
+        setTimeout(() => {
+          router.push('/');
+        }, 800)
         await fetchRevenue();
         await fetchExpenses();
       }      
