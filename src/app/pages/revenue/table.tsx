@@ -42,18 +42,6 @@ export default function Table({ columns, data }: TableProps) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [selectedRow, setSelectedRow] = useState<RowProps | null>(null);
-  const [formData, setFormData] = useState({
-    id: 0,
-    name: "",
-    date: "",
-    cpf: "",
-    nf: "",
-    procedure: "",
-    payment: "",
-    installments: 0,
-    value: 0,
-    notes: ""
-  });
 
   const openNotes = (row: RowProps, e: React.MouseEvent): void => {
     setSelectedRow(row);
@@ -76,17 +64,6 @@ export default function Table({ columns, data }: TableProps) {
     setSelectedRow(row);
   };
 
-  const handleSubmit = (formData: any) => {
-    setFormData(formData);
-    setShowUpdateModal(false);
-  };
-
-  const updateRevenue = () => {
-    if (formRef.current) {
-      formRef.current.requestSubmit();
-    }
-    console.log('Dados do formulário recebidos >> updateRevenue:', data);
-  }
 
   const deleteRevenue = () => {
     console.log('Deletar receita...')
@@ -154,15 +131,7 @@ export default function Table({ columns, data }: TableProps) {
       )}
       {showUpdateModal && selectedRow &&
         <Modal title={modalTitle}>
-          <RevenueForm selectedRow={selectedRow} onSubmit={handleSubmit} formRef={formRef} />
-          <div className="flex justify-around">
-            <button onClick={updateRevenue} className="btn green size">
-              Salvar
-            </button>
-            <button onClick={closeModal} className="btn red size">
-              Cancelar
-            </button>
-          </div>
+          <RevenueForm selectedRow={selectedRow} closeModal={closeModal} />
         </Modal>
       }
       {showDeleteModal && selectedRow &&

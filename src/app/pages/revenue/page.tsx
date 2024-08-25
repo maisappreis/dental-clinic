@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Table from "./table";
 import Button from "@/app/components/button";
 import MonthFilter from "@/app/components/monthFilter";
@@ -12,25 +12,13 @@ import { useData } from "@/app/context/DataContext";
 
 export default function Revenue() {
   const { revenue, loading } = useData();
-  const formRef = useRef<HTMLFormElement>(null);
-  const [filteredData, setFilteredData] = useState(revenue);
+  const [filteredData, setFilteredData] = useState(revenue && revenue.length > 0 ? revenue : []);
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
-  const [formData, setFormData] = useState({
-    id: 0,
-    name: "",
-    date: "",
-    cpf: "",
-    nf: "no",
-    procedure: "",
-    payment: "",
-    installments: 0,
-    value: 0,
-    notes: ""
-  });
+  const [formData, setFormData] = useState({});
 
   const columns: { key: string; name: string; }[] = [
     { key: "date", name: "Data" },
@@ -43,11 +31,11 @@ export default function Revenue() {
     { key: "value", name: "Valor" }
   ];
 
-  const filterData = useCallback(({selectedMonth = month, selectedYear = year,}) => {
+  const filterData = useCallback(({ selectedMonth = month, selectedYear = year, }) => {
     setMonth(selectedMonth)
     setYear(selectedYear)
     setSearch("");
-    
+
     const filtered = revenue.filter(item => {
       const [month, year] = getMonthAndYear(item.date);
       if (selectedMonth === "Todos os meses" && selectedYear === "Todos") return revenue
@@ -58,7 +46,7 @@ export default function Revenue() {
       );
     });
     setFilteredData(filtered);
-  },[month, year, revenue])
+  }, [month, year, revenue])
 
   const searchData = (search: string) => {
     setSearch(search);
@@ -68,17 +56,6 @@ export default function Revenue() {
     const filterData = applySearch(revenue, search)
     setFilteredData(filterData);
   }
-
-  const handleSubmit = (formData: any) => {
-    setFormData(formData);
-    setShowModal(false);
-  };
-
-  const saveRevenue = () => {
-    if (formRef.current) {
-      formRef.current.requestSubmit();
-    }
-  };
 
   const openModal: () => void = () => {
     setFormData({
@@ -100,15 +77,15 @@ export default function Revenue() {
   const closeModal = () => {
     setShowModal(false);
   };
-  
+
   useEffect(() => {
-    if (!loading) {
+    if (!loading && revenue && revenue.length > 0) {
       revenue.sort((a, b) => {
         const dateA: Date = new Date(a.date);
         const dateB: Date = new Date(b.date);
         return dateA.getTime() - dateB.getTime();
       });
-  
+
       filterData({ selectedMonth: month, selectedYear: year });
     }
   }, [revenue, loading, filterData, month, year]);
@@ -127,15 +104,7 @@ export default function Revenue() {
       <Table columns={columns} data={filteredData} />
       {showModal &&
         <Modal title={modalTitle}>
-          <RevenueForm selectedRow={formData} onSubmit={handleSubmit} formRef={formRef} />
-          <div className="flex justify-around">
-            <button onClick={saveRevenue} className="btn green size" type="submit">
-              Salvar
-            </button>
-            <button onClick={closeModal} className="btn red size">
-              Cancelar
-            </button>
-          </div>
+          <RevenueForm selectedRow={formData} closeModal={closeModal} />
         </Modal>
       }
     </div>
