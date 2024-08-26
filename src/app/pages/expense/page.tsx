@@ -102,6 +102,10 @@ export default function Expense() {
     }
   }, [expenses, loading, filterData, month, year, statusPayment]);
 
+  if (!expenses || loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="content">
       <div className="flex flex-column justify-between">

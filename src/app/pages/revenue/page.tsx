@@ -90,6 +90,10 @@ export default function Revenue() {
     }
   }, [revenue, loading, filterData, month, year]);
 
+  if (!revenue || loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="content">
       <div className="flex flex-column justify-between">
