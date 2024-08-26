@@ -16,27 +16,6 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
   const [expenses, setExpenses] = useState<ExpenseProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  switch (selectedOption) {
-    case "calendar":
-      contentComponent = <Calendar />;
-      break;
-    case "dashboard":
-      contentComponent = <Dashboard />;
-      break;
-    case "revenue":
-      contentComponent = <Revenue revenue={revenue} setRevenue={() => {}} loading={loading}  />;
-      break;
-    case "expense":
-      contentComponent = <Expense expenses={expenses} setExpenses={() => {}} loading={loading}  />;
-      break;
-    case "monthEndClosing":
-      contentComponent = <MonthEndClosing />;
-      break;
-
-    default:
-      contentComponent = null;
-  }
-
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
@@ -67,6 +46,27 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
 
     loadData();
   }, []);
+
+  switch (selectedOption) {
+    case "calendar":
+      contentComponent = <Calendar />;
+      break;
+    case "dashboard":
+      contentComponent = <Dashboard />;
+      break;
+    case "revenue":
+      contentComponent = <Revenue revenue={revenue} setRevenue={() => {}} loading={loading} />;
+      break;
+    case "expense":
+      contentComponent = <Expense expenses={expenses} setExpenses={() => {}} loading={loading} />;
+      break;
+    case "monthEndClosing":
+      contentComponent = <MonthEndClosing />;
+      break;
+
+    default:
+      contentComponent = null;
+  }
 
   return (
     <div className={style.content}>
