@@ -6,6 +6,7 @@ import Revenue from "@/app/pages/revenue/page";
 import Expense from "@/app/pages/expense/page";
 import MonthEndClosing from "@/app/pages/monthclosing/page";
 import style from "./styles/Content.module.css";
+import { DataProvider } from "@/app/context/DataContext"
 
 export default function Content({ selectedOption }: { selectedOption: string}) {
   let contentComponent: React.ReactNode;
@@ -32,37 +33,10 @@ export default function Content({ selectedOption }: { selectedOption: string}) {
   }
 
   return (
+    <DataProvider>
     <div className={style.content}>
       {contentComponent}
-
-
-      {/* <MetricsPage
-            v-if="selectedPage === 'metrics'"
-            :customers="customers"
-            :revenue="revenue"
-            :expenses="expenses"
-            @updateData="getData"
-        />
-        <CustomersPage
-            v-if="selectedPage === 'customers'"
-            :customers="customers"
-            :revenue="revenue"
-            :selectedPage="selectedPage"
-            @updateData="getData"
-        />
-        <RevenuePage
-            v-if="selectedPage === 'revenue'"
-            :revenue="revenue"
-            :customers="customers"
-            :selectedPage="selectedPage"
-            @updateData="getData"
-        />
-        <ExpensesPage
-            v-if="selectedPage === 'expenses'"
-            :expenses="expenses"
-            :selectedPage="selectedPage"
-            @updateData="getData"
-        /> */}
     </div>
+    </DataProvider>
   )
 }
