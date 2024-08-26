@@ -10,10 +10,10 @@ import ExpenseForm from "@/app/forms/expenseForm";
 import { getCurrentYear, getCurrentMonth } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
 // import { useData } from "@/app/context/DataContext";
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { DataExpenseProps } from '@/types/expense';
 
-export default function Expense({ expenses, setExpenses, loading }: DataExpenseProps) {
+export default function Expense({ expenses = [], setExpenses, loading }: DataExpenseProps) {
   // const { expenses, loading } = useData();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [month, setMonth] = useState(getCurrentMonth());
@@ -24,12 +24,12 @@ export default function Expense({ expenses, setExpenses, loading }: DataExpenseP
   const [modalTitle, setModalTitle] = useState('');
   const [formData, setFormData] = useState({});
 
-  const router = useRouter();
-  useEffect(() => {
-    if (!loading && (!expenses || expenses.length === 0)) {
-      router.push('/error');
-    }
-  }, [expenses, loading, router]);
+  // const router = useRouter();
+  // useEffect(() => {
+  //   if (!loading && (!expenses || expenses.length === 0)) {
+  //     router.push('/error');
+  //   }
+  // }, [expenses, loading, router]);
 
   const columns: { key: string; name: string; }[] = [
     { key: "year", name: "Ano" },
@@ -116,7 +116,7 @@ export default function Expense({ expenses, setExpenses, loading }: DataExpenseP
     }
   }, [expenses, loading, filterData, month, year, statusPayment]);
 
-  if (loading) {
+  if (loading && !expenses) {
     return (
       <div className="content">
         <div className="w-full h-full flex justify-center">
@@ -138,10 +138,10 @@ export default function Expense({ expenses, setExpenses, loading }: DataExpenseP
           <Search search={search} onSearchChange={searchData} />
         </div>
       </div>
-      <Table columns={columns} data={filteredData} setExpenses={setExpenses} />
+      <Table columns={columns} data={filteredData} setExpenses={() => {}} />
       {showModal &&
         <Modal title={modalTitle}>
-          <ExpenseForm selectedRow={formData} closeModal={closeModal} setExpenses={setExpenses} />
+          <ExpenseForm selectedRow={formData} closeModal={closeModal} setExpenses={() => {}} />
         </Modal>
       }
     </div>

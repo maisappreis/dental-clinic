@@ -9,10 +9,10 @@ import RevenueForm from "@/app/forms/revenueForm";
 import { getCurrentDate, getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
 // import { useData } from "@/app/context/DataContext";
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { DataRevenueProps } from '@/types/revenue';
 
-export default function Revenue({revenue, setRevenue, loading}: DataRevenueProps) {
+export default function Revenue({revenue = [], setRevenue, loading}: DataRevenueProps) {
   // const { revenue, loading } = useData();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [month, setMonth] = useState(getCurrentMonth());
@@ -22,12 +22,12 @@ export default function Revenue({revenue, setRevenue, loading}: DataRevenueProps
   const [modalTitle, setModalTitle] = useState('');
   const [formData, setFormData] = useState({});
 
-  const router = useRouter();
-  useEffect(() => {
-    if (!loading && (!revenue || revenue.length === 0)) {
-      router.push('/error');
-    }
-  }, [revenue, loading, router]);
+  // const router = useRouter();
+  // useEffect(() => {
+  //   if (!loading && (!revenue || revenue.length === 0)) {
+  //     router.push('/error');
+  //   }
+  // }, [revenue, loading, router]);
 
   // const [isClient, setIsClient] = useState(false);
 
@@ -124,7 +124,7 @@ export default function Revenue({revenue, setRevenue, loading}: DataRevenueProps
   //   }
   // }, [loading, revenue, router]);
 
-  if (loading) {
+  if (loading && !revenue) {
     return (
       <div className="content">
         <div className="w-full h-full flex justify-center">
@@ -153,10 +153,10 @@ export default function Revenue({revenue, setRevenue, loading}: DataRevenueProps
           <Search search={search} onSearchChange={searchData} />
         </div>
       </div>
-      <Table columns={columns} data={filteredData} setRevenue={setRevenue} />
+      <Table columns={columns} data={filteredData} setRevenue={() => {}} />
       {showModal &&
         <Modal title={modalTitle}>
-          <RevenueForm selectedRow={formData} closeModal={closeModal} setRevenue={setRevenue} />
+          <RevenueForm selectedRow={formData} closeModal={closeModal} setRevenue={() => {}} />
         </Modal>
       }
     </div>

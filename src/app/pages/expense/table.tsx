@@ -166,7 +166,7 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
       )}
       {showUpdateModal && selectedRow &&
         <Modal title={modalTitle}>
-          <ExpenseForm selectedRow={selectedRow} closeModal={closeModal} setExpenses={setExpenses} />
+          <ExpenseForm selectedRow={selectedRow} closeModal={closeModal} setExpenses={() => {}} />
         </Modal>
       }
       {showDeleteModal && selectedRow &&

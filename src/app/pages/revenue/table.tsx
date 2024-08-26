@@ -163,7 +163,7 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
       )}
       {showUpdateModal && selectedRow &&
         <Modal title={modalTitle}>
-          <RevenueForm selectedRow={selectedRow} closeModal={closeModal} setRevenue={setRevenue} />
+          <RevenueForm selectedRow={selectedRow} closeModal={closeModal} setRevenue={() => {}} />
         </Modal>
       }
       {showDeleteModal && selectedRow &&
