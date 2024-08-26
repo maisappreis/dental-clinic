@@ -11,26 +11,9 @@ import { getCurrentYear, getCurrentMonth } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
 // import { useData } from "@/app/context/DataContext";
 import { useRouter } from 'next/navigation';
+import { DataExpenseProps } from '@/types/expense';
 
-interface ExpenseProps {
-  id: number;
-  year: number;
-  month: string;
-  name: string;
-  installments: string;
-  date: string;
-  value: number;
-  is_paid: boolean;
-  notes: string;
-}
-
-interface DataProps {
-  expenses: ExpenseProps[];
-  setExpenses: (newExpenses: ExpenseProps[]) => void;
-  loading: boolean;
-}
-
-export default function Expense({ expenses, setExpenses, loading }: DataProps) {
+export default function Expense({ expenses, setExpenses, loading }: DataExpenseProps) {
   // const { expenses, loading } = useData();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [month, setMonth] = useState(getCurrentMonth());

@@ -10,27 +10,9 @@ import { getCurrentDate, getCurrentYear, getCurrentMonth, getMonthAndYear } from
 import { applySearch } from "@/utils/filter";
 // import { useData } from "@/app/context/DataContext";
 import { useRouter } from 'next/navigation';
+import { DataRevenueProps } from '@/types/revenue';
 
-interface RevenueProps {
-  id: number;
-  date: string;
-  name: string;
-  cpf: string;
-  nf: string;
-  procedure: string;
-  payment: string;
-  installments: number;
-  value: number;
-  notes: string;
-}
-
-interface DataProps {
-  revenue: RevenueProps[];
-  setRevenue: (newRevenue: RevenueProps[]) => void;
-  loading: boolean;
-}
-
-export default function Revenue({revenue, setRevenue, loading}: DataProps) {
+export default function Revenue({revenue, setRevenue, loading}: DataRevenueProps) {
   // const { revenue, loading } = useData();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [month, setMonth] = useState(getCurrentMonth());

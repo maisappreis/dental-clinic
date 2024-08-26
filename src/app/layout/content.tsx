@@ -7,11 +7,13 @@ import Expense from "@/app/pages/expense/page";
 import MonthEndClosing from "@/app/pages/monthclosing/page";
 import style from "./styles/Content.module.css";
 import { fetchRevenue, fetchExpenses } from "@/utils/api";
+import { RevenueProps } from '@/types/revenue';
+import { ExpenseProps } from '@/types/expense';
 
 export default function Content({ selectedOption }: { selectedOption: string }) {
   let contentComponent: React.ReactNode;
-  const [revenue, setRevenue] = useState<any[]>([]);
-  const [expenses, setExpenses] = useState<any[]>([]);
+  const [revenue, setRevenue] = useState<RevenueProps[]>([]);
+  const [expenses, setExpenses] = useState<ExpenseProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   switch (selectedOption) {
