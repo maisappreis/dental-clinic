@@ -12,13 +12,26 @@ import { useData } from "@/app/context/DataContext";
 
 export default function Revenue() {
   const { revenue, loading } = useData();
-  const [filteredData, setFilteredData] = useState(revenue && revenue.length > 0 ? revenue : []);
+  const [filteredData, setFilteredData] = useState<any[]>([]);
+  
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [formData, setFormData] = useState({});
+
+  // const [isClient, setIsClient] = useState(false);
+
+  // useEffect(() => {
+  //   setIsClient(true);
+  // }, []);
+
+  // if (!isClient) {
+  //   return null;
+  // }
+
+  
 
   const columns: { key: string; name: string; }[] = [
     { key: "date", name: "Data" },
@@ -36,16 +49,21 @@ export default function Revenue() {
     setYear(selectedYear)
     setSearch("");
 
-    const filtered = revenue.filter(item => {
-      const [month, year] = getMonthAndYear(item.date);
-      if (selectedMonth === "Todos os meses" && selectedYear === "Todos") return revenue
-      if (selectedMonth === "Todos os meses") return year.toString() === selectedYear
-      if (selectedYear === "Todos") return month === selectedMonth
-      return (
-        month === selectedMonth && year.toString() === selectedYear
-      );
-    });
-    setFilteredData(filtered);
+    if (revenue && revenue.length > 0) {
+      const filtered = revenue.filter(item => {
+        const [month, year] = getMonthAndYear(item.date);
+        if (selectedMonth === "Todos os meses" && selectedYear === "Todos") return revenue
+        if (selectedMonth === "Todos os meses") return year.toString() === selectedYear
+        if (selectedYear === "Todos") return month === selectedMonth
+        return (
+          month === selectedMonth && year.toString() === selectedYear
+        );
+      });
+      setFilteredData(filtered);
+    } else {
+      setFilteredData([]);
+    }
+    
   }, [month, year, revenue])
 
   const searchData = (search: string) => {

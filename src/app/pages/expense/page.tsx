@@ -13,7 +13,7 @@ import { useData } from "@/app/context/DataContext";
 
 export default function Expense() {
   const { expenses, loading } = useData();
-  const [filteredData, setFilteredData] = useState(expenses && expenses.length > 0 ? expenses : []);
+  const [filteredData, setFilteredData] = useState<any[]>([]);
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());
   const [statusPayment, setStatusPayment] = useState("Todos");
@@ -33,8 +33,8 @@ export default function Expense() {
   ];
 
   const filterData = useCallback(({
-    selectedMonth = month, 
-    selectedYear = year, 
+    selectedMonth = month,
+    selectedYear = year,
     selectedStatus = statusPayment
   }) => {
     setMonth(selectedMonth)
@@ -47,18 +47,23 @@ export default function Expense() {
     if (selectedStatus === "À pagar") isPaid = false;
     if (selectedStatus === "Pago") isPaid = true;
 
-    const filtered = expenses.filter(item => {
-      if (selectedMonth === "Todos os meses" && selectedYear === "Todos" && selectedStatus === "Todos") return true;
-      if (selectedMonth === "Todos os meses" && selectedStatus === "Todos") return item.year.toString() === selectedYear;
-      if (selectedMonth === "Todos os meses" && selectedYear === "Todos") return item.is_paid === isPaid;
-      if (selectedYear === "Todos" && selectedStatus === "Todos") return item.month === selectedMonth;
+    if (expenses && expenses.length > 0) {
+      const filtered = expenses.filter(item => {
+        if (selectedMonth === "Todos os meses" && selectedYear === "Todos" && selectedStatus === "Todos") return true;
+        if (selectedMonth === "Todos os meses" && selectedStatus === "Todos") return item.year.toString() === selectedYear;
+        if (selectedMonth === "Todos os meses" && selectedYear === "Todos") return item.is_paid === isPaid;
+        if (selectedYear === "Todos" && selectedStatus === "Todos") return item.month === selectedMonth;
 
-      if (selectedMonth === "Todos os meses") return item.year.toString() === selectedYear && item.is_paid === isPaid;
-      if (selectedYear === "Todos") return item.month === selectedMonth && item.is_paid === isPaid;
-      if (selectedStatus === "Todos") return item.month === selectedMonth && item.year.toString() === selectedYear;
-      return item.month === selectedMonth && item.year.toString() === selectedYear && item.is_paid === isPaid;
-    });
-    setFilteredData(filtered);
+        if (selectedMonth === "Todos os meses") return item.year.toString() === selectedYear && item.is_paid === isPaid;
+        if (selectedYear === "Todos") return item.month === selectedMonth && item.is_paid === isPaid;
+        if (selectedStatus === "Todos") return item.month === selectedMonth && item.year.toString() === selectedYear;
+        return item.month === selectedMonth && item.year.toString() === selectedYear && item.is_paid === isPaid;
+      });
+      setFilteredData(filtered);
+    } else {
+      setFilteredData([]);
+    }
+
   }, [month, year, statusPayment, expenses]);
 
   const searchData = (search: string) => {
@@ -97,7 +102,7 @@ export default function Expense() {
         const dateB: Date = new Date(b.date);
         return dateA.getTime() - dateB.getTime();
       });
-  
+
       filterData({ selectedMonth: month, selectedYear: year, selectedStatus: statusPayment });
     }
   }, [expenses, loading, filterData, month, year, statusPayment]);
@@ -118,7 +123,7 @@ export default function Expense() {
         <Button onClick={openModal} disabled={false} >
           Nova Despesa
         </Button>
-        <div className="flex justify-end" style={{marginBottom: 15}}>
+        <div className="flex justify-end" style={{ marginBottom: 15 }}>
           <MonthFilter month={month} year={year} onFilterChange={filterData} />
           <StatusFilter statusPayment={statusPayment} onStatusChange={filterData} />
           <Search search={search} onSearchChange={searchData} />
