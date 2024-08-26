@@ -9,6 +9,7 @@ import RevenueForm from "@/app/forms/revenueForm";
 import { getCurrentDate, getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
 import { useData } from "@/app/context/DataContext";
+import { useRouter } from 'next/navigation';
 
 export default function Revenue() {
   const { revenue, loading } = useData();
@@ -20,6 +21,8 @@ export default function Revenue() {
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [formData, setFormData] = useState({});
+
+  const router = useRouter();
 
   // const [isClient, setIsClient] = useState(false);
 
@@ -106,9 +109,19 @@ export default function Revenue() {
 
       filterData({ selectedMonth: month, selectedYear: year });
     }
-  }, [revenue, loading, filterData, month, year]);
 
-  if (!revenue || loading) {
+    if (!loading && (!revenue || revenue.length === 0)) {
+      router.push('/error');
+    }
+  }, [revenue, loading, router, filterData, month, year]);
+
+  // useEffect(() => {
+  //   if (!loading && (!revenue || revenue.length === 0)) {
+  //     router.push('/404');
+  //   }
+  // }, [loading, revenue, router]);
+
+  if (loading) {
     return (
       <div className="content">
         <div className="w-full h-full flex justify-center">
@@ -117,6 +130,14 @@ export default function Revenue() {
       </div>
     );
   }
+
+  // if (!loading && !revenue) {
+  //   return (
+  //   <div>
+  //     Página não encontrada
+  //   </div>
+  //   );
+  // }
 
   return (
     <div className="content">

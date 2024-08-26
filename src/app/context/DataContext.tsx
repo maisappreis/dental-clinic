@@ -51,6 +51,9 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         const revenueData = await fetchRevenue();
         const expenseData = await fetchExpenses();
 
+        console.log("revenueData:", revenueData);
+        console.log("expenseData:", expenseData);
+
         if (revenueData && revenueData.length > 0) {
           setRevenue(revenueData);
         } else {

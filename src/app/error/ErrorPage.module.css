@@ -1,0 +1,29 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+  }
+  
+  .title {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .description {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .homeLink {
+    color: #0070f3;
+    text-decoration: none;
+    font-size: 1.2rem;
+  }
+  
+  .homeLink:hover {
+    text-decoration: underline;
+  }
+  
