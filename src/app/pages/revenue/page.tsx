@@ -23,6 +23,11 @@ export default function Revenue() {
   const [formData, setFormData] = useState({});
 
   const router = useRouter();
+  useEffect(() => {
+    if (!loading && (!revenue || revenue.length === 0)) {
+      router.push('/error');
+    }
+  }, [revenue, loading, router]);
 
   // const [isClient, setIsClient] = useState(false);
 
@@ -33,9 +38,7 @@ export default function Revenue() {
   // if (!isClient) {
   //   return null;
   // }
-
-  
-
+ 
   const columns: { key: string; name: string; }[] = [
     { key: "date", name: "Data" },
     { key: "name", name: "Paciente" },
@@ -110,10 +113,10 @@ export default function Revenue() {
       filterData({ selectedMonth: month, selectedYear: year });
     }
 
-    if (!loading && (!revenue || revenue.length === 0)) {
-      router.push('/error');
-    }
-  }, [revenue, loading, router, filterData, month, year]);
+    // if (!loading && (!revenue || revenue.length === 0)) {
+    //   router.push('/error');
+    // }
+  }, [revenue, loading, filterData, month, year]);
 
   // useEffect(() => {
   //   if (!loading && (!revenue || revenue.length === 0)) {
