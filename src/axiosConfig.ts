@@ -4,7 +4,9 @@ axios.defaults.headers.common['Content-Type'] = 'application/json';
 axios.interceptors.request.use(
   (config) => {
     // const apiBase = `${import.meta.env.VITE_API_URL}`
-    const apiBase = 'https://django-apis-two.vercel.app/api/dental'
+    const apiBase = 'https://django-apis-two.vercel.app/api/dental/test'
+    // const apiBase: string = "http://localhost:8000/api/dental/test"
+    console.log('interceptors.request')
     const token = localStorage.getItem('accessToken')
     if (token) {
       axios.defaults.baseURL = `${apiBase}`
@@ -20,6 +22,7 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   (response) => response,
   async (error) => {
+    console.log('interceptors.response')
     const originalRequest = error.config;
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
