@@ -15,18 +15,18 @@ interface RevenueProps {
   id: number;
   date: string;
   name: string;
-  cpf: string | null;
+  cpf: string;
   nf: string;
   procedure: string;
   payment: string;
-  installments: number | null;
-  value: number | null;
+  installments: number;
+  value: number;
   notes: string;
 }
 
 interface DataProps {
   revenue: RevenueProps[];
-  setRevenue: (newRevenue: any[]) => void;
+  setRevenue: (newRevenue: RevenueProps[]) => void;
   loading: boolean;
 }
 

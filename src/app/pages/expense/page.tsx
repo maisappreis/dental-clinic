@@ -26,7 +26,7 @@ interface ExpenseProps {
 
 interface DataProps {
   expenses: ExpenseProps[];
-  setExpenses: (newExpenses: any[]) => void;
+  setExpenses: (newExpenses: ExpenseProps[]) => void;
   loading: boolean;
 }
 
