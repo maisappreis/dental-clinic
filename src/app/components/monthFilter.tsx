@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 import styles from "./styles/Filter.module.css";
 import React, { ChangeEvent } from "react";
 import { months, years } from '@/assets/data';

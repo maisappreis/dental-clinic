@@ -1,5 +1,3 @@
-'use client'
-
 import Calendar from "@/app/pages/calendar/page";
 import Dashboard from "@/app/pages/dashboard/page";
 import Revenue from "@/app/pages/revenue/page";

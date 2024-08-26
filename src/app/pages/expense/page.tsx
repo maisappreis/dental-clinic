@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Table from "./table";
 import Button from "@/app/components/button";
 import MonthFilter from "@/app/components/monthFilter";
@@ -103,7 +103,13 @@ export default function Expense() {
   }, [expenses, loading, filterData, month, year, statusPayment]);
 
   if (!expenses || loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="content">
+        <div className="w-full h-full flex justify-center">
+          <h1 className="mt-5 font-bold text-xl">Carregando despesas...</h1>
+        </div>
+      </div>
+    );
   }
 
   return (

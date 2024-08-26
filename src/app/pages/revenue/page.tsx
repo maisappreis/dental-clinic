@@ -91,7 +91,13 @@ export default function Revenue() {
   }, [revenue, loading, filterData, month, year]);
 
   if (!revenue || loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="content">
+        <div className="w-full h-full flex justify-center">
+          <h1 className="mt-5 font-bold text-xl">Carregando receitas...</h1>
+        </div>
+      </div>
+    );
   }
 
   return (

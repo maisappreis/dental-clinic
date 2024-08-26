@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 import styles from "./styles/Search.module.css";
 import React, { ChangeEvent } from "react";
 
