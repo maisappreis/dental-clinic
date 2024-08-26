@@ -10,6 +10,7 @@ import ExpenseForm from "@/app/forms/expenseForm";
 import { getCurrentYear, getCurrentMonth } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
 import { useData } from "@/app/context/DataContext";
+import { useRouter } from 'next/navigation';
 
 export default function Expense() {
   const { expenses, loading } = useData();
@@ -21,6 +22,13 @@ export default function Expense() {
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [formData, setFormData] = useState({});
+
+  const router = useRouter();
+  useEffect(() => {
+    if (!loading && (!expenses || expenses.length === 0)) {
+      router.push('/error');
+    }
+  }, [expenses, loading, router]);
 
   const columns: { key: string; name: string; }[] = [
     { key: "year", name: "Ano" },
@@ -107,7 +115,7 @@ export default function Expense() {
     }
   }, [expenses, loading, filterData, month, year, statusPayment]);
 
-  if (!expenses || loading) {
+  if (loading) {
     return (
       <div className="content">
         <div className="w-full h-full flex justify-center">
