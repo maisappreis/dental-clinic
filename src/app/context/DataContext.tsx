@@ -37,7 +37,7 @@ interface DataContextType {
   loading: boolean;
 }
 
-const DataContext = createContext<DataContextType | undefined>(undefined);
+const DataContext = createContext<DataContextType | null>(null);
 
 export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [revenue, setRevenue] = useState<any[]>([]);
@@ -72,7 +72,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
 export const useData = () => {
   const context = useContext(DataContext);
   console.log("Context:", context);
-  if (context === undefined) {
+  if (context === null) {
     // if (process.env.NODE_ENV === 'production') {
     //   return null;
     // }
