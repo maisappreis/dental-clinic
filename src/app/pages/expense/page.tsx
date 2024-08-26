@@ -9,11 +9,29 @@ import Modal from "@/app/components/modal";
 import ExpenseForm from "@/app/forms/expenseForm";
 import { getCurrentYear, getCurrentMonth } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
-import { useData } from "@/app/context/DataContext";
+// import { useData } from "@/app/context/DataContext";
 import { useRouter } from 'next/navigation';
 
-export default function Expense() {
-  const { expenses, loading } = useData();
+interface ExpenseProps {
+  id: number;
+  year: number;
+  month: string;
+  name: string;
+  installments: string;
+  date: string;
+  value: number;
+  is_paid: boolean;
+  notes: string;
+}
+
+interface DataProps {
+  expenses: ExpenseProps[];
+  setExpenses: (newExpenses: any[]) => void;
+  loading: boolean;
+}
+
+export default function Expense({ expenses, setExpenses, loading }: DataProps) {
+  // const { expenses, loading } = useData();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());
@@ -137,10 +155,10 @@ export default function Expense() {
           <Search search={search} onSearchChange={searchData} />
         </div>
       </div>
-      <Table columns={columns} data={filteredData} />
+      <Table columns={columns} data={filteredData} setExpenses={setExpenses} />
       {showModal &&
         <Modal title={modalTitle}>
-          <ExpenseForm selectedRow={formData} closeModal={closeModal} />
+          <ExpenseForm selectedRow={formData} closeModal={closeModal} setExpenses={setExpenses} />
         </Modal>
       }
     </div>

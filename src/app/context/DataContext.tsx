@@ -2,42 +2,40 @@
 import { createContext, useState, useEffect, useContext, ReactNode } from "react";
 import { fetchRevenue, fetchExpenses } from "@/utils/api";
 
-// interface RevenueProps {
-//   id: number;
-//   date: string;
-//   name: string;
-//   cpf: string | null;
-//   nf: string;
-//   procedure: string;
-//   payment: string;
-//   installments: number | null;
-//   value: number | null;
-//   notes: string;
-// }
+interface RevenueProps {
+  id: number;
+  date: string;
+  name: string;
+  cpf: string | null;
+  nf: string;
+  procedure: string;
+  payment: string;
+  installments: number | null;
+  value: number | null;
+  notes: string;
+}
 
-// interface ExpenseProps {
-//   id: number;
-//   year: number;
-//   month: string;
-//   name: string;
-//   installments: string;
-//   date: string;
-//   value: number;
-//   is_paid: boolean;
-//   notes: string;
-// }
+interface ExpenseProps {
+  id: number;
+  year: number;
+  month: string;
+  name: string;
+  installments: string;
+  date: string;
+  value: number;
+  is_paid: boolean;
+  notes: string;
+}
 
 interface DataContextType {
-  // revenue: RevenueProps[];
-  // expenses: ExpenseProps[];
-  revenue: any[];
-  expenses: any[];
+  revenue: RevenueProps[];
+  expenses: ExpenseProps[];
   setRevenue: (newRevenue: any[]) => void;
   setExpenses: (newExpenses: any[]) => void;
   loading: boolean;
 }
 
-const DataContext = createContext<DataContextType | null>(null);
+const DataContext = createContext<DataContextType | undefined>(undefined);
 
 export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [revenue, setRevenue] = useState<any[]>([]);
@@ -50,9 +48,6 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
       try {
         const revenueData = await fetchRevenue();
         const expenseData = await fetchExpenses();
-
-        console.log("revenueData:", revenueData);
-        console.log("expenseData:", expenseData);
 
         if (revenueData && revenueData.length > 0) {
           setRevenue(revenueData);
@@ -84,11 +79,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
 
 export const useData = () => {
   const context = useContext(DataContext);
-  console.log("Context:", context);
-  if (context === null) {
-    // if (process.env.NODE_ENV === 'production') {
-    //   return null;
-    // }
+  if (context === undefined) {
     throw new Error("useData must be used within a DataProvider");
   }
   return context;
