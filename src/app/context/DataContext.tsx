@@ -50,8 +50,18 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
       try {
         const revenueData = await fetchRevenue();
         const expenseData = await fetchExpenses();
-        setRevenue(revenueData);
-        setExpenses(expenseData);
+
+        if (revenueData && revenueData.length > 0) {
+          setRevenue(revenueData);
+        } else {
+          setRevenue([]);
+        }
+
+        if (expenseData && expenseData.length > 0) {
+          setExpenses(expenseData);
+        } else {
+          setExpenses([]);
+        }       
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
       } finally {
