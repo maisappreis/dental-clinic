@@ -1,3 +1,4 @@
+"use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChartLine, faCalendar, faHandHoldingDollar, faMoneyBillTransfer, faBook, faRightToBracket, faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import styles from "./styles/Header.module.css"

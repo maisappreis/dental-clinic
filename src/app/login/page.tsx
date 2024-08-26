@@ -1,5 +1,4 @@
 'use client'
-
 import React, { useState, useEffect } from 'react';
 import styles from './Login.module.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
