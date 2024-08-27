@@ -84,13 +84,13 @@ export default function Revenue({revenue = [], setRevenue, loading}: DataRevenue
 
   }, [revenue, loading, filterData, month, year]);
 
-  useEffect(() => {
-    if (!loading && (!revenue || revenue.length === 0)) {
-      router.push('/error');
-    }
-  }, [revenue, loading, router]);
+  // useEffect(() => {
+  //   if (!loading && (!revenue || revenue.length === 0)) {
+  //     router.push('/error');
+  //   }
+  // }, [revenue, loading, router]);
 
-  if (loading && !revenue) {
+  if (loading) {
     return (
       <div className="content">
         <div className="w-full h-full flex justify-center">

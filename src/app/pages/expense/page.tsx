@@ -96,13 +96,13 @@ export default function Expense({ expenses = [], setExpenses, loading }: DataExp
     }
   }, [expenses, loading, filterData, month, year, statusPayment]);
 
-  useEffect(() => {
-    if (!loading && (!expenses || expenses.length === 0)) {
-      router.push('/error');
-    }
-  }, [expenses, loading, router]);
+  // useEffect(() => {
+  //   if (!loading && (!expenses || expenses.length === 0)) {
+  //     router.push('/error');
+  //   }
+  // }, [expenses, loading, router]);
 
-  if (loading && !expenses) {
+  if (loading) {
     return (
       <div className="content">
         <div className="w-full h-full flex justify-center">
