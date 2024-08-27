@@ -21,7 +21,8 @@ export const apiURL = (): string => {
 
 export const fetchRevenue = async () => {
   try {
-    configureAxios()
+    // configureAxios()
+    console.log('fetchRevenue.....')
     const response = await axios.get(`${apiURL()}/revenue/`)
     return response.data
   } catch (error) {
@@ -31,7 +32,8 @@ export const fetchRevenue = async () => {
 
 export const fetchExpenses = async () => {
   try {
-    configureAxios()
+    // configureAxios()
+    console.log('fetchExpenses.....')
     const response = await axios.get(`${apiURL()}/expense/`)
     return response.data
   } catch (error) {

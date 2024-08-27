@@ -6,7 +6,7 @@ import Revenue from "@/app/pages/revenue/page";
 import Expense from "@/app/pages/expense/page";
 import MonthEndClosing from "@/app/pages/monthclosing/page";
 import style from "./styles/Content.module.css";
-import { fetchRevenue, fetchExpenses } from "@/utils/api";
+import { fetchRevenue, fetchExpenses, isAuthenticated, configureAxios } from "@/utils/api";
 import { RevenueProps } from '@/types/revenue';
 import { ExpenseProps } from '@/types/expense';
 
@@ -20,6 +20,9 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
     const loadData = async () => {
       setLoading(true);
       try {
+        isAuthenticated();
+        configureAxios();
+
         const revenueData = await fetchRevenue();
         const expenseData = await fetchExpenses();
 
