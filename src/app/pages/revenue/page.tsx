@@ -8,13 +8,10 @@ import Modal from "@/app/components/modal";
 import RevenueForm from "@/app/forms/revenueForm";
 import { getCurrentDate, getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
-// import { useData } from "@/app/context/DataContext";
-// import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { DataRevenueProps } from '@/types/revenue';
 
 export default function Revenue({revenue = [], setRevenue, loading}: DataRevenueProps) {
-// export default function Revenue() {
-  // const { revenue, loading } = useData();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());
@@ -22,23 +19,7 @@ export default function Revenue({revenue = [], setRevenue, loading}: DataRevenue
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [formData, setFormData] = useState({});
-
-  // const router = useRouter();
-  // useEffect(() => {
-  //   if (!loading && (!revenue || revenue.length === 0)) {
-  //     router.push('/error');
-  //   }
-  // }, [revenue, loading, router]);
-
-  // const [isClient, setIsClient] = useState(false);
-
-  // useEffect(() => {
-  //   setIsClient(true);
-  // }, []);
-
-  // if (!isClient) {
-  //   return null;
-  // }
+  const router = useRouter();
  
   const columns: { key: string; name: string; }[] = [
     { key: "date", name: "Data" },
@@ -114,16 +95,13 @@ export default function Revenue({revenue = [], setRevenue, loading}: DataRevenue
       filterData({ selectedMonth: month, selectedYear: year });
     }
 
-    // if (!loading && (!revenue || revenue.length === 0)) {
-    //   router.push('/error');
-    // }
   }, [revenue, loading, filterData, month, year]);
 
-  // useEffect(() => {
-  //   if (!loading && (!revenue || revenue.length === 0)) {
-  //     router.push('/404');
-  //   }
-  // }, [loading, revenue, router]);
+  useEffect(() => {
+    if (!loading && (!revenue || revenue.length === 0)) {
+      router.push('/error');
+    }
+  }, [revenue, loading, router]);
 
   if (loading && !revenue) {
     return (
@@ -134,14 +112,6 @@ export default function Revenue({revenue = [], setRevenue, loading}: DataRevenue
       </div>
     );
   }
-
-  // if (!loading && !revenue) {
-  //   return (
-  //   <div>
-  //     Página não encontrada
-  //   </div>
-  //   );
-  // }
 
   return (
     <div className="content">
@@ -157,7 +127,6 @@ export default function Revenue({revenue = [], setRevenue, loading}: DataRevenue
       <Table columns={columns} data={filteredData} setRevenue={setRevenue} />
       {showModal &&
         <Modal title={modalTitle}>
-          {/* <RevenueForm selectedRow={formData} closeModal={closeModal} /> */}
           <RevenueForm selectedRow={formData} closeModal={closeModal} setRevenue={setRevenue} />
         </Modal>
       }

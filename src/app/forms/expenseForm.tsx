@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { apiBase, fetchExpenses } from '@/utils/api';
 import { getMonthAndYear } from "@/utils/date";
-// import { useData } from "@/app/context/DataContext";
 import Alert from '@/app/components/alert'
 import axios from "axios";
 
@@ -24,11 +23,9 @@ interface ExpenseFormProps {
   setExpenses: (newExpenses: any[]) => void;
 }
 
-// export default function ExpenseForm({ selectedRow, closeModal }: ExpenseFormProps) {
 export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: ExpenseFormProps) {
   const [hasInstallments, setHasInstallments] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-  // const { setExpenses } = useData();
   const [isFormValid, setIsFormValid] = useState(false);
   const [formData, setFormData] = useState({
     id: 0,

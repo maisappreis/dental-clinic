@@ -7,7 +7,6 @@ import Modal from "@/app/components/modal";
 import RevenueForm from "@/app/forms/revenueForm";
 import { formatDate } from "@/utils/date";
 import { apiBase, fetchRevenue } from '@/utils/api';
-// import { useData } from "@/app/context/DataContext";
 import Alert from '@/app/components/alert'
 import axios from "axios";
 
@@ -39,7 +38,6 @@ interface RowProps {
   notes: string;
 }
 
-// export default function Table({ columns, data }: TableProps) {
 export default function Table({ columns, data, setRevenue }: TableProps) {
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
@@ -48,7 +46,6 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
   const [modalTitle, setModalTitle] = useState('');
   const [selectedRow, setSelectedRow] = useState<RowProps | null>(null);
   const [alertMessage, setAlertMessage] = useState('');
-  // const { setRevenue } = useData();
 
   const openNotes = (row: RowProps, e: React.MouseEvent): void => {
     setSelectedRow(row);
@@ -164,7 +161,6 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
       )}
       {showUpdateModal && selectedRow &&
         <Modal title={modalTitle}>
-          {/* <RevenueForm selectedRow={selectedRow} closeModal={closeModal} /> */}
           <RevenueForm selectedRow={selectedRow} closeModal={closeModal} setRevenue={setRevenue} />
         </Modal>
       }

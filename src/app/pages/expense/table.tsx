@@ -7,7 +7,6 @@ import Modal from "@/app/components/modal";
 import ExpenseForm from "@/app/forms/expenseForm";
 import { formatDate } from "@/utils/date";
 import { apiBase, fetchExpenses } from '@/utils/api';
-// import { useData } from "@/app/context/DataContext";
 import Alert from '@/app/components/alert'
 import axios from "axios";
 
@@ -38,7 +37,6 @@ interface RowProps {
   notes: string;
 }
 
-// export default function Table({ columns, data }: TableProps) {
 export default function Table({ columns, data, setExpenses }: TableProps) {
   const [statusClasses, setStatusClasses] = useState<string[]>([]);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -48,7 +46,6 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
   const [modalTitle, setModalTitle] = useState('');
   const [selectedRow, setSelectedRow] = useState<RowProps | null>(null);
   const [alertMessage, setAlertMessage] = useState('');
-  // const { setExpenses } = useData();
 
   const openNotes = (row: RowProps, e: React.MouseEvent): void => {
     setSelectedRow(row);
@@ -167,7 +164,6 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
       )}
       {showUpdateModal && selectedRow &&
         <Modal title={modalTitle}>
-          {/* <ExpenseForm selectedRow={selectedRow} closeModal={closeModal} /> */}
           <ExpenseForm selectedRow={selectedRow} closeModal={closeModal} setExpenses={setExpenses} />
         </Modal>
       }

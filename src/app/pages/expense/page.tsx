@@ -9,13 +9,10 @@ import Modal from "@/app/components/modal";
 import ExpenseForm from "@/app/forms/expenseForm";
 import { getCurrentYear, getCurrentMonth } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
-// import { useData } from "@/app/context/DataContext";
-// import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { DataExpenseProps } from '@/types/expense';
 
-// export default function Expense() {
 export default function Expense({ expenses = [], setExpenses, loading }: DataExpenseProps) {
-  // const { expenses, loading } = useData();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());
@@ -24,13 +21,7 @@ export default function Expense({ expenses = [], setExpenses, loading }: DataExp
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [formData, setFormData] = useState({});
-
-  // const router = useRouter();
-  // useEffect(() => {
-  //   if (!loading && (!expenses || expenses.length === 0)) {
-  //     router.push('/error');
-  //   }
-  // }, [expenses, loading, router]);
+  const router = useRouter();
 
   const columns: { key: string; name: string; }[] = [
     { key: "year", name: "Ano" },
@@ -117,6 +108,12 @@ export default function Expense({ expenses = [], setExpenses, loading }: DataExp
     }
   }, [expenses, loading, filterData, month, year, statusPayment]);
 
+  useEffect(() => {
+    if (!loading && (!expenses || expenses.length === 0)) {
+      router.push('/error');
+    }
+  }, [expenses, loading, router]);
+
   if (loading && !expenses) {
     return (
       <div className="content">
@@ -139,11 +136,9 @@ export default function Expense({ expenses = [], setExpenses, loading }: DataExp
           <Search search={search} onSearchChange={searchData} />
         </div>
       </div>
-      {/* <Table columns={columns} data={filteredData} /> */}
       <Table columns={columns} data={filteredData} setExpenses={setExpenses} />
       {showModal &&
         <Modal title={modalTitle}>
-          {/* <ExpenseForm selectedRow={formData} closeModal={closeModal} /> */}
           <ExpenseForm selectedRow={formData} closeModal={closeModal} setExpenses={setExpenses} />
         </Modal>
       }

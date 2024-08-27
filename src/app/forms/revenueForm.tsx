@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { procedureOptions, paymentOptions, installmentOptions } from '@/assets/data';
 import { apiBase, fetchRevenue } from '@/utils/api';
-// import { useData } from "@/app/context/DataContext";
 import Alert from '@/app/components/alert'
 import axios from "axios";
 
@@ -25,14 +24,12 @@ interface RevenueFormProps {
   setRevenue: (newRevenue: any[]) => void;
 }
 
-// export default function RevenueForm({ selectedRow, closeModal }: RevenueFormProps) {
 export default function RevenueForm({ selectedRow, closeModal, setRevenue }: RevenueFormProps) {
   const [showCpf, setShowCpf] = useState(false);
   const [showInstallments, setShowInstallments] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [validCPF, setValidCPF] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
-  // const { setRevenue } = useData();
   const [formData, setFormData] = useState({
     id: 0,
     date: "",

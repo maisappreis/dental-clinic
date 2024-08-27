@@ -23,9 +23,6 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
         const revenueData = await fetchRevenue();
         const expenseData = await fetchExpenses();
 
-        console.log("revenueData:", revenueData);
-        console.log("expenseData:", expenseData);
-
         if (revenueData && revenueData.length > 0) {
           setRevenue(revenueData);
         } else {
@@ -55,11 +52,9 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
       contentComponent = <Dashboard />;
       break;
     case "revenue":
-      // contentComponent = <Revenue />;
       contentComponent = <Revenue revenue={revenue} setRevenue={setRevenue} loading={loading} />;
       break;
     case "expense":
-      // contentComponent = <Expense />;
       contentComponent = <Expense expenses={expenses} setExpenses={setExpenses} loading={loading} />;
       break;
     case "monthEndClosing":
