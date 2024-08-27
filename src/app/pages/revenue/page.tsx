@@ -5,8 +5,8 @@ import Button from "@/app/components/button";
 import MonthFilter from "@/app/components/monthFilter";
 import Search from "@/app/components/search";
 import Modal from "@/app/components/modal";
-import RevenueForm from "@/app/forms/revenueForm";
-import { getCurrentDate, getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
+import RevenueForm from "./form";
+import { getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
 import { useRouter } from 'next/navigation';
 import { DataRevenueProps } from '@/types/revenue';
@@ -18,7 +18,6 @@ export default function Revenue({revenue = [], setRevenue, loading}: DataRevenue
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
-  const [formData, setFormData] = useState({});
   const router = useRouter();
  
   const columns: { key: string; name: string; }[] = [
@@ -64,18 +63,6 @@ export default function Revenue({revenue = [], setRevenue, loading}: DataRevenue
   }
 
   const openModal: () => void = () => {
-    setFormData({
-      id: 0,
-      name: "",
-      date: getCurrentDate(),
-      cpf: "",
-      nf: "no",
-      procedure: "",
-      payment: "",
-      installments: 0,
-      value: 0,
-      notes: ""
-    })
     setShowModal(true);
     setModalTitle("Adicionar Receita");
   };
@@ -127,7 +114,7 @@ export default function Revenue({revenue = [], setRevenue, loading}: DataRevenue
       <Table columns={columns} data={filteredData} setRevenue={setRevenue} />
       {showModal &&
         <Modal title={modalTitle}>
-          <RevenueForm selectedRow={formData} closeModal={closeModal} setRevenue={setRevenue} />
+          <RevenueForm closeModal={closeModal} setRevenue={setRevenue} />
         </Modal>
       }
     </div>

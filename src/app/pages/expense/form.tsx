@@ -4,27 +4,17 @@ import { apiBase, fetchExpenses } from '@/utils/api';
 import { getMonthAndYear } from "@/utils/date";
 import Alert from '@/app/components/alert'
 import axios from "axios";
-
-interface ExpenseRow {
-  id?: number;
-  year?: number;
-  month?: string;
-  name?: string;
-  installments?: string;
-  date?: string;
-  value?: number;
-  is_paid?: boolean;
-  notes?: string;
-}
+import { ExpenseProps } from '@/types/expense'
 
 interface ExpenseFormProps {
-  selectedRow?: ExpenseRow;
+  selectedRow?: ExpenseProps;
   closeModal: () => void;
   setExpenses: (newExpenses: any[]) => void;
 }
 
 export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: ExpenseFormProps) {
   const [hasInstallments, setHasInstallments] = useState(false);
+  const [validInstallments, setValidInstallments] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
   const [formData, setFormData] = useState({
@@ -42,17 +32,39 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
-    const { name, type, value } = e.target;
-  
-    if (type === 'checkbox') setHasInstallments(!hasInstallments);
+    const { name, value } = e.target;
+
+    let newValue = value;
+
+    if (name === "installments") {
+      if (hasInstallments) {
+        if (!isValidInstallments(value)) {
+          console.error("Parcelas inválidas");
+          setValidInstallments("Parcelas inválidas");
+        } else {
+          newValue = value;
+          setValidInstallments("");
+        }
+      } else {
+        newValue = "";
+        setValidInstallments("");
+      }
+    }
+
+    if (!hasInstallments) setValidInstallments("")
 
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: newValue,
     }));
   };
 
-  const prepareDataForSubmission = (data: ExpenseRow) => {
+  const isValidInstallments = (installment: string): boolean => {
+    const integerNumber = parseInt(installment);
+    return Number.isInteger(integerNumber);
+  };
+
+  const prepareDataForSubmission = (data: ExpenseProps) => {
     if (data.date) {
       const [month, year] = getMonthAndYear(data.date);
       return {
@@ -178,21 +190,28 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
         <div className="flex form-item">
           <label htmlFor="has-installments" className="form-label">Possui parcelas?</label>
           <input id="has-installments" name="has-installments" type="checkbox" className="form-radio"
-            checked={hasInstallments} onChange={handleInputChange} />
+            checked={hasInstallments} onChange={(e) => {
+              const checked = (e.target as HTMLInputElement).checked;
+              setHasInstallments(checked);
+            }}
+          />
         </div>
 
-        { hasInstallments &&
+        {hasInstallments &&
           <div className="flex form-item">
             <label htmlFor="installment" className="form-label">Número de parcelas:</label>
-            <input id="installment" name="installment" type="text" className="form-input"
+            <input id="installments" name="installments" type="text" className="form-input"
               value={formData.installments} onChange={handleInputChange} />
           </div>
+        }
+        {hasInstallments && validInstallments &&
+          <p className="error">{validInstallments}</p>
         }
 
         <div className="flex form-item">
           <label htmlFor="value" className="form-label">Valor:</label>
           <input id="value" name="value" type="number" className="form-input"
-            value={formData.value} onChange={handleInputChange} required />
+            value={formData.value} onChange={handleInputChange} min="1" required />
         </div>
 
         <div className="flex form-item">

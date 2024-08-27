@@ -1,25 +1,14 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { procedureOptions, paymentOptions, installmentOptions } from '@/assets/data';
+import { getCurrentDate } from "@/utils/date";
 import { apiBase, fetchRevenue } from '@/utils/api';
 import Alert from '@/app/components/alert'
 import axios from "axios";
-
-interface RevenueRow {
-  id?: number;
-  date?: string;
-  name?: string;
-  cpf?: string;
-  nf?: string;
-  procedure?: string;
-  payment?: string;
-  installments?: number;
-  value?: number;
-  notes?: string;
-}
+import { RevenueProps } from '@/types/revenue'
 
 interface RevenueFormProps {
-  selectedRow?: RevenueRow;
+  selectedRow?: RevenueProps;
   closeModal: () => void;
   setRevenue: (newRevenue: any[]) => void;
 }
@@ -32,7 +21,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
   const [isFormValid, setIsFormValid] = useState(false);
   const [formData, setFormData] = useState({
     id: 0,
-    date: "",
+    date: getCurrentDate(),
     name: "",
     cpf: "",
     nf: "no",
@@ -80,7 +69,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
     return numbers.length === 11;
   };
 
-  const prepareDataForSubmission = (data: RevenueRow) => {
+  const prepareDataForSubmission = (data: RevenueProps) => {
     return {
       ...data,
       nf: data.nf === "yes" ? true : false,
@@ -138,7 +127,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
   }
 
   useEffect(() => {
-    if (formData) {
+    if (formData) {     
       if (formData.nf == "no") {
         setShowCpf(false)
       } else {
@@ -156,10 +145,10 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
   useEffect(() => {
     setFormData({
       id: selectedRow?.id || 0,
-      date: selectedRow?.date || "",
+      date: selectedRow?.date || getCurrentDate(),
       name: selectedRow?.name || "",
       cpf: selectedRow?.cpf || "",
-      nf: selectedRow?.nf ? "yes" : "no" || "",
+      nf: selectedRow?.nf ? "yes" : "no",
       procedure: selectedRow?.procedure || "",
       payment: selectedRow?.payment || "",
       installments: selectedRow?.installments || 0,
@@ -218,10 +207,10 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
         <div className="flex form-item">
           <label className="form-label">Com nota fiscal?</label>
           <input id="nf-no" name="nf" type="radio" className="form-radio" value="no"
-            checked={formData.nf == 'no'} onChange={handleInputChange} />
+            checked={formData.nf === 'no'} onChange={handleInputChange} />
           <label htmlFor="nf-no" className="form-label">Não</label>
           <input id="nf-yes" name="nf" type="radio" className="form-radio" value="yes"
-            checked={formData.nf == 'yes'} onChange={handleInputChange} />
+            checked={formData.nf === 'yes'} onChange={handleInputChange} />
           <label htmlFor="nf-yes" className="form-label">Sim</label>
         </div>
 
@@ -273,7 +262,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
         <div className="flex form-item">
           <label htmlFor="value" className="form-label">Valor:</label>
           <input id="value" name="value" type="number" className="form-input"
-            value={formData.value} onChange={handleInputChange} required />
+            value={formData.value} onChange={handleInputChange} min="1" required />
         </div>
 
         <div className="flex form-item">

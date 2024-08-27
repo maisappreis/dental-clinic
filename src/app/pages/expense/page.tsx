@@ -6,7 +6,7 @@ import MonthFilter from "@/app/components/monthFilter";
 import StatusFilter from "@/app/components/statusFilter";
 import Search from "@/app/components/search";
 import Modal from "@/app/components/modal";
-import ExpenseForm from "@/app/forms/expenseForm";
+import ExpenseForm from "./form";
 import { getCurrentYear, getCurrentMonth } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
 import { useRouter } from 'next/navigation';
@@ -20,7 +20,6 @@ export default function Expense({ expenses = [], setExpenses, loading }: DataExp
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
-  const [formData, setFormData] = useState({});
   const router = useRouter();
 
   const columns: { key: string; name: string; }[] = [
@@ -77,17 +76,6 @@ export default function Expense({ expenses = [], setExpenses, loading }: DataExp
   }
 
   const openModal: () => void = () => {
-    setFormData({
-      id: 0,
-      year: 0,
-      month: "",
-      name: "",
-      installments: "",
-      date: "",
-      value: 0,
-      is_paid: false,
-      notes: ""
-    })
     setShowModal(true);
     setModalTitle("Adicionar Despesa");
   };
@@ -139,7 +127,7 @@ export default function Expense({ expenses = [], setExpenses, loading }: DataExp
       <Table columns={columns} data={filteredData} setExpenses={setExpenses} />
       {showModal &&
         <Modal title={modalTitle}>
-          <ExpenseForm selectedRow={formData} closeModal={closeModal} setExpenses={setExpenses} />
+          <ExpenseForm closeModal={closeModal} setExpenses={setExpenses} />
         </Modal>
       }
     </div>

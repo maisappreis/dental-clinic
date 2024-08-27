@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from "@/app/components/tooltip"
 import Modal from "@/app/components/modal";
-import ExpenseForm from "@/app/forms/expenseForm";
+import ExpenseForm from "./form";
 import { formatDate } from "@/utils/date";
 import { apiBase, fetchExpenses } from '@/utils/api';
 import Alert from '@/app/components/alert'
