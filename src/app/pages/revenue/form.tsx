@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { procedureOptions, paymentOptions, installmentOptions } from '@/assets/data';
 import { getCurrentDate } from "@/utils/date";
-import { apiBase, fetchRevenue } from '@/utils/api';
+import { apiURL, fetchRevenue } from '@/utils/api';
 import Alert from '@/app/components/alert'
 import axios from "axios";
 import { RevenueProps } from '@/types/revenue'
@@ -90,7 +90,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
     try {
       const preparedData = prepareDataForSubmission(formData);
 
-      await axios.post(`${apiBase}/revenue/create/`, preparedData, {
+      await axios.post(`${apiURL()}/revenue/create/`, preparedData, {
         withCredentials: true
       })
       setAlertMessage("Receita criada com sucesso!");
@@ -110,7 +110,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
     try {
       const preparedData = prepareDataForSubmission(formData);
 
-      await axios.patch(`${apiBase}/revenue/${id}/`, preparedData, {
+      await axios.patch(`${apiURL()}/revenue/${id}/`, preparedData, {
         withCredentials: true
       })
       setAlertMessage("Receita atualizada com sucesso!");
@@ -262,7 +262,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
         <div className="flex form-item">
           <label htmlFor="value" className="form-label">Valor:</label>
           <input id="value" name="value" type="number" className="form-input"
-            value={formData.value} onChange={handleInputChange} min="1" required />
+            value={formData.value} onChange={handleInputChange} min="0.01" step="0.01" required />
         </div>
 
         <div className="flex form-item">

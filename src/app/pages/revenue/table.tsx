@@ -6,7 +6,7 @@ import Tooltip from "@/app/components/tooltip"
 import Modal from "@/app/components/modal";
 import RevenueForm from "./form";
 import { formatDate } from "@/utils/date";
-import { apiBase, fetchRevenue } from '@/utils/api';
+import { apiURL, fetchRevenue } from '@/utils/api';
 import Alert from '@/app/components/alert'
 import axios from "axios";
 
@@ -72,7 +72,7 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
   const deleteRevenue = async () => {
     try {
       if (selectedRow && selectedRow.id) {
-        await axios.delete(`${apiBase}/revenue/${selectedRow.id}/`, {
+        await axios.delete(`${apiURL}/revenue/${selectedRow.id}/`, {
           withCredentials: true
         })
         setAlertMessage("Receita excluída com sucesso!");

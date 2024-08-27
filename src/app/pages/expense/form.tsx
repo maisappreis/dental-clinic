@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { apiBase, fetchExpenses } from '@/utils/api';
+import { apiURL, fetchExpenses } from '@/utils/api';
 import { getMonthAndYear } from "@/utils/date";
 import Alert from '@/app/components/alert'
 import axios from "axios";
@@ -93,7 +93,7 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
     try {
       const preparedData = prepareDataForSubmission(formData);
 
-      await axios.post(`${apiBase}/expense/create/`, preparedData, {
+      await axios.post(`${apiURL()}/expense/create/`, preparedData, {
         withCredentials: true
       })
       setAlertMessage("Despesa criada com sucesso!");
@@ -113,7 +113,7 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
     try {
       const preparedData = prepareDataForSubmission(formData);
 
-      await axios.patch(`${apiBase}/expense/${id}/`, preparedData, {
+      await axios.patch(`${apiURL()}/expense/${id}/`, preparedData, {
         withCredentials: true
       })
       setAlertMessage("Despesa atualizada com sucesso!");
@@ -211,7 +211,7 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
         <div className="flex form-item">
           <label htmlFor="value" className="form-label">Valor:</label>
           <input id="value" name="value" type="number" className="form-input"
-            value={formData.value} onChange={handleInputChange} min="1" required />
+            value={formData.value} onChange={handleInputChange} min="0.01" step="0.01" required />
         </div>
 
         <div className="flex form-item">

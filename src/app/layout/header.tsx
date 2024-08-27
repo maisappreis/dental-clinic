@@ -4,10 +4,10 @@ import { faChartLine, faCalendar, faHandHoldingDollar, faMoneyBillTransfer, faBo
 import styles from "./styles/Header.module.css"
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
-
+import { isAuthenticated } from "@/utils/auth"
 
 export default function Header({ selectedOption }: { selectedOption: string }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showDropdownLogout, setShowDropdownLogout] = useState(false);
   const router = useRouter();
   let title;
@@ -71,9 +71,9 @@ export default function Header({ selectedOption }: { selectedOption: string }) {
             {subtitle}
           </p>
         </div>
-        {isAuthenticated ?
-          <div className={styles.user}>
-            <h2>Olá, Dra Mirian</h2>
+        {isAuthenticated() ?
+          <div className={`${styles.user} cursor-pointer`} onClick={handleLogout}>
+            <h2 className="font-bold text-xl">Olá, Dra Mirian</h2>
             <FontAwesomeIcon icon={faCircleUser} className="ml-3" style={{ zoom: 1.4 }} />
           </div> :
           <FontAwesomeIcon icon={faRightToBracket} className={styles.login} onClick={loginUser} />
