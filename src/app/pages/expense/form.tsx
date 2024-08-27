@@ -219,7 +219,7 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
           <textarea id="notes" name="notes" className="form-textarea" value={formData.notes}
             onChange={handleInputChange} />
         </div>
-        <div className="flex justify-around">
+        <div className="flex justify-around mt-3">
           <button className="btn green size" type="submit" disabled={!isFormValid}>
             Salvar
           </button>

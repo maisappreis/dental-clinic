@@ -249,8 +249,8 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
 
         {showInstallments &&
           <div className="flex form-item">
-            <label htmlFor="installment" className="form-label">Número de parcelas:</label>
-            <select id="installment" name="installments" className="form-select"
+            <label htmlFor="installments" className="form-label">Número de parcelas:</label>
+            <select id="installments" name="installments" className="form-select"
               value={formData.installments} onChange={handleInputChange}>
               {installmentOptions.map((option, i) => (
                 <option key={i} value={option}>{option}</option>
@@ -270,7 +270,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
           <textarea id="notes" name="notes" className="form-textarea" value={formData.notes}
             onChange={handleInputChange} />
         </div>
-        <div className="flex justify-around">
+        <div className="flex justify-around mt-3">
           <button className="btn green size" type="submit" disabled={!isFormValid}>
             Salvar
           </button>
