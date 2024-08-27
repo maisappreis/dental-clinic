@@ -1,13 +1,12 @@
 "use client";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChartLine, faCalendar, faHandHoldingDollar, faMoneyBillTransfer, faBook, faRightToBracket, faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import styles from "./styles/Header.module.css"
-import { useState } from "react";
 import { useRouter } from 'next/navigation';
-import { isAuthenticated } from "@/utils/auth"
 
 export default function Header({ selectedOption }: { selectedOption: string }) {
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showDropdownLogout, setShowDropdownLogout] = useState(false);
   const router = useRouter();
   let title;
@@ -56,8 +55,17 @@ export default function Header({ selectedOption }: { selectedOption: string }) {
   }
 
   const logoutUser = () => {
-    console.log("Logout");
+    setIsAuthenticated(false);
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    window.location.reload();
   }
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+
+    if (token) setIsAuthenticated(true);
+  }, []);
 
   return (
     <div className={styles.hearder}>
@@ -71,7 +79,7 @@ export default function Header({ selectedOption }: { selectedOption: string }) {
             {subtitle}
           </p>
         </div>
-        {isAuthenticated() ?
+        {isAuthenticated ?
           <div className={`${styles.user} cursor-pointer`} onClick={handleLogout}>
             <h2 className="font-bold text-xl">Olá, Dra Mirian</h2>
             <FontAwesomeIcon icon={faCircleUser} className="ml-3" style={{ zoom: 1.4 }} />

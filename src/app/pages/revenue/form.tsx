@@ -2,10 +2,10 @@
 import React, { useState, useEffect } from "react";
 import { procedureOptions, paymentOptions, installmentOptions } from '@/assets/data';
 import { getCurrentDate } from "@/utils/date";
-import { apiURL, fetchRevenue } from '@/utils/api';
+import { apiURL, fetchRevenue, isAuthenticated, configureAxios } from '@/utils/api';
 import Alert from '@/app/components/alert'
 import axios from "axios";
-import { RevenueProps } from '@/types/revenue'
+import { RevenueProps } from '@/types/revenue';
 
 interface RevenueFormProps {
   selectedRow?: RevenueProps;
@@ -187,7 +187,12 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
     } else {
       setIsFormValid(false);
     }
-  }, [formData])
+  }, [formData]);
+
+  useEffect(() => {
+    isAuthenticated();
+    configureAxios();
+  }, []);
 
   return (
     <>

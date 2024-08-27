@@ -6,7 +6,7 @@ import Tooltip from "@/app/components/tooltip"
 import Modal from "@/app/components/modal";
 import RevenueForm from "./form";
 import { formatDate } from "@/utils/date";
-import { apiURL, fetchRevenue } from '@/utils/api';
+import { apiURL, fetchRevenue, isAuthenticated, configureAxios } from '@/utils/api';
 import Alert from '@/app/components/alert'
 import axios from "axios";
 
@@ -103,6 +103,11 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
       return () => clearTimeout(timer);
     }
   }, [alertMessage]);
+
+  useEffect(() => {
+    isAuthenticated();
+    configureAxios();
+  }, []);
 
   return (
     <div>

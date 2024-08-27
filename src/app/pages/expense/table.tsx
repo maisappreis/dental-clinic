@@ -6,10 +6,10 @@ import Tooltip from "@/app/components/tooltip"
 import Modal from "@/app/components/modal";
 import ExpenseForm from "./form";
 import { formatDate, getNextMonth, getMonthAndYear } from "@/utils/date";
-import { apiURL, fetchExpenses } from '@/utils/api';
+import { apiURL, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api';
 import Alert from '@/app/components/alert'
 import axios from "axios";
-import { ExpenseProps } from "@/types/expense"
+import { ExpenseProps } from "@/types/expense";
 
 interface Data {
   [key: string]: any;
@@ -175,6 +175,11 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
       return () => clearTimeout(timer);
     }
   }, [alertMessage]);
+
+  useEffect(() => {
+    isAuthenticated();
+    configureAxios();
+  }, []);
 
   return (
     <div>

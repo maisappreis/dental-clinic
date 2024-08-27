@@ -4,7 +4,7 @@ import styles from './Login.module.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTooth } from '@fortawesome/free-solid-svg-icons';
 import Alert from '@/app/components/alert'
-import { apiBase, fetchRevenue, fetchExpenses } from '@/utils/api'
+import { apiBase, fetchRevenue, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api'
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
@@ -18,7 +18,6 @@ export default function Login() {
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(username, password)
 
     try {
       const loginData = {
@@ -29,8 +28,6 @@ export default function Login() {
       const response = await axios.post(`${apiBase}/accounts/token/`, loginData)
       const accessToken = response.data.access
       const refreshToken = response.data.refresh
-      console.log('accessToken', accessToken)
-      console.log('refreshToken', refreshToken)
 
       if (accessToken && refreshToken) {
         localStorage.setItem('accessToken', accessToken);
@@ -57,6 +54,11 @@ export default function Login() {
       return () => clearTimeout(timer);
     }
   }, [alertMessage]);
+
+  useEffect(() => {
+    isAuthenticated();
+    configureAxios();
+  }, []);
 
   return (
     <div className={styles.area}>

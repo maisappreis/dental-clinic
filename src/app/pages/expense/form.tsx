@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { apiURL, fetchExpenses } from '@/utils/api';
+import { apiURL, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api';
 import { getMonthAndYear } from "@/utils/date";
 import Alert from '@/app/components/alert'
 import axios from "axios";
-import { ExpenseProps } from '@/types/expense'
+import { ExpenseProps } from '@/types/expense';
 
 interface ExpenseFormProps {
   selectedRow?: ExpenseProps;
@@ -171,6 +171,11 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
       setIsFormValid(false);
     }
   }, [formData, hasInstallments])
+
+  useEffect(() => {
+    isAuthenticated();
+    configureAxios();
+  }, []);
 
   return (
     <>
