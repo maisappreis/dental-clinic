@@ -8,13 +8,13 @@ import Modal from "@/app/components/modal";
 import RevenueForm from "@/app/forms/revenueForm";
 import { getCurrentDate, getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
-import { useData } from "@/app/context/DataContext";
+// import { useData } from "@/app/context/DataContext";
 // import { useRouter } from 'next/navigation';
-// import { DataRevenueProps } from '@/types/revenue';
+import { DataRevenueProps } from '@/types/revenue';
 
-// export default function Revenue({revenue = [], setRevenue, loading}: DataRevenueProps) {
-export default function Revenue() {
-  const { revenue, loading } = useData();
+export default function Revenue({revenue = [], setRevenue, loading}: DataRevenueProps) {
+// export default function Revenue() {
+  // const { revenue, loading } = useData();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());
@@ -154,11 +154,11 @@ export default function Revenue() {
           <Search search={search} onSearchChange={searchData} />
         </div>
       </div>
-      <Table columns={columns} data={filteredData} setRevenue={() => {}} />
+      <Table columns={columns} data={filteredData} setRevenue={setRevenue} />
       {showModal &&
         <Modal title={modalTitle}>
-          <RevenueForm selectedRow={formData} closeModal={closeModal} />
-          {/* <RevenueForm selectedRow={formData} closeModal={closeModal} setRevenue={() => {}} /> */}
+          {/* <RevenueForm selectedRow={formData} closeModal={closeModal} /> */}
+          <RevenueForm selectedRow={formData} closeModal={closeModal} setRevenue={setRevenue} />
         </Modal>
       }
     </div>
