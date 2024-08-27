@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// export const apiBase: string = "https://django-apis-two.vercel.app/api"
-export const apiBase: string = "http://localhost:8000/api"
+export const apiBase: string = "https://django-apis-two.vercel.app/api"
+// export const apiBase: string = "http://localhost:8000/api"
 
 export const isAuthenticated = () => {
   const token = localStorage.getItem('accessToken');
