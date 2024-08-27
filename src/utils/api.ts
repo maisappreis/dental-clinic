@@ -44,7 +44,7 @@ export const configureAxios = () => {
 
   axios.interceptors.request.use(
     (config) => {
-      axios.defaults.baseURL = `${apiBase}/accounts`
+      axios.defaults.baseURL = `${apiBase}`
       const token = localStorage.getItem('accessToken')
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -65,7 +65,7 @@ export const configureAxios = () => {
 
         if (refreshToken) {
           try {
-            const response = await axios.post('/token/refresh/', { refresh: refreshToken });
+            const response = await axios.post('/accounts/token/refresh/', { refresh: refreshToken });
             const { access } = response.data;
             localStorage.setItem('accessToken', access);
             axios.defaults.headers.common['Authorization'] = `Bearer ${access}`;
