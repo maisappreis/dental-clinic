@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// export const apiBase: string = "https://django-apis-two.vercel.app/api/dental"
-export const apiBase: string = "http://localhost:8000/api/dental/test"
+export const apiBase: string = "https://django-apis-two.vercel.app/api/dental/test"
+// export const apiBase: string = "http://localhost:8000/api/dental/test"
 
 export const fetchRevenue = async () => {
   try {
