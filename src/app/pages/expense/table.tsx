@@ -5,10 +5,11 @@ import { faPenToSquare, faTrashCan, faCircleInfo } from '@fortawesome/free-solid
 import Tooltip from "@/app/components/tooltip"
 import Modal from "@/app/components/modal";
 import ExpenseForm from "./form";
-import { formatDate } from "@/utils/date";
-import { apiBase, fetchExpenses } from '@/utils/api';
+import { formatDate, getNextMonth, getMonthAndYear } from "@/utils/date";
+import { apiURL, fetchExpenses } from '@/utils/api';
 import Alert from '@/app/components/alert'
 import axios from "axios";
+import { ExpenseProps } from "@/types/expense"
 
 interface Data {
   [key: string]: any;
@@ -25,29 +26,18 @@ interface TableProps {
   setExpenses: (newExpenses: any[]) => void;
 }
 
-interface RowProps {
-  id: number;
-  year: number;
-  month: string;
-  name: string;
-  installments: string;
-  date: string;
-  value: number;
-  is_paid: boolean;
-  notes: string;
-}
-
 export default function Table({ columns, data, setExpenses }: TableProps) {
   const [statusClasses, setStatusClasses] = useState<string[]>([]);
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
-  const [selectedRow, setSelectedRow] = useState<RowProps | null>(null);
+  const [selectedRow, setSelectedRow] = useState<ExpenseProps | null>(null);
   const [alertMessage, setAlertMessage] = useState('');
 
-  const openNotes = (row: RowProps, e: React.MouseEvent): void => {
+  const openNotes = (row: ExpenseProps, e: React.MouseEvent): void => {
     setSelectedRow(row);
     setShowTooltip(!showTooltip);
     setTooltipPosition({
@@ -56,22 +46,97 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
     });
   }
 
-  const openUpdateModal = (row: RowProps): void => {
+  const openConfirmationModal = (row: ExpenseProps): void => {
+    setSelectedRow(row);
+
+    let title = "";
+
+    if (row.is_paid) {
+      title = "Marcar como à pagar?";
+    } else {
+      title = "Marcar como pago?";
+    }
+
+    setModalTitle(title);
+    setShowConfirmationModal(true);
+  }
+
+  const changePaymentStatus = async () => {
+    if (selectedRow) await updateExpense(selectedRow)
+    setShowConfirmationModal(false);
+  }
+
+  const openUpdateModal = (row: ExpenseProps): void => {
     setShowUpdateModal(true);
     setModalTitle("Atualizar Despesa");
     setSelectedRow(row);
   };
 
-  const openDeleteModal = (row: RowProps): void => {
+  const openDeleteModal = (row: ExpenseProps): void => {
     setShowDeleteModal(true);
     setModalTitle("Excluir Despesa");
     setSelectedRow(row);
   };
 
+  const updateExpense = async (row: ExpenseProps) => {
+    try {
+      const response = await axios.patch(`${apiURL()}/expense/${row.id}/`, {
+        is_paid: !row.is_paid
+      }, {
+        withCredentials: true
+      })
+      setAlertMessage("Despesa atualizada com sucesso!");
+
+      const isPaid = response.data.is_paid;
+      const hasInstallments = response.data.installments !== "";
+
+      if (isPaid && !hasInstallments) {
+        await createNextMonthExpense(row);
+      } else {
+        const newExpense = await fetchExpenses();
+        setExpenses(newExpense)
+      }
+
+      setTimeout(() => {
+        closeModal();
+      }, 1000);
+    } catch (error) {
+      console.error('Erro ao atualizar despesa.', error)
+      setAlertMessage("Erro ao atualizar despesa.");
+    }
+  }
+
+  const createNextMonthExpense = async (row: ExpenseProps) => {
+    try {
+      const selectedRowClone = {...row}
+      const nextMonthDate = getNextMonth(selectedRowClone.date);
+      const [month, year] = getMonthAndYear(nextMonthDate);
+
+      selectedRowClone.date = nextMonthDate;
+      selectedRowClone.is_paid = false;
+      selectedRowClone.month = month;
+      selectedRowClone.year = parseInt(year);
+
+      await axios.post(`${apiURL()}/expense/create/`, selectedRowClone, {
+        withCredentials: true
+      })
+      setAlertMessage("Despesa do mês seguinte criada com sucesso!");
+      const newExpense = await fetchExpenses();
+      setExpenses(newExpense);
+
+      setTimeout(() => {
+        closeModal();
+      }, 1000);
+    } catch (error) {
+      console.error('Erro ao criar despesa do mês seguinte.', error)
+      setAlertMessage("Erro ao criar despesa do mês seguinte.");
+    }
+  }
+
   const deleteExpense = async () => {
     try {
       if (selectedRow && selectedRow.id) {
-        await axios.delete(`${apiBase}/expense/${selectedRow.id}/`, {
+        await axios.delete(`${apiURL()}/expense/${selectedRow.id}/`, {
           withCredentials: true
         })
         setAlertMessage("Despesa excluída com sucesso!");
@@ -91,6 +156,7 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
   const closeModal = () => {
     setShowUpdateModal(false);
     setShowDeleteModal(false);
+    setShowConfirmationModal(false);
   }
 
   useEffect(() => {
@@ -135,6 +201,7 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
                           : column.key === 'is_paid' ?
                             <button
                               className={statusClasses[rowIndex]}
+                              onClick={() => openConfirmationModal(row)}
                             >
                               {row[column.key] ? "Pago" : "À pagar"}
                             </button>
@@ -177,7 +244,19 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
             <button onClick={deleteExpense} className="btn red size">
               Excluir
             </button>
-            <button onClick={closeModal} className="btn red size blue">
+            <button onClick={closeModal} className="btn size blue">
+              Cancelar
+            </button>
+          </div>
+        </Modal>
+      }
+      {showConfirmationModal && selectedRow &&
+        <Modal title={modalTitle}>
+          <div className="flex justify-around mt-3">
+            <button onClick={changePaymentStatus} className="btn green size">
+              Confirmar
+            </button>
+            <button onClick={closeModal} className="btn red size">
               Cancelar
             </button>
           </div>

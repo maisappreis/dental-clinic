@@ -42,7 +42,19 @@ export function getMonthAndYear(date: string): string [] {
 }
 
 // Formats the date to "day/month/year" string.
-export function formatDate (dateString: string): string {
-  const [year, month, day] = dateString.split('-');
+export function formatDate (date: string): string {
+  const [year, month, day] = date.split('-');
   return `${day}/${month}/${year}`;
 };
+
+// Receives a date and returns the same date in the next month.
+export function getNextMonth(date: string): string {
+  const currentDate = new Date(date);
+  currentDate.setMonth(currentDate.getMonth() + 1);
+
+  const year = currentDate.getFullYear();
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+  const day = String(currentDate.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
