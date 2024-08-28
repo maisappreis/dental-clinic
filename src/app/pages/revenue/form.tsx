@@ -267,7 +267,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
         <div className="flex form-item">
           <label htmlFor="value" className="form-label">Valor:</label>
           <input id="value" name="value" type="number" className="form-input"
-            value={formData.value} onChange={handleInputChange} min="0.01" step="0.01" required />
+            value={formData.value} onChange={handleInputChange} min="0.001" step="0.001" required />
         </div>
 
         <div className="flex form-item">

@@ -1,4 +1,3 @@
-// "use client";
 import styles from "./styles/Search.module.css";
 import React, { ChangeEvent } from "react";
 
@@ -10,12 +9,13 @@ interface SearchProps {
 export default function Search({ search, onSearchChange }: SearchProps) {
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const searchedNames = event.target.value;
-    onSearchChange(searchedNames)
+    onSearchChange(event.target.value);
   };
 
   return (
-    <input className={styles.search} type="text"
+    <input
+      className={styles.search}
+      type="text"
       placeholder="Pesquisar nomes separados por vírgula..."
       value={search}
       onChange={handleSearchChange}

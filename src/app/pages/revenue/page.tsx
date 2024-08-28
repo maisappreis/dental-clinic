@@ -8,18 +8,18 @@ import Modal from "@/app/components/modal";
 import RevenueForm from "./form";
 import { getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { DataRevenueProps } from '@/types/revenue';
 
-export default function Revenue({revenue = [], setRevenue, loading}: DataRevenueProps) {
+export default function Revenue({ revenue = [], setRevenue, loading }: DataRevenueProps) {
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
-  const router = useRouter();
- 
+  // const router = useRouter();
+
   const columns: { key: string; name: string; }[] = [
     { key: "date", name: "Data" },
     { key: "name", name: "Paciente" },
@@ -50,16 +50,14 @@ export default function Revenue({revenue = [], setRevenue, loading}: DataRevenue
     } else {
       setFilteredData([]);
     }
-    
+
   }, [month, year, revenue])
 
   const searchData = (search: string) => {
     setSearch(search);
-    setMonth("Todos os meses")
-    setYear("Todos")
 
-    const filterData = applySearch(revenue, search)
-    setFilteredData(filterData);
+    const filteredData = applySearch(revenue, search)
+    setFilteredData(filteredData);
   }
 
   const openModal: () => void = () => {
@@ -83,6 +81,10 @@ export default function Revenue({revenue = [], setRevenue, loading}: DataRevenue
     }
 
   }, [revenue, loading, filterData, month, year]);
+
+  // useEffect(() => {
+  //   searchData(search);
+  // }, [search, searchData]);
 
   // useEffect(() => {
   //   if (!loading && (!revenue || revenue.length === 0)) {
@@ -109,6 +111,7 @@ export default function Revenue({revenue = [], setRevenue, loading}: DataRevenue
         <div className="flex justify-end" style={{ marginBottom: 15 }}>
           <MonthFilter month={month} year={year} onFilterChange={filterData} />
           <Search search={search} onSearchChange={searchData} />
+          {/* <Search search={search} onSearchChange={setSearch} /> */}
         </div>
       </div>
       <Table columns={columns} data={filteredData} setRevenue={setRevenue} />

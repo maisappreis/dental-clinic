@@ -30,11 +30,11 @@
 
 @media only screen and (max-width: 1000px) {
   .modal {
-    top: 15vh;
+    top: 10vh;
     left: 20vw;
     width: 55vw;
     overflow: auto;
-    max-height: 240px;
+    max-height: 80vh;
     padding: 30px;
   }
 

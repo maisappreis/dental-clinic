@@ -9,7 +9,7 @@ import Modal from "@/app/components/modal";
 import ExpenseForm from "./form";
 import { getCurrentYear, getCurrentMonth } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { DataExpenseProps } from '@/types/expense';
 
 export default function Expense({ expenses = [], setExpenses, loading }: DataExpenseProps) {
@@ -20,7 +20,7 @@ export default function Expense({ expenses = [], setExpenses, loading }: DataExp
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
-  const router = useRouter();
+  // const router = useRouter();
 
   const columns: { key: string; name: string; }[] = [
     { key: "year", name: "Ano" },
@@ -66,13 +66,19 @@ export default function Expense({ expenses = [], setExpenses, loading }: DataExp
 
   }, [month, year, statusPayment, expenses]);
 
+  // const searchData = useCallback((month: string, year: string,) => {
+  //   const filteredData = applySearch(expenses, search)
+  //   setFilteredData(filteredData);
+
+  //   setMonth(month)
+  //   setYear(year)
+  // }, [search, expenses])
+
   const searchData = (search: string) => {
     setSearch(search);
-    setMonth("Todos os meses")
-    setYear("Todos")
 
-    const filterData = applySearch(expenses, search)
-    setFilteredData(filterData);
+    const filteredData = applySearch(expenses, search)
+    setFilteredData(filteredData);
   }
 
   const openModal: () => void = () => {
@@ -95,6 +101,23 @@ export default function Expense({ expenses = [], setExpenses, loading }: DataExp
       filterData({ selectedMonth: month, selectedYear: year, selectedStatus: statusPayment });
     }
   }, [expenses, loading, filterData, month, year, statusPayment]);
+
+  // useEffect(() => {
+  //   if (search === "") {
+  //     const month = getCurrentMonth()
+  //     const year = getCurrentYear()
+
+  //     setMonth(month)
+  //     setYear(year)
+  //   } else {
+  //     setMonth("Todos os meses")
+  //     setYear("Todos")
+  //   }
+  // },[search])
+
+  // useEffect(() => {
+  //   searchData("Todos os meses", "Todos")
+  // }, [search, searchData])
 
   // useEffect(() => {
   //   if (!loading && (!expenses || expenses.length === 0)) {
@@ -122,6 +145,7 @@ export default function Expense({ expenses = [], setExpenses, loading }: DataExp
           <MonthFilter month={month} year={year} onFilterChange={filterData} />
           <StatusFilter statusPayment={statusPayment} onStatusChange={filterData} />
           <Search search={search} onSearchChange={searchData} />
+          {/* <Search search={search} onSearchChange={setSearch} /> */}
         </div>
       </div>
       <Table columns={columns} data={filteredData} setExpenses={setExpenses} />
