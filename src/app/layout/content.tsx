@@ -4,8 +4,8 @@ import Calendar from "@/app/pages/calendar/page";
 import Dashboard from "@/app/pages/dashboard/page";
 import Revenue from "@/app/pages/revenue/page";
 import Expense from "@/app/pages/expense/page";
-import MonthEndClosing from "@/app/pages/monthclosing/page";
-import style from "./styles/Content.module.css";
+import MonthClosing from "@/app/pages/monthclosing/page";
+import styles from "./styles/Content.module.css";
 import { fetchRevenue, fetchExpenses, isAuthenticated, configureAxios } from "@/utils/api";
 import { RevenueProps } from '@/types/revenue';
 import { ExpenseProps } from '@/types/expense';
@@ -60,8 +60,8 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
     case "expense":
       contentComponent = <Expense expenses={expenses} setExpenses={setExpenses} loading={loading} />;
       break;
-    case "monthEndClosing":
-      contentComponent = <MonthEndClosing />;
+    case "monthClosing":
+      contentComponent = <MonthClosing />;
       break;
 
     default:
@@ -69,7 +69,7 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
   }
 
   return (
-    <div className={style.content}>
+    <div className={styles.content}>
       {contentComponent}
     </div>
   )

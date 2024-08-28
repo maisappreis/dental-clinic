@@ -34,7 +34,7 @@ export default function Header({ selectedOption }: { selectedOption: string }) {
       subtitle = "Controle do pagamento das contas";
       icon = <FontAwesomeIcon icon={faMoneyBillTransfer} className={styles.icon} />;
       break;
-    case "monthEndClosing":
+    case "monthClosing":
       title = "Fechamento de caixa";
       subtitle = "Encerramento do caixa mensal";
       icon = <FontAwesomeIcon icon={faBook} className={styles.icon} />;

@@ -18,6 +18,10 @@
   width: 200px;
 }
 
+.size-fit {
+  width: fit-content;
+}
+
 .green {
   background-color: green;
 }
