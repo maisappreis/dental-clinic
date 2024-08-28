@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { apiURL, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api';
+import { capitalize } from '@/utils/utils';
 import { getMonthAndYear } from "@/utils/date";
 import Alert from '@/app/components/alert'
 import axios from "axios";
@@ -71,10 +72,12 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
         ...data,
         month,
         year: parseInt(year),
+        name: capitalize(data.name),
       };
     } else {
       return {
-        ...data
+        ...data,
+        name: capitalize(data.name),
       };
     }
   }

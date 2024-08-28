@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { procedureOptions, paymentOptions, installmentOptions } from '@/assets/data';
 import { getCurrentDate } from "@/utils/date";
 import { apiURL, fetchRevenue, isAuthenticated, configureAxios } from '@/utils/api';
+import { capitalize } from '@/utils/utils';
 import Alert from '@/app/components/alert'
 import axios from "axios";
 import { RevenueProps } from '@/types/revenue';
@@ -73,6 +74,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
     return {
       ...data,
       nf: data.nf === "yes" ? true : false,
+      name: capitalize(data.name),
     };
   }
 
