@@ -1,6 +1,6 @@
 import styles from "./MonthClosing.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 
 export default function Reports() {
 
@@ -21,19 +21,16 @@ export default function Reports() {
     console.log('Editar', id)
   }
 
-  const deleteReport = (id: string) => {
-    console.log('Excluir', id)
-  }
 
   return (
     <div className="flex justify-left w-full flex-wrap">
       {reports.map((report) => (
         <div
           key={report.id}
-          className={styles.box}>
+          className={`${styles.box}`}
+          style={{marginBottom: 20}}>
           {report.label}
           <FontAwesomeIcon icon={faPenToSquare} className="ml-3" onClick={() => editReport(report.id)} />
-          <FontAwesomeIcon icon={faTrashCan} className="ml-3" onClick={() => deleteReport(report.id)} />
         </div>
       ))}
     </div>

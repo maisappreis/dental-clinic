@@ -8,16 +8,23 @@ interface ValuesProps {
 
 export default function TabThree() {
 
+  const summary = [
+    { id: 1, label: "Receita Bruta:", value: 7300 },
+    { id: 2, label: "Receita Líquida:", value: 7200 },
+    { id: 3, label: "Despesas:", value: 850 },
+    { id: 4, label: "Lucro Mirian:", value: 6500 },
+  ]
+
   const inputs = [
     { id: 1, label: "Banco do Brasil:", value: 2156.5 },
-    { id: 2, label: "Dinhero:", value: 3000 },
+    { id: 2, label: "Dinheiro:", value: 3000 },
     { id: 3, label: "PagBank:", value: 2006.5 },
-    { id: 4, label: "Alana:", value: 450.5 },
+    { id: 4, label: "Dentista Alana:", value: 450.5 },
   ];
 
   const outputs = [
-    { id: 1, label: "Contas à pagar:", value: 850 },
-    { id: 2, label: "Mirian:", value: 6500 }
+    { id: 1, label: "Despesas:", value: 850 },
+    { id: 2, label: "Dentista Mirian:", value: 6500 }
   ];
 
   const sumValues = (array: ValuesProps[]) => {
@@ -27,6 +34,18 @@ export default function TabThree() {
   return (
     <div className="flex-col">
       <div className="flex justify-center w-full">
+        <div className={`${styles.summary}`}>
+          <h3 className="font-bold mb-4 text-center">Resumo</h3>
+          {summary.map((item) => (
+            <div key={item.id} className="flex-col">
+              <div className="flex justify-between my-2">
+                <span className="mr-4">{item.label}</span>
+                <span>R$ {(item.value).toFixed(2).replace('.', ',')}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
         <div className={styles.inputs}>
           <h3 className="font-bold mb-4 text-center">Entradas</h3>
           {inputs.map((input) => (
@@ -68,10 +87,10 @@ export default function TabThree() {
         </div>
       </div>
 
-      <div className="flex justify-center w-full">
+      <div className="flex justify-center w-full mt-4">
         <div className={`flex ${styles.box}`}>
           <h3 className="font-bold">
-            Saldo: R$ {(sumValues(inputs) - sumValues(outputs)).toFixed(2).replace('.', ',')}
+            Saldo consultório: R$ {(sumValues(inputs) - sumValues(outputs)).toFixed(2).replace('.', ',')}
           </h3>
         </div>
       </div>
