@@ -1,4 +1,6 @@
-// Lista de opções de procedimentos
+import { MonthNames } from '@/types/chart';
+
+// Procedure options list
 export const procedureOptions: string[] = [
   'Profilaxia',
   'Restauração',
@@ -37,7 +39,7 @@ export const procedureOptions: string[] = [
   'Estética'
 ];
 
-// Lista de opções de pagamento
+// Payment options list
 export const paymentOptions: string[] = [
   'Dinheiro',
   'PIX',
@@ -48,17 +50,33 @@ export const paymentOptions: string[] = [
   'Cheque'
 ];
 
-// Lista de opções de parcelas
+// Installment options list
 export const installmentOptions: number[] = [
   2, 3, 4, 5, 6, 7, 8, 9, 10
 ];
 
-// Lista dos meses
+// Month list
 export const months: string[] = [
   "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro", "Todos os meses"
 ];
 
-// Lista dos anos
+// Year list
 export const years: string[] = [
   "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "Todos"
 ];
+
+// Mapping month names with month numbers
+export const monthNames: MonthNames = {
+  "01": "Janeiro",
+  "02": "Fevereiro",
+  "03": "Março",
+  "04": "Abril",
+  "05": "Maio",
+  "06": "Junho",
+  "07": "Julho",
+  "08": "Agosto",
+  "09": "Setembro",
+  "10": "Outubro",
+  "11": "Novembro",
+  "12": "Dezembro"
+};

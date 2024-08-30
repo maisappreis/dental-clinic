@@ -10,6 +10,8 @@ export interface ExpenseProps {
   notes: string;
 }
 
+export type ExpenseList = ExpenseProps[];
+
 export interface DataExpenseProps {
   expenses: ExpenseProps[];
   setExpenses: (newExpenses: ExpenseProps[]) => void;

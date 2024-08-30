@@ -52,7 +52,7 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
       contentComponent = <Calendar />;
       break;
     case "dashboard":
-      contentComponent = <Dashboard />;
+      contentComponent = <Dashboard revenue={revenue} expenses={expenses} />;
       break;
     case "revenue":
       contentComponent = <Revenue revenue={revenue} setRevenue={setRevenue} loading={loading} />;
