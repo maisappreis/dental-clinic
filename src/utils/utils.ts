@@ -1,3 +1,8 @@
+import { RevenueList } from "@/types/revenue";
+import { ExpenseList } from "@/types/expense";
+import { MonthNames } from '@/types/chart';
+import { monthNames } from "@/assets/data";
+
 export const capitalize = (str: string) => {
   return str
     .toLowerCase()
@@ -5,9 +10,6 @@ export const capitalize = (str: string) => {
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 };
-
-import { RevenueList } from "@/types/revenue";
-import { ExpenseList } from "@/types/expense";
 
 export function calculateMonthlyTotals(revenue: RevenueList, expenses: ExpenseList) {
   const months = Array.from({ length: 12 }, (_, i) =>
@@ -26,15 +28,20 @@ export function calculateMonthlyTotals(revenue: RevenueList, expenses: ExpenseLi
       .reduce((sum, item) => sum + item.value, 0);
   });
 
-  return { months, monthlyRevenue, monthlyExpenses };
+  const monthsLabels = months.map(date => {
+    const [year, month] = date.split("-");
+    return `${monthNames[month as keyof MonthNames]} ${year}`;
+  });
+
+  return { monthsLabels, monthlyRevenue, monthlyExpenses };
 }
 
 export function calculateMonthlyProfit(revenue: RevenueList, expenses: ExpenseList) {
-  const { months, monthlyRevenue, monthlyExpenses } = calculateMonthlyTotals(revenue, expenses);
+  const { monthsLabels, monthlyRevenue, monthlyExpenses } = calculateMonthlyTotals(revenue, expenses);
 
   const monthlyProfit = monthlyRevenue.map((revenue, index) => {
     return revenue - monthlyExpenses[index];
   });
 
-  return { months, monthlyProfit };
+  return { monthsLabels, monthlyProfit };
 }

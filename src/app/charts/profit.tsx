@@ -10,49 +10,63 @@ import { calculateMonthlyProfit } from '@/utils/utils';
 export default function ProfitChart(
   { revenue, expenses }: { revenue: RevenueList, expenses: ExpenseList }
 ) {
+  const [options, setOptions] = useState({});
   const [data, setData] = useState<ChartData>({
     labels: [],
     datasets: []
   });
 
+  const setLayout = () => {
+    return {
+      plugins: {
+        legend: {
+          labels: {
+            font: {
+              size: 20
+            },
+            color: 'rgba(0, 0, 0, 0.8)',
+          }
+        },
+        tooltip: {
+          titleFont: {
+            size: 18,
+          },
+          bodyFont: {
+            size: 16,
+          },
+          padding: 10,
+          boxPadding: 8,
+          callbacks: {
+            label: function (context: TooltipItem) {
+              let label = ""
+              if (context.parsed.y !== null) {
+                label += `R$ ${context.raw?.toFixed(2).replace('.', ',')}`;
+              }
+              return label;
+            }
+          }
+        }
+      }
+    };
+  };
+
   const drawChart = useMemo(() => {
     if (revenue && expenses && revenue.length > 0 && expenses.length > 0) {
-      const { months, monthlyProfit } = calculateMonthlyProfit(revenue, expenses);
+      const { monthsLabels, monthlyProfit } = calculateMonthlyProfit(revenue, expenses);
+
+      const options = setLayout();
+      setOptions(options);
 
       return {
-        labels: months,
+        labels: monthsLabels,
         datasets: [
           {
-            label: 'Lucro Mensal',
+            label: 'Lucro mensal',
             backgroundColor: 'rgba(19, 163, 0, 0.7)',
             borderColor: 'rgba(75,192,192,1)',
             data: monthlyProfit,
           }
-        ],
-        plugins: {
-          legend: {
-            labels: {
-              font: {
-                size: 16 // Aumenta o tamanho da legenda
-              },
-              color: 'rgba(0, 0, 0, 0.8)', // Cor das legendas
-            }
-          },
-        },
-        tooltip: {
-          backgroundColor: 'rgba(0, 0, 0, 0.8)', // Cor do fundo da tooltip
-          titleFont: {
-            size: 14, // Tamanho da fonte do título
-          },
-          bodyFont: {
-            size: 12, // Tamanho da fonte do corpo
-          },
-          callbacks: {
-            label: function(context: TooltipItem) {
-              return `Lucro: R$ ${context.raw?.toFixed(2).replace('.', ',')}`;
-            }
-          }
-        }
+        ]
       };
     }
     return {
@@ -67,7 +81,7 @@ export default function ProfitChart(
 
   return (
     data.labels.length > 0 ? (
-      <Bar data={data} />
+      <Bar data={data} options={options} />
     ) : (
       <span>Sem dados para exibir</span>
     )

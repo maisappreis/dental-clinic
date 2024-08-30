@@ -4,16 +4,51 @@ import { Line } from "react-chartjs-2";
 import "@/utils/chart"
 import { RevenueProps, RevenueList } from '@/types/revenue';
 import { ExpenseProps, ExpenseList } from '@/types/expense';
-import { ChartData, MonthNames } from '@/types/chart';
+import { ChartData, MonthNames, TooltipItem } from '@/types/chart';
 import { monthNames } from "@/assets/data";
 
 export default function RevenueExpensesChart(
   { revenue, expenses }: { revenue: RevenueList, expenses: ExpenseList }
 ) {
+  const [options, setOptions] = useState({});
   const [data, setData] = useState<ChartData>({
     labels: [],
     datasets: []
-  })
+  });
+
+  const setLayout = () => {
+    return {
+      plugins: {
+        legend: {
+          labels: {
+            font: {
+              size: 20
+            },
+            color: 'rgba(0, 0, 0, 0.8)',
+          }
+        },
+        tooltip: {
+          titleFont: {
+            size: 18,
+          },
+          bodyFont: {
+            size: 16,
+          },
+          padding: 10,
+          boxPadding: 8,
+          callbacks: {
+            label: function (context: TooltipItem) {
+              let label = ""
+              if (context.parsed.y !== null) {
+                label += `R$ ${context.raw?.toFixed(2).replace('.', ',')}`;
+              }
+              return label;
+            }
+          }
+        }
+      }
+    };
+  };
 
   const drawChart = useMemo(() => {
     if (revenue && expenses && revenue.length > 0 && expenses.length > 0) {
@@ -50,6 +85,9 @@ export default function RevenueExpensesChart(
       const revenueValues = last12Months.map(date => revenueByMonth[date] || 0);
       const expensesValues = last12Months.map(date => expensesByMonth[date] || 0);
 
+      const options = setLayout();
+      setOptions(options);
+
       return {
         labels: labels,
         datasets: [
@@ -80,7 +118,7 @@ export default function RevenueExpensesChart(
 
   return (
     data.labels.length > 0 ? (
-      <Line data={data} />
+      <Line data={data} options={options} />
     ) : (
       <span>Sem dados para exibir</span>
     )
