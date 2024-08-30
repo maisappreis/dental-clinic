@@ -16,7 +16,7 @@ export default function ProfitChart(
   });
 
   const drawChart = useMemo(() => {
-    if (revenue.length > 0 && expenses.length > 0) {
+    if (revenue && expenses && revenue.length > 0 && expenses.length > 0) {
       const { months, monthlyProfit } = calculateMonthlyProfit(revenue, expenses);
 
       return {
