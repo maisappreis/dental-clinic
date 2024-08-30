@@ -10,7 +10,7 @@ export default function Dashboard(
   { revenue, expenses }: { revenue: RevenueList, expenses: ExpenseList }
 ) {
   return (
-    <div className="content">
+    <div className="content align-middle">
       <div className={styles.area}>
         <RevenueExpensesChart revenue={revenue} expenses={expenses} />
         <MostPerformedProceduresChart revenue={revenue} />
