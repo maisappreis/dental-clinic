@@ -13,7 +13,7 @@ export default function MostPerformedProceduresChart({ revenue }: { revenue: Rev
   })
 
   const drawChart = useMemo(() => {
-    if (revenue && revenue.length > 0) { 
+    if (revenue && revenue.length > 0) {
       const procedureCount = revenue.reduce((acc: Record<string, number>, curr: RevenueProps) => {
         if (!acc[curr.procedure]) {
           acc[curr.procedure] = 0;

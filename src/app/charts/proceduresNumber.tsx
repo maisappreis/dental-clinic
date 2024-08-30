@@ -12,23 +12,34 @@ export default function NumberOfProceduresChart({ revenue }: { revenue: RevenueL
     datasets: []
   })
 
-  const groupByMonth = useMemo(() => {
-    return revenue.reduce((acc: Record<string, number>, curr: RevenueProps) => {
-      const month: string = curr.date.slice(5, 7);
-      const year: string = curr.date.slice(0, 4);
-      const key = `${year}-${month}`;
+  // const groupByMonth = useMemo(() => {
+  //   return revenue.reduce((acc: Record<string, number>, curr: RevenueProps) => {
+  //     const month: string = curr.date.slice(5, 7);
+  //     const year: string = curr.date.slice(0, 4);
+  //     const key = `${year}-${month}`;
 
-      if (!acc[key]) {
-        acc[key] = 0;
-      }
-      acc[key]++;
-      return acc;
-    }, {});
-  }, [revenue]);
+  //     if (!acc[key]) {
+  //       acc[key] = 0;
+  //     }
+  //     acc[key]++;
+  //     return acc;
+  //   }, {});
+  // }, [revenue]);
 
   const drawChart = useMemo(() => {
     if (revenue && revenue.length > 0) {
-      const groupedByMonth = groupByMonth;
+      // const groupedByMonth = groupByMonth;
+      const groupedByMonth = revenue.reduce((acc: Record<string, number>, curr: RevenueProps) => {
+        const month: string = curr.date.slice(5, 7);
+        const year: string = curr.date.slice(0, 4);
+        const key = `${year}-${month}`;
+  
+        if (!acc[key]) {
+          acc[key] = 0;
+        }
+        acc[key]++;
+        return acc;
+      }, {});
 
       const sortedKeys = Object.keys(groupedByMonth).sort().slice(-12);
 
@@ -55,7 +66,7 @@ export default function NumberOfProceduresChart({ revenue }: { revenue: RevenueL
       labels: [],
       datasets: []
     };
-  }, [groupByMonth, revenue]);
+  }, [revenue]);
 
   useEffect(() => {
     setData(drawChart);

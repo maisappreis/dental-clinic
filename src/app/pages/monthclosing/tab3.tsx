@@ -28,7 +28,11 @@ export default function TabThree() {
   ];
 
   const sumValues = (array: ValuesProps[]) => {
-    return array.reduce((total, input) => total + input.value, 0);
+    if (array && array.length > 0) {
+      return array.reduce((total, input) => total + input.value, 0);
+    } else {
+      return 0
+    }
   }
 
   return (
