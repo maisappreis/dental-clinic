@@ -30,6 +30,10 @@
   background-color: red;
 }
 
+.orange {
+  background-color: rgb(190, 114, 0);
+}
+
 .blue {
   background-color: var(--blue-dark-color)
 }
