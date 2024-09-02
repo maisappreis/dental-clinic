@@ -1,19 +1,23 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./Calendar.module.css";
 import Modal from "@/app/components/modal";
 import AppointmentForm from "./form";
 import { formatDate } from "@/utils/date";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
-import { PatientProps, AppointmentsProps } from "@/types/appointment";
+import { AgendaProps, AppointmentsProps } from "@/types/agenda";
+import Alert from '@/app/components/alert'
+import axios from "axios";
+import { apiURL, fetchAgenda, isAuthenticated, configureAxios } from '@/utils/api';
 
-export default function Appointments({ time, patients }: AppointmentsProps) {
+export default function Appointments({ time, patients, setAgenda }: AppointmentsProps) {
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteModalTitle, setDeleteModalTitle] = useState('');
   const [modalTitle, setModalTitle] = useState('');
   const [mode, setMode] = useState('view');
+  const [alertMessage, setAlertMessage] = useState('');
   const [selectedPatient, setSelectedPatient] = useState({
     id: 0,
     date: "",
@@ -22,7 +26,7 @@ export default function Appointments({ time, patients }: AppointmentsProps) {
     notes: ""
   });
 
-  const openModal = (patient: PatientProps): void => {
+  const openModal = (patient: AgendaProps): void => {
     setSelectedPatient(patient);
     setShowModal(true);
     setModalTitle("Agendamento");
@@ -44,8 +48,23 @@ export default function Appointments({ time, patients }: AppointmentsProps) {
     setMode("update")
   };
 
-  const deleteAppointment = () => {
-    console.log('Excluir')
+  const deleteAppointment = async () => {
+    try {
+      if (selectedPatient && selectedPatient.id) {
+        await axios.delete(`${apiURL()}/agenda/${selectedPatient.id}/`)
+
+        setAlertMessage("Agendamento excluído com sucesso!");
+        const newAppointment = await fetchAgenda();
+        setAgenda(newAppointment);
+
+        setTimeout(() => {
+          closeModal();
+        }, 1000);
+      }
+    } catch (error) {
+      console.error('Erro ao excluir agendamento.', error)
+      setAlertMessage("Erro ao excluir agendamento.");
+    }
   };
 
   const openDeleteModal = (): void => {
@@ -54,13 +73,26 @@ export default function Appointments({ time, patients }: AppointmentsProps) {
     setDeleteModalTitle("Excluir Agendamento")
   }
 
+  const shortName = (name: string): string => {
+    if (name && name.length > 9) {
+      return `${name.slice(0, 9)}..`
+    } else {
+      return name
+    }
+  }
+
+  useEffect(() => {
+    isAuthenticated();
+    configureAxios();
+  }, []);
+
   return (
     <>
       <div className={`${styles.schedule} ${styles.blue} ${styles.text}`}>{time}</div>
       {patients.map((patient, index) => (
         <button key={index} className={`${styles.schedule} ${styles.graylight}`} onClick={() => openModal(patient)}>
           <div className="flex justify-center">
-            <p className={`${styles.text}`}>{patient.name}</p>
+            <p className={`${styles.text}`}>{shortName(patient.name)}</p>
           </div>
         </button>
       ))}
@@ -88,7 +120,7 @@ export default function Appointments({ time, patients }: AppointmentsProps) {
               </div>
             </div>
             :
-            <AppointmentForm selectedPatient={selectedPatient} closeModal={closeModal} />
+            <AppointmentForm selectedPatient={selectedPatient} setAgenda={setAgenda} closeModal={closeModal} />
           }
         </Modal>
       }
@@ -107,6 +139,7 @@ export default function Appointments({ time, patients }: AppointmentsProps) {
           </div>
         </Modal>
       }
+      <Alert message={alertMessage} />
     </>
   );
 }

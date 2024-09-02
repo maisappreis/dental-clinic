@@ -6,14 +6,16 @@ import Revenue from "@/app/pages/revenue/page";
 import Expense from "@/app/pages/expense/page";
 import MonthClosing from "@/app/pages/monthclosing/page";
 import styles from "./styles/Content.module.css";
-import { fetchRevenue, fetchExpenses, isAuthenticated, configureAxios } from "@/utils/api";
+import { fetchAgenda, fetchRevenue, fetchExpenses, isAuthenticated, configureAxios } from "@/utils/api";
 import { RevenueProps } from '@/types/revenue';
 import { ExpenseProps } from '@/types/expense';
+import { AgendaProps } from "@/types/agenda";
 
 export default function Content({ selectedOption }: { selectedOption: string }) {
   let contentComponent: React.ReactNode;
   const [revenue, setRevenue] = useState<RevenueProps[]>([]);
   const [expenses, setExpenses] = useState<ExpenseProps[]>([]);
+  const [agenda, setAgenda] = useState<AgendaProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -23,8 +25,15 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
         isAuthenticated();
         configureAxios();
 
+        const agendaData = await fetchAgenda();
         const revenueData = await fetchRevenue();
         const expenseData = await fetchExpenses();
+
+        if (agendaData && agendaData.length > 0) {
+          setAgenda(agendaData);
+        } else {
+          setAgenda([]);
+        }
 
         if (revenueData && revenueData.length > 0) {
           setRevenue(revenueData);
@@ -49,7 +58,7 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
 
   switch (selectedOption) {
     case "calendar":
-      contentComponent = <Calendar />;
+      contentComponent = <Calendar agenda={agenda} setAgenda={setAgenda} loading={loading} />;
       break;
     case "dashboard":
       contentComponent = <Dashboard revenue={revenue} expenses={expenses} />;

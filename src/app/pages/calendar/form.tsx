@@ -1,17 +1,22 @@
 
 "use client";
 import React, { useState, useEffect } from "react";
-import { PatientProps } from "@/types/appointment";
+import { AgendaProps } from "@/types/agenda";
 import { scheduleOptions } from "@/assets/data";
 import { capitalize } from '@/utils/utils';
+import Alert from '@/app/components/alert'
+import axios from "axios";
+import { apiURL, fetchAgenda, isAuthenticated, configureAxios } from '@/utils/api';
 
 interface AppointmentFormProps {
-  selectedPatient?: PatientProps;
+  selectedPatient?: AgendaProps;
   closeModal: () => void;
+  setAgenda: (newAgenda: AgendaProps[]) => void;
 }
 
-export default function AppointmentForm({ selectedPatient, closeModal }: AppointmentFormProps) {
+export default function AppointmentForm({ selectedPatient, closeModal, setAgenda }: AppointmentFormProps) {
   const [isFormValid, setIsFormValid] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
   const [formData, setFormData] = useState({
     id: 0,
     date: "",
@@ -49,9 +54,46 @@ export default function AppointmentForm({ selectedPatient, closeModal }: Appoint
     }
   }, [formData]);
 
-  const saveAppointment = (event: React.FormEvent<HTMLFormElement>) => {
+  const saveAppointment = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('Editar')
+
+    if (selectedPatient && selectedPatient.id && selectedPatient.id > 0) {
+      await updateAppointment(selectedPatient.id);
+    } else {
+      await createAppointment();
+    }
+  }
+
+  const createAppointment = async () => {
+    try {
+      await axios.post(`${apiURL()}/agenda/create/`, formData);
+      setAlertMessage("Agendamento criado com sucesso!");
+      const newAppointment = await fetchAgenda();
+      setAgenda(newAppointment);
+
+      setTimeout(() => {
+        closeModal();
+      }, 1000);
+    } catch (error) {
+      console.error('Erro ao criar agendamento.', error)
+      setAlertMessage("Erro ao criar agendamento.");
+    }
+  }
+
+  const updateAppointment = async (id: number) => {
+    try {
+      await axios.patch(`${apiURL()}/agenda/${id}/`, formData)
+      setAlertMessage("Agendamento atualizado com sucesso!");
+      const newAppointment = await fetchAgenda();
+      setAgenda(newAppointment);
+
+      setTimeout(() => {
+        closeModal();
+      }, 1000);
+    } catch (error) {
+      console.error('Erro ao atualizar agendamento.', error)
+      setAlertMessage("Erro ao atualizar agendamento.");
+    }
   }
 
   useEffect(() => {
@@ -63,6 +105,11 @@ export default function AppointmentForm({ selectedPatient, closeModal }: Appoint
       notes: selectedPatient?.notes || ""
     });
   }, [selectedPatient]);
+
+  useEffect(() => {
+    isAuthenticated();
+    configureAxios();
+  }, []);
 
   return (
     <form className="form-area" onSubmit={saveAppointment}>
@@ -102,6 +149,7 @@ export default function AppointmentForm({ selectedPatient, closeModal }: Appoint
           Cancelar
         </button>
       </div>
+      <Alert message={alertMessage} />
     </form>
   )
 }
