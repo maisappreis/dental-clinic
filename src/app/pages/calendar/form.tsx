@@ -62,6 +62,10 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
     } else {
       await createAppointment();
     }
+
+    setTimeout(() => {
+      closeModal();
+    }, 1000);
   }
 
   const createAppointment = async () => {
@@ -71,9 +75,6 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
       const newAppointment = await fetchAgenda();
       setAgenda(newAppointment);
 
-      setTimeout(() => {
-        closeModal();
-      }, 1000);
     } catch (error) {
       console.error('Erro ao criar agendamento.', error)
       setAlertMessage("Erro ao criar agendamento.");
@@ -87,9 +88,6 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
       const newAppointment = await fetchAgenda();
       setAgenda(newAppointment);
 
-      setTimeout(() => {
-        closeModal();
-      }, 1000);
     } catch (error) {
       console.error('Erro ao atualizar agendamento.', error)
       setAlertMessage("Erro ao atualizar agendamento.");

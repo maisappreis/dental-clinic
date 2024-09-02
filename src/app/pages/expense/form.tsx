@@ -90,22 +90,21 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
     } else {
       await createExpense();
     }
+
+    setTimeout(() => {
+      closeModal();
+    }, 1000);
   }
 
   const createExpense = async () => {
     try {
       const preparedData = prepareDataForSubmission(formData);
 
-      await axios.post(`${apiURL()}/expense/create/`, preparedData, {
-        withCredentials: true
-      })
+      await axios.post(`${apiURL()}/expense/create/`, preparedData)
       setAlertMessage("Despesa criada com sucesso!");
       const newExpense = await fetchExpenses();
       setExpenses(newExpense)
 
-      setTimeout(() => {
-        closeModal();
-      }, 1000);
     } catch (error) {
       console.error('Erro ao criar despesa.', error)
       setAlertMessage("Erro ao criar despesa.");
@@ -116,16 +115,11 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
     try {
       const preparedData = prepareDataForSubmission(formData);
 
-      await axios.patch(`${apiURL()}/expense/${id}/`, preparedData, {
-        withCredentials: true
-      })
+      await axios.patch(`${apiURL()}/expense/${id}/`, preparedData)
       setAlertMessage("Despesa atualizada com sucesso!");
       const newExpense = await fetchExpenses();
       setExpenses(newExpense)
 
-      setTimeout(() => {
-        closeModal();
-      }, 1000);
     } catch (error) {
       console.error('Erro ao atualizar despesa.', error)
       setAlertMessage("Erro ao atualizar despesa.");

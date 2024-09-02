@@ -35,6 +35,7 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
   const closeModal = () => {
     setShowModal(false);
     setShowDeleteModal(false);
+    setMode("view");
     setSelectedPatient({
       id: 0,
       date: "",
@@ -45,7 +46,7 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
   };
 
   const updateAppointment = () => {
-    setMode("update")
+    setMode("update");
   };
 
   const deleteAppointment = async () => {

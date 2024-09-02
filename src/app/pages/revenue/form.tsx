@@ -86,22 +86,21 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
     } else {
       await createRevenue();
     }
+
+    setTimeout(() => {
+      closeModal();
+    }, 1000);
   }
 
   const createRevenue = async () => {
     try {
       const preparedData = prepareDataForSubmission(formData);
 
-      await axios.post(`${apiURL()}/revenue/create/`, preparedData, {
-        withCredentials: true
-      })
+      await axios.post(`${apiURL()}/revenue/create/`, preparedData)
       setAlertMessage("Receita criada com sucesso!");
       const newRevenue = await fetchRevenue();
       setRevenue(newRevenue)
 
-      setTimeout(() => {
-        closeModal();
-      }, 1000);
     } catch (error) {
       console.error('Erro ao criar receita.', error)
       setAlertMessage("Erro ao criar receita.");
@@ -112,16 +111,11 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
     try {
       const preparedData = prepareDataForSubmission(formData);
 
-      await axios.patch(`${apiURL()}/revenue/${id}/`, preparedData, {
-        withCredentials: true
-      })
+      await axios.patch(`${apiURL()}/revenue/${id}/`, preparedData)
       setAlertMessage("Receita atualizada com sucesso!");
       const newRevenue = await fetchRevenue();
       setRevenue(newRevenue)
 
-      setTimeout(() => {
-        closeModal();
-      }, 1000);
     } catch (error) {
       console.error('Erro ao atualizar receita.', error)
       setAlertMessage("Erro ao atualizar receita.");

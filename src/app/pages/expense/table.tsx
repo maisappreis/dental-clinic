@@ -82,8 +82,6 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
     try {
       const response = await axios.patch(`${apiURL()}/expense/${row.id}/`, {
         is_paid: !row.is_paid
-      }, {
-        withCredentials: true
       })
       setAlertMessage("Despesa atualizada com sucesso!");
 
@@ -117,9 +115,7 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
       selectedRowClone.month = month;
       selectedRowClone.year = parseInt(year);
 
-      await axios.post(`${apiURL()}/expense/create/`, selectedRowClone, {
-        withCredentials: true
-      })
+      await axios.post(`${apiURL()}/expense/create/`, selectedRowClone)
       setAlertMessage("Despesa do mês seguinte criada com sucesso!");
       const newExpense = await fetchExpenses();
       setExpenses(newExpense);
@@ -136,9 +132,7 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
   const deleteExpense = async () => {
     try {
       if (selectedRow && selectedRow.id) {
-        await axios.delete(`${apiURL()}/expense/${selectedRow.id}/`, {
-          withCredentials: true
-        })
+        await axios.delete(`${apiURL()}/expense/${selectedRow.id}/`)
         setAlertMessage("Despesa excluída com sucesso!");
         const newExpense = await fetchExpenses();
         setExpenses(newExpense)

@@ -72,9 +72,7 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
   const deleteRevenue = async () => {
     try {
       if (selectedRow && selectedRow.id) {
-        await axios.delete(`${apiURL}/revenue/${selectedRow.id}/`, {
-          withCredentials: true
-        })
+        await axios.delete(`${apiURL}/revenue/${selectedRow.id}/`)
         setAlertMessage("Receita excluída com sucesso!");
         const newRevenue = await fetchRevenue();
         setRevenue(newRevenue)
