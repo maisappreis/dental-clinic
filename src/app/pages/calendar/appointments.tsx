@@ -2,24 +2,20 @@
 import { useState } from "react";
 import styles from "./Calendar.module.css";
 import Modal from "@/app/components/modal";
+import AppointmentForm from "./form";
 import { formatDate } from "@/utils/date";
-
-interface PatientProps {
-  date: string;
-  time: string;
-  name: string;
-  notes: string;
-}
-
-interface AppointmentsProps {
-  time: string;
-  patients: PatientProps[];
-}
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { PatientProps, AppointmentsProps } from "@/types/appointment";
 
 export default function Appointments({ time, patients }: AppointmentsProps) {
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteModalTitle, setDeleteModalTitle] = useState('');
   const [modalTitle, setModalTitle] = useState('');
+  const [mode, setMode] = useState('view');
   const [selectedPatient, setSelectedPatient] = useState({
+    id: 0,
     date: "",
     time: "",
     name: "",
@@ -33,12 +29,13 @@ export default function Appointments({ time, patients }: AppointmentsProps) {
     }
     setShowModal(true);
     setModalTitle("Agendamento");
-
   };
 
   const closeModal = () => {
     setShowModal(false);
+    setShowDeleteModal(false);
     setSelectedPatient({
+      id: 0,
       date: "",
       time: "",
       name: "",
@@ -46,8 +43,18 @@ export default function Appointments({ time, patients }: AppointmentsProps) {
     });
   };
 
-  const saveAppointment = () => {
-    console.log('Salvar')
+  const updateAppointment = () => {
+    setMode("update")
+  };
+
+  const deleteAppointment = () => {
+    console.log('Excluir')
+  };
+
+  const openDeleteModal = (): void => {
+    setShowModal(false);
+    setShowDeleteModal(true);
+    setDeleteModalTitle("Excluir Agendamento")
   }
 
   return (
@@ -63,18 +70,42 @@ export default function Appointments({ time, patients }: AppointmentsProps) {
 
       {showModal &&
         <Modal title={modalTitle}>
-          <div className="my-5 text-left">
-            <h3 className="mb-3">Dia: <strong>{formatDate(selectedPatient.date)}</strong></h3>
-            <h3 className="mb-3">Horário: <strong>{selectedPatient.time}</strong></h3>
-            <h3>Paciente: <strong>{selectedPatient.name}</strong></h3>
-            <p className="my-4">{selectedPatient.notes}</p>
+          {mode === "view" ?
+            <div>
+              <div className="my-5 text-left">
+                <h3 className="mb-3">Paciente: <strong>{selectedPatient.name}</strong></h3>
+                <h3 className="mb-3">Dia: <strong>{formatDate(selectedPatient.date)}</strong></h3>
+                <h3 className="mb-3">Horário: <strong>{selectedPatient.time}</strong></h3>
+                <p className="my-4">{selectedPatient.notes}</p>
+              </div>
+              <div className="flex justify-center">
+                <button onClick={updateAppointment} className="btn orange size-fit mr-3">
+                  <FontAwesomeIcon icon={faPenToSquare} className="table-icon" />
+                </button>
+                <button onClick={openDeleteModal} className="btn red size-fit mr-3">
+                  <FontAwesomeIcon icon={faTrashCan} className="table-icon" />
+                </button>
+                <button onClick={closeModal} className="btn red size blue">
+                  Fechar
+                </button>
+              </div>
+            </div>
+            :
+            <AppointmentForm selectedPatient={selectedPatient} closeModal={closeModal} />
+          }
+        </Modal>
+      }
+      {showDeleteModal &&
+        <Modal title={deleteModalTitle}>
+          <div className="my-5 text-center">
+            Tem certeza que deseja excluir o agendamento do paciente <strong>{selectedPatient.name}</strong>?
           </div>
           <div className="flex justify-around">
-            <button onClick={saveAppointment} className="btn orange size">
-              Editar
+            <button onClick={deleteAppointment} className="btn red size">
+              Excluir
             </button>
-            <button onClick={closeModal} className="btn red size blue">
-              Fechar
+            <button onClick={closeModal} className="btn size blue">
+              Cancelar
             </button>
           </div>
         </Modal>

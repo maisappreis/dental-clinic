@@ -1,32 +1,28 @@
 "use client";
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import styles from "./Calendar.module.css";
 import Appointments from "./appointments";
+import Modal from "@/app/components/modal";
+import AppointmentForm from "./form";
+import { scheduleOptions, initialAppointmentFormat } from "@/assets/data"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const dataComingFromBack = [
-  { date: "2024-09-02", time: "09:00", patient: "Luis Silva", notes: "" },
-  { date: "2024-09-02", time: "10:00", patient: "Renan Bern", notes: "" },
-  { date: "2024-09-03", time: "11:00", patient: "Amanda Lopes", notes: "" },
-  { date: "2024-09-03", time: "13:00", patient: "Bianca", notes: "" },
-  { date: "2024-09-03", time: "14:00", patient: "Duff Preis", notes: "Muito lindo" },
-  { date: "2024-09-04", time: "15:00", patient: "Luis Silva", notes: "" },
-  { date: "2024-09-04", time: "16:00", patient: "José", notes: "" },
-  { date: "2024-09-04", time: "17:00", patient: "Maisa Preis", notes: "" },
-  { date: "2024-09-05", time: "18:00", patient: "Bia", notes: "" },
+  { id: 1, date: "2024-09-02", time: "09:00", name: "Luis Silva", notes: "" },
+  { id: 2, date: "2024-09-02", time: "10:00", name: "Renan Bern", notes: "" },
+  { id: 3, date: "2024-09-03", time: "11:00", name: "Amanda Lopes", notes: "" },
+  { id: 4, date: "2024-09-03", time: "13:00", name: "Bianca", notes: "" },
+  { id: 5, date: "2024-09-03", time: "14:00", name: "Duff Preis", notes: "Muito lindo" },
+  { id: 6, date: "2024-09-04", time: "15:00", name: "Luis Silva", notes: "" },
+  { id: 7, date: "2024-09-04", time: "16:00", name: "José", notes: "" },
+  { id: 8, date: "2024-09-04", time: "17:00", name: "Maisa Preis", notes: "" },
+  { id: 9, date: "2024-09-05", time: "18:00", name: "Bia", notes: "" },
 ]
 
-const times = ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
-
-const initialFormat = [
-  { date: "", time: "", name: "", notes: "" },
-  { date: "", time: "", name: "", notes: "" },
-  { date: "", time: "", name: "", notes: "" },
-  { date: "", time: "", name: "", notes: "" },
-  { date: "", time: "", name: "", notes: "" },
-  { date: "", time: "", name: "", notes: "" },
-];
-
 export default function Calendar() {
+  const [showModal, setShowModal] = useState(false);
+  const [modalTitle, setModalTitle] = useState('');
 
   const daysOfWeek = useMemo(() => {
     const today = new Date();
@@ -44,36 +40,50 @@ export default function Calendar() {
     });
   }, []);
 
-  const initialAppointments = times.map(time => ({
+  const initialAppointments = scheduleOptions.map(time => ({
     time,
-    patients: initialFormat.map(patient => ({ ...patient, time }))
+    patients: initialAppointmentFormat.map(patient => ({ ...patient, time }))
   }));
 
   const appointments = useMemo(() => {
     const updatedAppointments = [...initialAppointments];
 
-    dataComingFromBack.forEach(({ date, time, patient, notes }) => {
+    dataComingFromBack.forEach(({ id, date, time, name, notes }) => {
       const dayIndex = daysOfWeek.findIndex(day => day.date === date);
       if (dayIndex !== -1) {
         const appointment = updatedAppointments.find(a => a.time === time);
         if (appointment) {
           appointment.patients[dayIndex] = {
+            id,
             date,
             time,
-            name: patient,
+            name,
             notes: notes,
           };
         }
       }
     });
+    console.log('updatedAppointments', updatedAppointments)
 
     return updatedAppointments;
   }, [daysOfWeek, initialAppointments]);
 
+  const addAppointment = () => {
+    setShowModal(true);
+    setModalTitle("Novo Agendamento");
+  }
+
+  const closeModal = () => {
+    setShowModal(false);
+  }
+
   return (
     <div className="content">
       <div className={styles.grid}>
-        <div className={`${styles.week} ${styles.time} ${styles.font}`}>Horários</div>
+        <div className={`${styles.week} ${styles.time} ${styles.font} cursor-pointer`}
+          onClick={addAppointment}>
+            <FontAwesomeIcon icon={faPlus} className={styles.icon} />
+          </div>
         {daysOfWeek.map((day, index) => (
           <div key={index} className={`${styles.week} ${styles.header} ${styles.font}`}>
             <span>{day.dayWeek}</span>
@@ -84,6 +94,11 @@ export default function Calendar() {
           <Appointments key={appointment.time} time={appointment.time} patients={appointment.patients} />
         ))}
       </div>
+      {showModal &&
+        <Modal title={modalTitle}>
+          <AppointmentForm closeModal={closeModal} />
+        </Modal>
+      }
     </div>
   )
 }
