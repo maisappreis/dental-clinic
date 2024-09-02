@@ -83,6 +83,16 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
   }
 
   useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => {
+        setAlertMessage("")
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [alertMessage]);
+
+  useEffect(() => {
     isAuthenticated();
     configureAxios();
   }, []);

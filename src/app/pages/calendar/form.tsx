@@ -105,6 +105,16 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
   }, [selectedPatient]);
 
   useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => {
+        setAlertMessage("")
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [alertMessage]);
+
+  useEffect(() => {
     isAuthenticated();
     configureAxios();
   }, []);
