@@ -19,6 +19,15 @@ export const apiURL = (): string => {
   }
 }
 
+export const fetchAgenda = async () => {
+  try {
+    const response = await axios.get(`${apiURL()}/agenda/`)
+    return response.data
+  } catch (error) {
+    console.error('Erro ao requisitar a lista de agendamentos.', error)
+  }
+}
+
 export const fetchRevenue = async () => {
   try {
     const response = await axios.get(`${apiURL()}/revenue/`)
