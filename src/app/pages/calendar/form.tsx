@@ -41,8 +41,7 @@ export default function AppointmentForm({ selectedPatient, closeModal }: Appoint
     if (
       formData.name !== "" &&
       formData.date !== "" &&
-      formData.time !== "" &&
-      formData.notes !== ""
+      formData.time !== ""
     ) {
       setIsFormValid(true);
     } else {
@@ -50,7 +49,8 @@ export default function AppointmentForm({ selectedPatient, closeModal }: Appoint
     }
   }, [formData]);
 
-  const saveAppointment = () => {
+  const saveAppointment = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     console.log('Editar')
   }
 
@@ -81,7 +81,7 @@ export default function AppointmentForm({ selectedPatient, closeModal }: Appoint
       <div className="flex form-item">
         <label htmlFor="time" className="form-label">Horário:</label>
         <select id="time" name="time" className="form-select"
-          value={formData.time} onChange={handleInputChange}>
+          value={formData.time} onChange={handleInputChange} required>
           {scheduleOptions.map((option, i) => (
             <option key={i} value={option}>{option}</option>
           ))}

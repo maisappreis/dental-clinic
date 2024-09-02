@@ -18,6 +18,7 @@ const dataComingFromBack = [
   { id: 7, date: "2024-09-04", time: "16:00", name: "José", notes: "" },
   { id: 8, date: "2024-09-04", time: "17:00", name: "Maisa Preis", notes: "" },
   { id: 9, date: "2024-09-05", time: "18:00", name: "Bia", notes: "" },
+  { id: 9, date: "2024-09-09", time: "09:00", name: "João", notes: "" },
 ]
 
 export default function Calendar() {
@@ -36,13 +37,19 @@ export default function Calendar() {
         month: "2-digit",
       });
 
-      return { dayWeek: day, day: dayFormatted, date: currentDay.toISOString().split('T')[0] };
+      const formattedDate = `${currentDay.getFullYear()}-${String(currentDay.getMonth() + 1).padStart(2, '0')}-${String(currentDay.getDate()).padStart(2, '0')}`;
+
+      return { dayWeek: day, day: dayFormatted, date: formattedDate };
     });
   }, []);
 
   const initialAppointments = scheduleOptions.map(time => ({
     time,
-    patients: initialAppointmentFormat.map(patient => ({ ...patient, time }))
+    patients: daysOfWeek.map(day => ({
+      ...initialAppointmentFormat[0],
+      time,
+      date: day.date
+    }))
   }));
 
   const appointments = useMemo(() => {
@@ -63,7 +70,6 @@ export default function Calendar() {
         }
       }
     });
-    console.log('updatedAppointments', updatedAppointments)
 
     return updatedAppointments;
   }, [daysOfWeek, initialAppointments]);
@@ -82,8 +88,8 @@ export default function Calendar() {
       <div className={styles.grid}>
         <div className={`${styles.week} ${styles.time} ${styles.font} cursor-pointer`}
           onClick={addAppointment}>
-            <FontAwesomeIcon icon={faPlus} className={styles.icon} />
-          </div>
+          <FontAwesomeIcon icon={faPlus} className={styles.icon} />
+        </div>
         {daysOfWeek.map((day, index) => (
           <div key={index} className={`${styles.week} ${styles.header} ${styles.font}`}>
             <span>{day.dayWeek}</span>

@@ -23,10 +23,7 @@ export default function Appointments({ time, patients }: AppointmentsProps) {
   });
 
   const openModal = (patient: PatientProps): void => {
-    if (patient.name !== "") {
-      setSelectedPatient(patient);
-      console.log('patient', patient)
-    }
+    setSelectedPatient(patient);
     setShowModal(true);
     setModalTitle("Agendamento");
   };
@@ -70,7 +67,7 @@ export default function Appointments({ time, patients }: AppointmentsProps) {
 
       {showModal &&
         <Modal title={modalTitle}>
-          {mode === "view" ?
+          {mode === "view" && selectedPatient.name ?
             <div>
               <div className="my-5 text-left">
                 <h3 className="mb-3">Paciente: <strong>{selectedPatient.name}</strong></h3>
