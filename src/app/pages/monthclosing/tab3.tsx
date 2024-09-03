@@ -1,4 +1,5 @@
 import styles from "./MonthClosing.module.css";
+import { MonthClosingProps } from '@/types/monthClosing';
 
 interface ValuesProps {
   id: number;
@@ -6,25 +7,25 @@ interface ValuesProps {
   value: number;
 }
 
-export default function TabThree() {
+export default function TabThree({ selectedMonthClosing }: { selectedMonthClosing: MonthClosingProps }) {
 
   const summary = [
-    { id: 1, label: "Receita Bruta:", value: 7300 },
-    { id: 2, label: "Receita Líquida:", value: 7200 },
-    { id: 3, label: "Despesas:", value: 850 },
-    { id: 4, label: "Lucro Mirian:", value: 6500 },
+    { id: 1, label: "Receita Bruta:", value: selectedMonthClosing.gross_revenue },
+    { id: 2, label: "Receita Líquida:", value: selectedMonthClosing.net_revenue },
+    { id: 3, label: "Despesas:", value: selectedMonthClosing.expenses },
+    { id: 4, label: "Lucro Mirian:", value: selectedMonthClosing.profit },
   ]
 
   const inputs = [
-    { id: 1, label: "Banco do Brasil:", value: 2156.5 },
-    { id: 2, label: "Dinheiro:", value: 3000 },
-    { id: 3, label: "PagBank:", value: 2006.5 },
-    { id: 4, label: "Dentista Alana:", value: 450.5 },
+    { id: 1, label: "Banco do Brasil:", value: selectedMonthClosing.bank_value },
+    { id: 2, label: "Dinheiro:", value: selectedMonthClosing.cash_value },
+    { id: 3, label: "PagBank:", value: selectedMonthClosing.card_value },
+    { id: 4, label: "Dentista Alana:", value: selectedMonthClosing.other_revenue },
   ];
 
   const outputs = [
-    { id: 1, label: "Despesas:", value: 850 },
-    { id: 2, label: "Dentista Mirian:", value: 6500 }
+    { id: 1, label: "Despesas:", value: selectedMonthClosing.expenses },
+    { id: 2, label: "Dentista Mirian:", value: selectedMonthClosing.profit }
   ];
 
   const sumValues = (array: ValuesProps[]) => {

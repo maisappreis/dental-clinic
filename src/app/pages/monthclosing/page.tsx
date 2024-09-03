@@ -108,7 +108,9 @@ export default function MonthClosing(
 
   const updateMonthClosing = async () => {
     try {
-      await axios.post(`${apiURL()}/month_closing/${selectedMonthClosing.id}/`, selectedMonthClosing)
+      const response = await axios.patch(`${apiURL()}/month_closing/${selectedMonthClosing.id}/`, selectedMonthClosing);
+      setSelectedMonthClosing(response.data);
+
       setAlertMessage("Dados salvos com sucesso!");
     } catch (error) {
       console.error('Erro ao salvar os dados.', error)
@@ -268,7 +270,7 @@ export default function MonthClosing(
       tabContent = <TabTwo revenue={revenue} selectedMonthClosing={selectedMonthClosing} setSelectedMonthClosing={setSelectedMonthClosing} />;
       break;
     case "tab3":
-      tabContent = <TabThree />;
+      tabContent = <TabThree selectedMonthClosing={selectedMonthClosing} />;
       break;
 
     default:
