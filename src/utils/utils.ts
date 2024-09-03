@@ -2,6 +2,7 @@ import { RevenueList } from "@/types/revenue";
 import { ExpenseList } from "@/types/expense";
 import { MonthNames } from '@/types/chart';
 import { monthNames } from "@/assets/data";
+import { RevenueProps } from "@/types/revenue"
 
 export const capitalize = (str: string) => {
   return str
@@ -10,6 +11,21 @@ export const capitalize = (str: string) => {
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 };
+
+// Receives Revenue list, a month and a year and return the sum of this specific month.
+export function calculateMonthlyRevenue(revenue: RevenueList, currentMonth: number, currentYear: number): number {
+  return revenue.reduce((acc: number, curr: RevenueProps) => {
+    const month = parseInt(curr.date.slice(5, 7));
+    const year = parseInt(curr.date.slice(0, 4));
+    const key = `${year}-${month}`;
+
+    if (currentMonth === month && currentYear === year) {
+      return acc + curr.value;
+    }
+
+    return acc
+  }, 0);
+}
 
 export function calculateMonthlyTotals(revenue: RevenueList, expenses: ExpenseList) {
   const months = Array.from({ length: 12 }, (_, i) =>

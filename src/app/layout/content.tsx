@@ -6,16 +6,18 @@ import Revenue from "@/app/pages/revenue/page";
 import Expense from "@/app/pages/expense/page";
 import MonthClosing from "@/app/pages/monthclosing/page";
 import styles from "./styles/Content.module.css";
-import { fetchAgenda, fetchRevenue, fetchExpenses, isAuthenticated, configureAxios } from "@/utils/api";
+import { fetchAgenda, fetchRevenue, fetchExpenses, fetchMonthClosing, isAuthenticated, configureAxios } from "@/utils/api";
 import { RevenueProps } from '@/types/revenue';
 import { ExpenseProps } from '@/types/expense';
 import { AgendaProps } from "@/types/agenda";
+import { MonthClosingProps } from "@/types/monthClosing";
 
 export default function Content({ selectedOption }: { selectedOption: string }) {
   let contentComponent: React.ReactNode;
   const [revenue, setRevenue] = useState<RevenueProps[]>([]);
   const [expenses, setExpenses] = useState<ExpenseProps[]>([]);
   const [agenda, setAgenda] = useState<AgendaProps[]>([]);
+  const [monthClosing, setMonthClosing] = useState<MonthClosingProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -28,6 +30,7 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
         const agendaData = await fetchAgenda();
         const revenueData = await fetchRevenue();
         const expenseData = await fetchExpenses();
+        const monthClosingData = await fetchMonthClosing();
 
         if (agendaData && agendaData.length > 0) {
           setAgenda(agendaData);
@@ -45,7 +48,13 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
           setExpenses(expenseData);
         } else {
           setExpenses([]);
-        }       
+        }
+
+        if (monthClosingData && monthClosingData.length > 0) {
+          setMonthClosing(monthClosingData);
+        } else {
+          setMonthClosing([]);
+        }
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
       } finally {
@@ -70,7 +79,7 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
       contentComponent = <Expense expenses={expenses} setExpenses={setExpenses} loading={loading} />;
       break;
     case "monthClosing":
-      contentComponent = <MonthClosing revenue={revenue} setRevenue={setRevenue} />;
+      contentComponent = <MonthClosing revenue={revenue} setRevenue={setRevenue} monthClosing={monthClosing} />;
       break;
 
     default:

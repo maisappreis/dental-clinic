@@ -46,6 +46,15 @@ export const fetchExpenses = async () => {
   }
 }
 
+export const fetchMonthClosing = async () => {
+  try {
+    const response = await axios.get(`${apiURL()}/month_closing/`)
+    return response.data
+  } catch (error) {
+    console.error('Erro ao salvar os dados.', error)
+  }
+}
+
 export const configureAxios = () => {
   axios.defaults.headers.common['Content-Type'] = 'application/json';
 

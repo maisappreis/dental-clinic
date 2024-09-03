@@ -6,12 +6,22 @@ import TabOne from './tab1';
 import TabTwo from './tab2';
 import TabThree from './tab3';
 import Modal from "@/app/components/modal";
+import Alert from '@/app/components/alert';
 import { RevenueList, RevenueProps } from '@/types/revenue';
+import { MonthClosingList } from '@/types/monthClosing';
 import { months, years } from "@/assets/data"
 import { getCurrentYear, getCurrentMonth } from "@/utils/date"
+import axios from "axios";
+import { fetchMonthClosing, apiURL, isAuthenticated, configureAxios } from '@/utils/api';
+
+interface DataMonthClosing {
+  revenue: RevenueList;
+  setRevenue: (newRevenue: RevenueProps[]) => void;
+  monthClosing: MonthClosingList;
+}
 
 export default function MonthClosing(
-  { revenue, setRevenue }: { revenue: RevenueList, setRevenue: (newRevenue: RevenueProps[]) => void; }
+  { revenue, setRevenue, monthClosing }: DataMonthClosing
 ) {
   let tabContent: React.ReactNode;
   const [selectedTab, setSelectedTab] = useState("reports");
@@ -23,13 +33,16 @@ export default function MonthClosing(
   const [selectedNumberMonth, setSelectedNumberMonth] = useState(0);
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
+  const [alertMessage, setAlertMessage] = useState('');
+  const [filteredRevenue, setFilteredRevenue] = useState<RevenueList>([]);
   const [tabsOptions, setTabsOptions] = useState([
     { id: "reports", label: "Relatórios", disabled: false },
     { id: "tab1", label: "Passo 1", disabled: true },
     { id: "tab2", label: "Passo 2", disabled: true },
     { id: "tab3", label: "Passo 3", disabled: true }
   ]);
-  const [monthClosing, setMonthClosing] = useState({
+  const [selectedMonthClosing, setSelectedMonthClosing] = useState({
+    id: 0,
     reference: "",
     month: 0,
     year: 0,
@@ -52,10 +65,19 @@ export default function MonthClosing(
     if (selectedTab === "reports") {
       openModal();
     } else if (selectedTab === "tab1") {
+      disableTabForward();
       await updateRevenue();
       setSelectedTab("tab2");
     } else if (selectedTab === "tab2") {
-      await createMonthClosing();
+      disableTabForward();
+
+      console.log('selectedMonthClosing', selectedMonthClosing);
+      
+      if (selectedMonthClosing.id === 0) {
+        await createMonthClosing();
+      } else {
+        await updateMonthClosing();
+      }
       setSelectedTab("tab3");
     } else {
       await fetchMonthClosing();
@@ -66,50 +88,31 @@ export default function MonthClosing(
 
   const updateRevenue = async () => {
     try {
-      console.log("Criar view que atualiza o campo net_value de Revenue")
-
-      // await axios.patch(`${apiURL()}/revenue/${id}/`, preparedData)
-      // setAlertMessage("Receita atualizada com sucesso!");
-      // const newRevenue = await fetchRevenue();
-      // setRevenue(newRevenue)
-
+      // await axios.patch(`${apiURL()}/revenue/${id}/`, data)
+      setAlertMessage("Receita atualizada com sucesso!");
     } catch (error) {
       console.error('Erro ao atualizar receita.', error)
-      // setAlertMessage("Erro ao atualizar receita.");
+      setAlertMessage("Erro ao atualizar receita.");
     }
   }
 
   const createMonthClosing = async () => {
     try {
-      console.log("Criar view que cria o fechamento do mês")
-
-      console.log('monthClosing', monthClosing)
-
-      const updatedMonthClosing = {
-        ...monthClosing,
-        reference: `${selectedMonth} ${selectedYear}`,
-        month: selectedNumberMonth,
-        year: parseInt(selectedYear, 10),
-      }
-
-      console.log('updatedMonthClosing', updatedMonthClosing)
-
-      // await axios.post(`${apiURL()}/month_closing/create`, updatedMonthClosing)
-      // setAlertMessage("Dados salvos com sucesso!");
-
+      await axios.post(`${apiURL()}/month_closing/create/`, selectedMonthClosing)
+      setAlertMessage("Dados salvos com sucesso!");
     } catch (error) {
       console.error('Erro ao salvar os dados.', error)
-      // setAlertMessage("Erro ao salvar os dados.");
+      setAlertMessage("Erro ao salvar os dados.");
     }
   }
 
-  const fetchMonthClosing = async () => {
+  const updateMonthClosing = async () => {
     try {
-      console.log("Criar view que requisita o fechamento do mês")
-      // const response = await axios.get(`${apiURL()}/month_closing/`, data)
-
+      await axios.post(`${apiURL()}/month_closing/${selectedMonthClosing.id}/`, selectedMonthClosing)
+      setAlertMessage("Dados salvos com sucesso!");
     } catch (error) {
       console.error('Erro ao salvar os dados.', error)
+      setAlertMessage("Erro ao salvar os dados.");
     }
   }
 
@@ -129,13 +132,23 @@ export default function MonthClosing(
   const onConfirmationClick = () => {
     setShowModal(false);
     setSelectedTab("tab1");
+    setSelectedMonthClosing({
+      id: 0,
+      reference: `${selectedMonth} ${selectedYear}`,
+      month: selectedNumberMonth,
+      year: parseInt(selectedYear, 10),
+      bank_value: 0,
+      cash_value: 0,
+      card_value: 0,
+      gross_revenue: 0,
+      net_revenue: 0,
+      expenses: 0,
+      profit: 0,
+      other_revenue: 0,
+      balance: 0
+    });
 
-    const updatedTabsOptions = tabsOptions.map(tab => ({
-      ...tab,
-      disabled: false
-    }));
-
-    setTabsOptions(updatedTabsOptions);
+    disableTabForward();
   }
 
   const disableTabsOptions = () => {
@@ -144,6 +157,16 @@ export default function MonthClosing(
       disabled: tab.id !== "reports"
     }));
     setTabsOptions(initialTabsOptions);
+  };
+
+  const disableTabForward = () => {
+    const currentTabIndex = tabsOptions.findIndex(tab => tab.id === selectedTab) + 1 ;   
+    const updatedTabsOptions = tabsOptions.map((tab, index) => ({
+      ...tab,
+      disabled: index > currentTabIndex
+    }));
+  
+    setTabsOptions(updatedTabsOptions);
   };
 
   const handleInputChange = (
@@ -159,6 +182,37 @@ export default function MonthClosing(
   };
 
   useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => {
+        setAlertMessage("")
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [alertMessage]);
+
+  useEffect(() => {
+    isAuthenticated();
+    configureAxios();
+  }, []);
+
+  useEffect(() => {
+    if (revenue && revenue.length > 0) {
+      const currentMonth = selectedMonthClosing.month;
+      const currentYear = selectedMonthClosing.year;
+
+      const currentRevenueMonth = revenue.filter(item => {
+        const month = parseInt(item.date.slice(5, 7));
+        const year = parseInt(item.date.slice(0, 4));
+
+        return month === currentMonth && year === currentYear;
+      })
+
+      setFilteredRevenue(currentRevenueMonth)
+    }
+  }, [revenue, selectedMonthClosing, setFilteredRevenue])
+
+  useEffect(() => {
     switch (selectedTab) {
       case "reports":
         setButtonText("Novo Fechamento");
@@ -167,7 +221,7 @@ export default function MonthClosing(
         setButtonText("Salvar");
         break;
       case "tab2":
-        setButtonText("Salvar");
+        setButtonText("Avançar");
         break;
       case "tab3":
         setButtonText("Concluir");
@@ -205,20 +259,20 @@ export default function MonthClosing(
 
   switch (selectedTab) {
     case "reports":
-      tabContent = <Reports />;
+      tabContent = <Reports monthClosingList={monthClosing} setSelectedMonthClosing={setSelectedMonthClosing} setSelectedTab={setSelectedTab} disableTabForward={disableTabForward} />;
       break;
     case "tab1":
-      tabContent = <TabOne revenue={revenue} setRevenue={setRevenue} />;
+      tabContent = <TabOne revenue={filteredRevenue} setRevenue={setRevenue} />;
       break;
     case "tab2":
-      tabContent = <TabTwo setMonthClosing={setMonthClosing} />;
+      tabContent = <TabTwo revenue={revenue} selectedMonthClosing={selectedMonthClosing} setSelectedMonthClosing={setSelectedMonthClosing} />;
       break;
     case "tab3":
       tabContent = <TabThree />;
       break;
 
     default:
-      tabContent = <Reports />;
+      tabContent = <Reports monthClosingList={monthClosing} setSelectedMonthClosing={setSelectedMonthClosing} setSelectedTab={setSelectedTab} disableTabForward={disableTabForward} />;
   }
 
   return (
@@ -270,7 +324,7 @@ export default function MonthClosing(
               }}
             />
             <label htmlFor="has-installments" className="form-label">
-              Confirmo que todas as receitas do mês passado, Agosto, foram cadastras.
+              Confirmo que todas as receitas do <strong>mês passado</strong> foram cadastras.
             </label>
           </div>
           <div className="flex form-item">
@@ -281,7 +335,7 @@ export default function MonthClosing(
               }}
             />
             <label htmlFor="has-installments" className="form-label">
-              Confirmo que todas as despesas do mês seguinte, Setembro, foram cadastras.
+              Confirmo que todas as despesas <strong>deste mês</strong> foram cadastras.
             </label>
           </div>
           <div className="flex justify-around mt-4">
@@ -294,6 +348,7 @@ export default function MonthClosing(
           </div>
         </Modal>
       }
+      <Alert message={alertMessage} />
     </div>
   )
 }

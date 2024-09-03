@@ -1,4 +1,7 @@
+import { RevenueProps} from "./revenue"
+
 export interface MonthClosingProps {
+  id: number;
   reference: string;
   month: number;
   year: number;
@@ -14,3 +17,9 @@ export interface MonthClosingProps {
 }
 
 export type MonthClosingList = MonthClosingProps[];
+
+export interface DataMonthClosingProps {
+  selectedMonthClosing: MonthClosingProps;
+  setSelectedMonthClosing: (newSelectedMonthClosing: MonthClosingProps) => void;
+  revenue: RevenueProps[];
+}

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './Login.module.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTooth } from '@fortawesome/free-solid-svg-icons';
-import Alert from '@/app/components/alert'
+import Alert from '@/app/components/alert';
 import { apiBase, fetchRevenue, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api'
 import { useRouter } from 'next/navigation';
 import axios from 'axios';

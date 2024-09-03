@@ -1,18 +1,17 @@
 'use client'
 import { useEffect, useState } from 'react';
 import styles from "./MonthClosing.module.css";
-import { MonthClosingProps } from "@/types/monthClosing"
+import { DataMonthClosingProps } from "@/types/monthClosing"
+import { calculateMonthlyRevenue } from "@/utils/utils"
 
-export default function TabTwo(
-  { setMonthClosing }: { setMonthClosing: (newMonthClosing: MonthClosingProps) => void; }
-) {
+export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonthClosing }: DataMonthClosingProps) {
   const [bankValue, setBankValue] = useState(0);
   const [cashValue, setCashValue] = useState(0);
   const [cardValue, setCardValue] = useState(0);
+  const [totalMonthlyRevenue, setTotalMonthlyRevenue] = useState(0);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
     const newValue = parseFloat(value) || 0;
 
     if (name === "bankValue") {
@@ -24,33 +23,31 @@ export default function TabTwo(
     }
   };
 
-  const sumValues = bankValue + cashValue + cardValue
+  const saveValues = () => {
+    setSelectedMonthClosing({
+      ...selectedMonthClosing,
+      bank_value: bankValue,
+      cash_value: cashValue,
+      card_value: cardValue
+    });
+  };
 
-  const diffValues = () => {
+  const sumValues = bankValue + cashValue + cardValue;
+
+  const diffValues = (): number => {
     const inputs = sumValues;
-    const revenue = 7300;
-
-    return inputs- revenue
-  }
+    return inputs - totalMonthlyRevenue
+  };
 
   useEffect(() => {
-    if (bankValue && cashValue && cardValue) {
-      setMonthClosing({
-        reference: "",
-        month: 0,
-        year: 0,
-        bank_value: bankValue,
-        cash_value: cashValue,
-        card_value: cardValue,
-        gross_revenue: 0,
-        net_revenue: 0,
-        expenses: 0,
-        profit: 0,
-        other_revenue: 0,
-        balance: 0,
-      });
+    if (revenue && revenue.length > 0) {
+      const currentMonth = selectedMonthClosing.month;
+      const currentYear = selectedMonthClosing.year;
+      const totalRevenue = calculateMonthlyRevenue(revenue, currentMonth, currentYear);
+
+      setTotalMonthlyRevenue(totalRevenue);
     }
-  }, [setMonthClosing, bankValue, cashValue, cardValue])
+  }, [revenue, setTotalMonthlyRevenue, selectedMonthClosing])
 
   return (
     <div className="flex justify-center">
@@ -72,9 +69,14 @@ export default function TabTwo(
           <input id="cardValue" name="cardValue" type="number" className="form-input"
             value={cardValue} onChange={handleInputChange} min="0.001" step="0.001" required />
         </div>
+        <div className="flex justify-end w-full align-bottom mt-3">
+          <button className="btn green size-fit" onClick={saveValues}>
+            Salvar
+          </button>
+        </div>
       </div>
       <div className={`${styles.summary} w-1/2`}>
-      <div className="flex-col">
+        <div className="flex-col">
           <div className="flex justify-between my-2">
             <span className="mr-4 font-bold">Soma das entradas:</span>
             <span className="font-bold">R$ {(sumValues).toFixed(2).replace('.', ',')}</span>
@@ -83,7 +85,7 @@ export default function TabTwo(
         <div className="flex-col">
           <div className="flex justify-between my-2">
             <span className="mr-4 font-bold">Receita Bruta:</span>
-            <span className="font-bold">R$ 7300,00</span>
+            <span className="font-bold">R$ {totalMonthlyRevenue.toFixed(2).replace('.', ',')}</span>
           </div>
         </div>
         <p className="my-4">A soma das entradas deve ser igual ao valor da receita bruta calculada.</p>
