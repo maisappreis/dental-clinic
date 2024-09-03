@@ -70,7 +70,7 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
       contentComponent = <Expense expenses={expenses} setExpenses={setExpenses} loading={loading} />;
       break;
     case "monthClosing":
-      contentComponent = <MonthClosing />;
+      contentComponent = <MonthClosing revenue={revenue} setRevenue={setRevenue} />;
       break;
 
     default:

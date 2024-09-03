@@ -1,16 +1,17 @@
 'use client'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from "./MonthClosing.module.css";
+import { MonthClosingProps } from "@/types/monthClosing"
 
-export default function TabTwo() {
+export default function TabTwo(
+  { setMonthClosing }: { setMonthClosing: (newMonthClosing: MonthClosingProps) => void; }
+) {
   const [bankValue, setBankValue] = useState(0);
   const [cashValue, setCashValue] = useState(0);
-  const [pagBankValue, setPagBankValue] = useState(0);
+  const [cardValue, setCardValue] = useState(0);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    console.log('name', name)
-    console.log('value', value)
 
     const newValue = parseFloat(value) || 0;
 
@@ -18,12 +19,12 @@ export default function TabTwo() {
       setBankValue(newValue);
     } else if (name === "cashValue") {
       setCashValue(newValue);
-    } else if (name === "pagBankValue") {
-      setPagBankValue(newValue);
+    } else if (name === "cardValue") {
+      setCardValue(newValue);
     }
   };
 
-  const sumValues = bankValue + cashValue + pagBankValue
+  const sumValues = bankValue + cashValue + cardValue
 
   const diffValues = () => {
     const inputs = sumValues;
@@ -31,6 +32,25 @@ export default function TabTwo() {
 
     return inputs- revenue
   }
+
+  useEffect(() => {
+    if (bankValue && cashValue && cardValue) {
+      setMonthClosing({
+        reference: "",
+        month: 0,
+        year: 0,
+        bank_value: bankValue,
+        cash_value: cashValue,
+        card_value: cardValue,
+        gross_revenue: 0,
+        net_revenue: 0,
+        expenses: 0,
+        profit: 0,
+        other_revenue: 0,
+        balance: 0,
+      });
+    }
+  }, [setMonthClosing, bankValue, cashValue, cardValue])
 
   return (
     <div className="flex justify-center">
@@ -48,9 +68,9 @@ export default function TabTwo() {
         </div>
 
         <div className="flex form-item">
-          <label htmlFor="pagBankValue" className="form-label">PagBank:</label>
-          <input id="pagBankValue" name="pagBankValue" type="number" className="form-input"
-            value={pagBankValue} onChange={handleInputChange} min="0.001" step="0.001" required />
+          <label htmlFor="cardValue" className="form-label">PagBank:</label>
+          <input id="cardValue" name="cardValue" type="number" className="form-input"
+            value={cardValue} onChange={handleInputChange} min="0.001" step="0.001" required />
         </div>
       </div>
       <div className={`${styles.summary} w-1/2`}>
