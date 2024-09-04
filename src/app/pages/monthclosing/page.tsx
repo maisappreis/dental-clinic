@@ -70,8 +70,6 @@ export default function MonthClosing(
       setSelectedTab("tab2");
     } else if (selectedTab === "tab2") {
       disableTabForward();
-
-      console.log('selectedMonthClosing', selectedMonthClosing);
       
       if (selectedMonthClosing.id === 0) {
         await createMonthClosing();
@@ -88,7 +86,12 @@ export default function MonthClosing(
 
   const updateRevenue = async () => {
     try {
-      // await axios.patch(`${apiURL()}/revenue/${id}/`, data)
+      const updatedNetValues = revenue.map(item => ({
+        id: item.id,
+        net_value: item.net_value
+      }));
+
+      await axios.put(`${apiURL()}/update-net-values/`, updatedNetValues)
       setAlertMessage("Receita atualizada com sucesso!");
     } catch (error) {
       console.error('Erro ao atualizar receita.', error)

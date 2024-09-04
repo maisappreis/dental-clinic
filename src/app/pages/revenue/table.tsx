@@ -2,12 +2,13 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan, faCircleInfo, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
-import Tooltip from "@/app/components/tooltip"
+import Tooltip from "@/app/components/tooltip";
 import Modal from "@/app/components/modal";
 import RevenueForm from "./form";
 import { formatDate } from "@/utils/date";
 import { apiURL, fetchRevenue, isAuthenticated, configureAxios } from '@/utils/api';
-import Alert from '@/app/components/alert'
+import { RevenueProps } from "@/types/revenue";
+import Alert from '@/app/components/alert';
 import axios from "axios";
 
 interface Data {
@@ -25,29 +26,16 @@ interface TableProps {
   setRevenue: (newRevenue: any[]) => void;
 }
 
-interface RowProps {
-  id: number;
-  date: string;
-  name: string;
-  cpf: string;
-  nf: string;
-  procedure: string;
-  payment: string;
-  installments: number;
-  value: number;
-  notes: string;
-}
-
 export default function Table({ columns, data, setRevenue }: TableProps) {
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
-  const [selectedRow, setSelectedRow] = useState<RowProps | null>(null);
+  const [selectedRow, setSelectedRow] = useState<RevenueProps | null>(null);
   const [alertMessage, setAlertMessage] = useState('');
 
-  const openNotes = (row: RowProps, e: React.MouseEvent): void => {
+  const openNotes = (row: RevenueProps, e: React.MouseEvent): void => {
     setSelectedRow(row);
     setShowTooltip(!showTooltip);
     setTooltipPosition({
@@ -56,13 +44,13 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
     });
   }
 
-  const openUpdateModal = (row: RowProps): void => {
+  const openUpdateModal = (row: RevenueProps): void => {
     setShowUpdateModal(true);
     setModalTitle("Atualizar Receita");
     setSelectedRow(row);
   };
 
-  const openDeleteModal = (row: RowProps): void => {
+  const openDeleteModal = (row: RevenueProps): void => {
     setShowDeleteModal(true);
     setModalTitle("Excluir Receita");
     setSelectedRow(row);
@@ -72,7 +60,7 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
   const deleteRevenue = async () => {
     try {
       if (selectedRow && selectedRow.id) {
-        await axios.delete(`${apiURL}/revenue/${selectedRow.id}/`)
+        await axios.delete(`${apiURL()}/revenue/${selectedRow.id}/`)
         setAlertMessage("Receita excluída com sucesso!");
         const newRevenue = await fetchRevenue();
         setRevenue(newRevenue)

@@ -8,6 +8,7 @@ export interface RevenueProps {
   payment: string;
   installments: number;
   value: number;
+  net_value: number;
   notes: string;
 }
 

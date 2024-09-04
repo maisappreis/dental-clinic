@@ -16,7 +16,6 @@ export default function Reports(
 
   const openReport = (id: number)=> {
     const selectedReport = monthClosingList.find(e => e.id === id);
-    console.log('selectedReport', selectedReport)
 
     if (selectedReport) {
       setSelectedMonthClosing(selectedReport);

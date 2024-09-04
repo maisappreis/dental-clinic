@@ -49,6 +49,10 @@ export default function TabOne(
     );
   };
 
+  const saveRevenue = () => {
+    setRevenue(updatedRevenue);
+  }
+
   const calculatedRevenue = useCallback((sortedRevenue: RevenueList) => {
     return sortedRevenue.map((item) => {
       let netValue = item.value;
@@ -148,6 +152,11 @@ export default function TabOne(
           </table>
           : <div className="no-data">Nenhum resultado encontrado.</div>
         }
+      </div>
+      <div className="flex justify-end w-full align-bottom mt-3">
+        <button className="btn green size-fit" onClick={saveRevenue}>
+          Salvar
+        </button>
       </div>
     </div>
   )
