@@ -6,22 +6,21 @@ import TabOne from './tab1';
 import TabTwo from './tab2';
 import TabThree from './tab3';
 import Modal from "@/app/components/modal";
-import Alert from '@/app/components/alert';
 import { RevenueList, RevenueProps } from '@/types/revenue';
-import { MonthClosingList } from '@/types/monthClosing';
+import { MonthClosingList, MonthClosingProps } from '@/types/monthClosing';
 import { months, years } from "@/assets/data"
 import { getCurrentYear, getCurrentMonth } from "@/utils/date"
-import axios from "axios";
-import { fetchMonthClosing, apiURL, isAuthenticated, configureAxios } from '@/utils/api';
+import { fetchMonthClosing } from '@/utils/api';
 
 interface DataMonthClosing {
   revenue: RevenueList;
   setRevenue: (newRevenue: RevenueProps[]) => void;
   monthClosing: MonthClosingList;
+  setMonthClosing: (newRevenue: MonthClosingProps[]) => void;
 }
 
 export default function MonthClosing(
-  { revenue, setRevenue, monthClosing }: DataMonthClosing
+  { revenue, setRevenue, monthClosing, setMonthClosing }: DataMonthClosing
 ) {
   let tabContent: React.ReactNode;
   const [selectedTab, setSelectedTab] = useState("reports");
@@ -33,7 +32,6 @@ export default function MonthClosing(
   const [selectedNumberMonth, setSelectedNumberMonth] = useState(0);
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
-  const [alertMessage, setAlertMessage] = useState('');
   const [filteredRevenue, setFilteredRevenue] = useState<RevenueList>([]);
   const [tabsOptions, setTabsOptions] = useState([
     { id: "reports", label: "Relatórios", disabled: false },
@@ -66,58 +64,15 @@ export default function MonthClosing(
       openModal();
     } else if (selectedTab === "tab1") {
       disableTabForward();
-      await updateRevenue();
       setSelectedTab("tab2");
     } else if (selectedTab === "tab2") {
       disableTabForward();
-      
-      if (selectedMonthClosing.id === 0) {
-        await createMonthClosing();
-      } else {
-        await updateMonthClosing();
-      }
       setSelectedTab("tab3");
     } else {
-      await fetchMonthClosing();
+      const monthClosingData = await fetchMonthClosing();
+      setMonthClosing(monthClosingData);
       setSelectedTab("reports");
       disableTabsOptions();
-    }
-  }
-
-  const updateRevenue = async () => {
-    try {
-      const updatedNetValues = revenue.map(item => ({
-        id: item.id,
-        net_value: item.net_value
-      }));
-
-      await axios.put(`${apiURL()}/update-net-values/`, updatedNetValues)
-      setAlertMessage("Receita atualizada com sucesso!");
-    } catch (error) {
-      console.error('Erro ao atualizar receita.', error)
-      setAlertMessage("Erro ao atualizar receita.");
-    }
-  }
-
-  const createMonthClosing = async () => {
-    try {
-      await axios.post(`${apiURL()}/month_closing/create/`, selectedMonthClosing)
-      setAlertMessage("Dados salvos com sucesso!");
-    } catch (error) {
-      console.error('Erro ao salvar os dados.', error)
-      setAlertMessage("Erro ao salvar os dados.");
-    }
-  }
-
-  const updateMonthClosing = async () => {
-    try {
-      const response = await axios.patch(`${apiURL()}/month_closing/${selectedMonthClosing.id}/`, selectedMonthClosing);
-      setSelectedMonthClosing(response.data);
-
-      setAlertMessage("Dados salvos com sucesso!");
-    } catch (error) {
-      console.error('Erro ao salvar os dados.', error)
-      setAlertMessage("Erro ao salvar os dados.");
     }
   }
 
@@ -187,21 +142,6 @@ export default function MonthClosing(
   };
 
   useEffect(() => {
-    if (alertMessage) {
-      const timer = setTimeout(() => {
-        setAlertMessage("")
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [alertMessage]);
-
-  useEffect(() => {
-    isAuthenticated();
-    configureAxios();
-  }, []);
-
-  useEffect(() => {
     if (revenue && revenue.length > 0) {
       const currentMonth = selectedMonthClosing.month;
       const currentYear = selectedMonthClosing.year;
@@ -223,7 +163,7 @@ export default function MonthClosing(
         setButtonText("Novo Fechamento");
         break;
       case "tab1":
-        setButtonText("Salvar");
+        setButtonText("Avançar");
         break;
       case "tab2":
         setButtonText("Avançar");
@@ -298,7 +238,7 @@ export default function MonthClosing(
         {tabContent}
       </div>
       <div className="flex justify-end w-full align-bottom mt-3">
-        <button className="btn green size-fit" onClick={handleButtonClick}>
+        <button className="btn blue size-fit" onClick={handleButtonClick}>
           {buttonText}
         </button>
       </div>
@@ -353,7 +293,6 @@ export default function MonthClosing(
           </div>
         </Modal>
       }
-      <Alert message={alertMessage} />
     </div>
   )
 }

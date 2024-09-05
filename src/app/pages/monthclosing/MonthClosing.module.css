@@ -30,6 +30,11 @@
   height: 100%;
 }
 
+.overflow {
+  max-height: 300px;
+  overflow: auto;
+}
+
 .selected {
   background-color: green;
 }
@@ -98,6 +103,20 @@
 
 .green {
   color: green;
+}
+
+.input {
+  width: 50%;
+  padding: 5px;
+  border-radius: 5px;
+  border: 2px solid #b4b4b4;
+  font-size: 16px;
+}
+
+@media only screen and (min-width: 1600px) {
+  .overflow {
+    max-height: 465px;
+  }
 }
 
 @media only screen and (max-width: 1000px) {

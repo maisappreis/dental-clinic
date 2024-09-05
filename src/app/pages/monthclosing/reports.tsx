@@ -1,6 +1,4 @@
 import styles from "./MonthClosing.module.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { MonthClosingList, MonthClosingProps } from '@/types/monthClosing';
 
 interface ReportsProps {
@@ -24,10 +22,6 @@ export default function Reports(
     }
   }
 
-  const editReport = (id: number) => {
-    console.log('Editar', id)
-  }
-
   return (
     <div className="flex justify-left w-full flex-wrap">
       {monthClosingList.length > 0 ?
@@ -39,7 +33,6 @@ export default function Reports(
             onClick={() => openReport(report.id)}
             >
             {report.reference}
-            <FontAwesomeIcon icon={faPenToSquare} className="ml-3" onClick={() => editReport(report.id)} />
           </div>
         ))
         : <div className="no-data">Nenhum resultado encontrado.</div>

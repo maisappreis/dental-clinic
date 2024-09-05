@@ -1,14 +1,18 @@
 'use client'
 import { useEffect, useState } from 'react';
 import styles from "./MonthClosing.module.css";
-import { DataMonthClosingProps } from "@/types/monthClosing"
+import { DataMonthClosingProps, MonthClosingProps } from "@/types/monthClosing"
 import { calculateMonthlyRevenue } from "@/utils/utils"
+import Alert from '@/app/components/alert';
+import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
+import axios from "axios";
 
 export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonthClosing }: DataMonthClosingProps) {
   const [bankValue, setBankValue] = useState(0);
   const [cashValue, setCashValue] = useState(0);
   const [cardValue, setCardValue] = useState(0);
   const [totalMonthlyRevenue, setTotalMonthlyRevenue] = useState(0);
+  const [alertMessage, setAlertMessage] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -23,14 +27,44 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
     }
   };
 
-  const saveValues = () => {
-    setSelectedMonthClosing({
+  const saveValues = async () => {
+    const updatedMonthClosing = {
       ...selectedMonthClosing,
-      bank_value: bankValue,
-      cash_value: cashValue,
-      card_value: cardValue
-    });
+    bank_value: bankValue,
+    cash_value: cashValue,
+    card_value: cardValue
+    };
+
+    if (selectedMonthClosing.id === 0) {
+      await createMonthClosing(updatedMonthClosing);
+    } else {
+      await updateMonthClosing(updatedMonthClosing);
+    }
   };
+
+  const createMonthClosing = async (updatedMonthClosing: MonthClosingProps) => {
+    try {
+      const response = await axios.post(`${apiURL()}/month_closing/create/`, updatedMonthClosing)
+      setSelectedMonthClosing(response.data);
+
+      setAlertMessage("Dados salvos com sucesso!");
+    } catch (error) {
+      console.error('Erro ao salvar os dados.', error)
+      setAlertMessage("Erro ao salvar os dados.");
+    }
+  }
+
+  const updateMonthClosing = async (updatedMonthClosing: MonthClosingProps) => {
+    try {
+      const response = await axios.put(`${apiURL()}/month_closing/${selectedMonthClosing.id}/`, updatedMonthClosing);
+      setSelectedMonthClosing(response.data);
+
+      setAlertMessage("Dados salvos com sucesso!");
+    } catch (error) {
+      console.error('Erro ao salvar os dados.', error)
+      setAlertMessage("Erro ao salvar os dados.");
+    }
+  }
 
   const sumValues = bankValue + cashValue + cardValue;
 
@@ -40,6 +74,14 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
   };
 
   useEffect(() => {
+    if (selectedMonthClosing && selectedMonthClosing.id > 0) {
+      setBankValue(selectedMonthClosing.bank_value);
+      setCashValue(selectedMonthClosing.cash_value);
+      setCardValue(selectedMonthClosing.card_value);
+    }
+  }, [selectedMonthClosing])
+
+  useEffect(() => {
     if (revenue && revenue.length > 0) {
       const currentMonth = selectedMonthClosing.month;
       const currentYear = selectedMonthClosing.year;
@@ -47,7 +89,22 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
 
       setTotalMonthlyRevenue(totalRevenue);
     }
-  }, [revenue, setTotalMonthlyRevenue, selectedMonthClosing])
+  }, [revenue, setTotalMonthlyRevenue, selectedMonthClosing]);
+
+  useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => {
+        setAlertMessage("")
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [alertMessage]);
+
+  useEffect(() => {
+    isAuthenticated();
+    configureAxios();
+  }, []);
 
   return (
     <div className="flex justify-center">
@@ -100,6 +157,7 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
           </div>
         </div>
       </div>
+      <Alert message={alertMessage} />
     </div>
   )
 }

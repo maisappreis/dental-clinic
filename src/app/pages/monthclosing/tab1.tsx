@@ -2,12 +2,16 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { formatDate } from "@/utils/date";
 import { RevenueProps, RevenueList } from '@/types/revenue';
-
+import axios from "axios";
+import Alert from '@/app/components/alert';
+import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
+import styles from "./MonthClosing.module.css";
 
 export default function TabOne(
   { revenue, setRevenue }: { revenue: RevenueList, setRevenue: (newRevenue: RevenueProps[]) => void; }
 ) {
   const [updatedRevenue, setUpdatedRevenue] = useState<RevenueList>([]);
+  const [alertMessage, setAlertMessage] = useState('');
   const [formRate, setFormRate] = useState({
     debit: 1.99,
     cashCredit: 4.99,
@@ -51,6 +55,22 @@ export default function TabOne(
 
   const saveRevenue = () => {
     setRevenue(updatedRevenue);
+    updateRevenue();
+  }
+
+  const updateRevenue = async () => {
+    try {
+      const updatedNetValues = updatedRevenue.map(item => ({
+        id: item.id,
+        net_value: item.net_value
+      }));
+
+      await axios.put(`${apiURL()}/update-net-values/`, updatedNetValues)
+      setAlertMessage("Receita atualizada com sucesso!");
+    } catch (error) {
+      console.error('Erro ao atualizar receita.', error)
+      setAlertMessage("Erro ao atualizar receita.");
+    }
   }
 
   const calculatedRevenue = useCallback((sortedRevenue: RevenueList) => {
@@ -73,16 +93,48 @@ export default function TabOne(
   }, [formRate]);
 
   useEffect(() => {
-    if (revenue && revenue.length > 0) {
-      const sortedRevenue = [...revenue].sort((a, b) => {
-        const order = ["Débito", "Crédito à vista", "Crédito à prazo", 'Dinheiro', 'PIX', 'Transferência', 'Cheque'];
-        return order.indexOf(a.payment) - order.indexOf(b.payment);
+    if (revenue && revenue.length > 0 && updatedRevenue.length === 0) { 
+      const priorityPayments = ["Débito", "Crédito à vista", "Crédito à prazo"];
+
+      const prioritizedRevenue = revenue.filter(item => 
+        priorityPayments.includes(item.payment)
+      );
+      
+      const otherRevenue = revenue.filter(item => 
+        !priorityPayments.includes(item.payment)
+      );
+
+      prioritizedRevenue.sort((a, b) => {
+        return new Date(a.date).getTime() - new Date(b.date).getTime();
       });
 
-      const updatedRevenue = calculatedRevenue(sortedRevenue);
-      setUpdatedRevenue(updatedRevenue)
+      const sortedRevenue = [...prioritizedRevenue, ...otherRevenue];
+
+      const allNetValuesZero = revenue.every(item => item.net_value === 0);
+  
+      if (allNetValuesZero) {
+        const updatedRevenueData = calculatedRevenue(sortedRevenue);
+        setUpdatedRevenue(updatedRevenueData);
+      } else {
+        setUpdatedRevenue(sortedRevenue);
+      }
     }
-  }, [revenue, formRate, calculatedRevenue]);
+  }, [revenue, formRate, calculatedRevenue, updatedRevenue.length]);
+
+  useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => {
+        setAlertMessage("")
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [alertMessage]);
+
+  useEffect(() => {
+    isAuthenticated();
+    configureAxios();
+  }, []);
 
   return (
     <div>
@@ -101,63 +153,71 @@ export default function TabOne(
             value={formRate.installmentCredit} onChange={handleRateInputChange} min="0.001" step="0.001" required />
         </div>
       </div>
-      <div className="table-overflow">
+      <div className={styles.overflow}>
         {updatedRevenue.length > 0 ?
-          <table>
-            <thead>
-              <tr>
-                {columns.map((column) => (
-                  <th key={column.key}>{column.name}</th>
-                ))}
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {updatedRevenue.map((row: any, rowIndex: number) => (
-                <tr key={rowIndex}>
-                  {columns.map((column, colIndex) => {
-                    const isHighlighted = ["Débito", "Crédito à vista", "Crédito à prazo"].includes(row.payment);
-                    const formattedValue = `R$ ${parseFloat(row[column.key]).toFixed(2).replace('.', ',')}`;
-
-                    return (
-                      <td key={colIndex}>
-                        {column.key === 'value' ? (
-                          <span style={isHighlighted ? { color: 'red', fontWeight: 'bold' } : undefined}>
-                            {formattedValue}
-                          </span>
-                        ) : column.key === 'date' ? (
-                          formatDate(row[column.key])
-                        ) : column.key === 'net_value' ? (
-                          <input
-                            id="net-value"
-                            name="net-value"
-                            type="number"
-                            className="form-input"
-                            onChange={(e) => handleInputChange(e, rowIndex)}
-                            value={row.net_value}
-                            min="0.001"
-                            step="0.001"
-                            required
-                          />
-                        ) : (
-                          row[column.key]
-                        )}
-                      </td>
-                    );
-                  })}
-                  <td></td>
+          <>
+            <table>
+              <thead>
+                <tr>
+                  {columns.map((column) => (
+                    <th key={column.key}>{column.name}</th>
+                  ))}
+                  <th></th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {updatedRevenue.map((row: any, rowIndex: number) => (
+                  <tr key={rowIndex}>
+                    {columns.map((column, colIndex) => {
+                      const isHighlighted = ["Débito", "Crédito à vista", "Crédito à prazo"].includes(row.payment);
+                      const formattedValue = `R$ ${parseFloat(row[column.key]).toFixed(2).replace('.', ',')}`;
+
+                      return (
+                        <td key={colIndex}>
+                          {column.key === 'value' ? (
+                            <span style={isHighlighted ? { color: 'red', fontWeight: 'bold' } : undefined}>
+                              {formattedValue}
+                            </span>
+                          ) : column.key === 'payment' ? (
+                            <span style={isHighlighted ? { color: 'red', fontWeight: 'bold' } : undefined}>
+                              {row[column.key]}
+                            </span>
+                          ) : column.key === 'date' ? (
+                            formatDate(row[column.key])
+                          ) : column.key === 'net_value' ? (
+                            <input
+                              id="net-value"
+                              name="net-value"
+                              type="number"
+                              className={styles.input}
+                              onChange={(e) => handleInputChange(e, rowIndex)}
+                              value={row.net_value}
+                              min="0.001"
+                              step="0.001"
+                              required
+                            />
+                          ) : (
+                            row[column.key]
+                          )}
+                        </td>
+                      );
+                    })}
+                    <td></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="flex justify-end w-full align-bottom my-3">
+              <button className="btn green size-fit" onClick={saveRevenue}>
+                Salvar
+              </button>
+            </div>
+          </>
           : <div className="no-data">Nenhum resultado encontrado.</div>
         }
+
       </div>
-      <div className="flex justify-end w-full align-bottom mt-3">
-        <button className="btn green size-fit" onClick={saveRevenue}>
-          Salvar
-        </button>
-      </div>
+      <Alert message={alertMessage} />
     </div>
   )
 }

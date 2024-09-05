@@ -20,7 +20,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
   const [alertMessage, setAlertMessage] = useState('');
   const [validCPF, setValidCPF] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RevenueProps>({
     id: 0,
     date: getCurrentDate(),
     name: "",
@@ -30,6 +30,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
     payment: "",
     installments: 0,
     value: 0,
+    net_value: 0,
     notes: ""
   });
 
@@ -149,6 +150,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
       payment: selectedRow?.payment || "",
       installments: selectedRow?.installments || 0,
       value: selectedRow?.value || 0,
+      net_value: selectedRow?.net_value || 0,
       notes: selectedRow?.notes || ""
     });
   }, [selectedRow]);
