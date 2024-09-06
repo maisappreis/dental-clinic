@@ -37,7 +37,7 @@ export default function MonthClosing(
     { id: "reports", label: "Relatórios", disabled: false },
     { id: "tab1", label: "Passo 1", disabled: true },
     { id: "tab2", label: "Passo 2", disabled: true },
-    { id: "tab3", label: "Passo 3", disabled: true }
+    { id: "tab3", label: "Resumo", disabled: true }
   ]);
   const [selectedMonthClosing, setSelectedMonthClosing] = useState({
     id: 0,
@@ -47,6 +47,7 @@ export default function MonthClosing(
     bank_value: 0,
     cash_value: 0,
     card_value: 0,
+    card_value_next_month: 0,
     gross_revenue: 0,
     net_revenue: 0,
     expenses: 0,
@@ -100,6 +101,7 @@ export default function MonthClosing(
       bank_value: 0,
       cash_value: 0,
       card_value: 0,
+      card_value_next_month: 0,
       gross_revenue: 0,
       net_revenue: 0,
       expenses: 0,
@@ -120,12 +122,12 @@ export default function MonthClosing(
   };
 
   const disableTabForward = () => {
-    const currentTabIndex = tabsOptions.findIndex(tab => tab.id === selectedTab) + 1 ;   
+    const currentTabIndex = tabsOptions.findIndex(tab => tab.id === selectedTab) + 1;
     const updatedTabsOptions = tabsOptions.map((tab, index) => ({
       ...tab,
       disabled: index > currentTabIndex
     }));
-  
+
     setTabsOptions(updatedTabsOptions);
   };
 
@@ -146,16 +148,29 @@ export default function MonthClosing(
       const currentMonth = selectedMonthClosing.month;
       const currentYear = selectedMonthClosing.year;
 
-      const currentRevenueMonth = revenue.filter(item => {
-        const month = parseInt(item.date.slice(5, 7));
-        const year = parseInt(item.date.slice(0, 4));
+      const getPreviousMonth = (month: number, year: number) => {
+        if (month === 1) {
+          return { previousMonth: 12, previousYear: year - 1 };
+        }
+        return { previousMonth: month - 1, previousYear: year };
+      };
 
-        return month === currentMonth && year === currentYear;
-      })
+      const filteredRevenue = revenue.filter(item => {
+        const itemMonth = parseInt(item.date.slice(5, 7));
+        const itemYear = parseInt(item.date.slice(0, 4));
+        const isCredit = item.payment === "Crédito à vista" || item.payment === "Crédito à prazo";
 
-      setFilteredRevenue(currentRevenueMonth)
+        if (isCredit) {
+          const { previousMonth, previousYear } = getPreviousMonth(currentMonth, currentYear);
+          return itemMonth === previousMonth && itemYear === previousYear;
+        }
+
+        return itemMonth === currentMonth && itemYear === currentYear;
+      });
+
+      setFilteredRevenue(filteredRevenue);
     }
-  }, [revenue, selectedMonthClosing, setFilteredRevenue])
+  }, [revenue, selectedMonthClosing, setFilteredRevenue]);
 
   useEffect(() => {
     switch (selectedTab) {
@@ -204,20 +219,23 @@ export default function MonthClosing(
 
   switch (selectedTab) {
     case "reports":
-      tabContent = <Reports monthClosingList={monthClosing} setSelectedMonthClosing={setSelectedMonthClosing} setSelectedTab={setSelectedTab} disableTabForward={disableTabForward} />;
+      tabContent = <Reports monthClosingList={monthClosing} setSelectedMonthClosing={setSelectedMonthClosing}
+        setSelectedTab={setSelectedTab} disableTabForward={disableTabForward} />;
       break;
     case "tab1":
       tabContent = <TabOne revenue={filteredRevenue} setRevenue={setRevenue} />;
       break;
     case "tab2":
-      tabContent = <TabTwo revenue={revenue} selectedMonthClosing={selectedMonthClosing} setSelectedMonthClosing={setSelectedMonthClosing} />;
+      tabContent = <TabTwo revenue={revenue} selectedMonthClosing={selectedMonthClosing}
+        setSelectedMonthClosing={setSelectedMonthClosing} />;
       break;
     case "tab3":
       tabContent = <TabThree selectedMonthClosing={selectedMonthClosing} />;
       break;
 
     default:
-      tabContent = <Reports monthClosingList={monthClosing} setSelectedMonthClosing={setSelectedMonthClosing} setSelectedTab={setSelectedTab} disableTabForward={disableTabForward} />;
+      tabContent = <Reports monthClosingList={monthClosing} setSelectedMonthClosing={setSelectedMonthClosing}
+        setSelectedTab={setSelectedTab} disableTabForward={disableTabForward} />;
   }
 
   return (

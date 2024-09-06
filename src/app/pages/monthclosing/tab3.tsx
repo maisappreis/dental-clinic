@@ -19,13 +19,13 @@ export default function TabThree({ selectedMonthClosing }: { selectedMonthClosin
   const inputs = [
     { id: 1, label: "Banco do Brasil:", value: selectedMonthClosing.bank_value },
     { id: 2, label: "Dinheiro:", value: selectedMonthClosing.cash_value },
-    { id: 3, label: "PagBank:", value: selectedMonthClosing.card_value },
-    { id: 4, label: "Dentista Alana:", value: selectedMonthClosing.other_revenue },
+    { id: 3, label: "Cartão:", value: selectedMonthClosing.card_value -  selectedMonthClosing.card_value_next_month},
+    { id: 4, label: "Dra. Alana:", value: selectedMonthClosing.other_revenue },
   ];
 
   const outputs = [
     { id: 1, label: "Despesas:", value: selectedMonthClosing.expenses },
-    { id: 2, label: "Dentista Mirian:", value: selectedMonthClosing.profit }
+    { id: 2, label: "Dra. Mirian:", value: selectedMonthClosing.profit }
   ];
 
   const sumValues = (array: ValuesProps[]) => {

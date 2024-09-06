@@ -19,7 +19,8 @@ export default function TabOne(
   });
 
   const columns: { key: string; name: string; }[] = [
-    { key: "date", name: "Data" },
+    { key: "date", name: "Data Pgto" },
+    { key: "release_date", name: "Data Liberação" },
     { key: "name", name: "Nome" },
     { key: "payment", name: "Pagamento" },
     { key: "installments", name: "Parcelas" },
@@ -62,7 +63,8 @@ export default function TabOne(
     try {
       const updatedNetValues = updatedRevenue.map(item => ({
         id: item.id,
-        net_value: item.net_value
+        net_value: item.net_value,
+        release_date: item.release_date
       }));
 
       await axios.put(`${apiURL()}/update-net-values/`, updatedNetValues)
@@ -76,21 +78,31 @@ export default function TabOne(
   const calculatedRevenue = useCallback((sortedRevenue: RevenueList) => {
     return sortedRevenue.map((item) => {
       let netValue = item.value;
+      let releaseDate = item.date
 
       if (item.payment === "Débito") {
         netValue -= (item.value * (formRate.debit / 100));
       } else if (item.payment === "Crédito à vista") {
         netValue -= (item.value * (formRate.cashCredit / 100));
+        releaseDate = addDaysToDate(item.date, 30);
       } else if (item.payment === "Crédito à prazo") {
         netValue -= (item.value * (formRate.installmentCredit / 100));
+        releaseDate = addDaysToDate(item.date, 30);
       }
 
       return {
         ...item,
         net_value: parseFloat(netValue.toFixed(2)),
+        release_date: releaseDate,
       };
     });
   }, [formRate]);
+
+  const addDaysToDate = (dateString: string, days: number) => {
+    const date = new Date(dateString);
+    date.setDate(date.getDate() + days);
+    return date.toISOString().split('T')[0];
+  };
 
   useEffect(() => {
     if (revenue && revenue.length > 0 && updatedRevenue.length === 0) { 
@@ -183,6 +195,8 @@ export default function TabOne(
                               {row[column.key]}
                             </span>
                           ) : column.key === 'date' ? (
+                            formatDate(row[column.key])
+                          ) : column.key === 'release_date' ? (
                             formatDate(row[column.key])
                           ) : column.key === 'net_value' ? (
                             <input

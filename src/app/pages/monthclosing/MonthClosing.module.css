@@ -74,8 +74,9 @@
 
 .speechbubble {
   position: absolute;
-  top: 1vh;
-  right: 5vw;
+  bottom: 6vh;
+  left: 7vw;
+  font-size: 14px;
   background-color: #c1ffc5;
   border-radius: 15px;
   padding: 10px 20px;
@@ -87,10 +88,14 @@
 .speechbubble::after {
   content: '';
   position: absolute;
-  bottom: -20px;
+  /* bottom: -20px;
   left: 50px;
+  border-width: 20px 20px 0; */
 
-  border-width: 20px 20px 0;
+  top: -20px;
+  left: 50px;
+  border-width: 0px 20px 20px;
+
   border-style: solid;
   border-color: #c1ffc5 transparent;
   display: block;

@@ -1,6 +1,7 @@
 export interface RevenueProps {
   id: number;
   date: string;
+  release_date: string;
   name: string;
   cpf: string;
   nf: string;

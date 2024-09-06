@@ -11,6 +11,7 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
   const [bankValue, setBankValue] = useState(0);
   const [cashValue, setCashValue] = useState(0);
   const [cardValue, setCardValue] = useState(0);
+  const [cardValueNext, setCardValueNext] = useState(0);
   const [totalMonthlyRevenue, setTotalMonthlyRevenue] = useState(0);
   const [alertMessage, setAlertMessage] = useState('');
 
@@ -24,6 +25,8 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
       setCashValue(newValue);
     } else if (name === "cardValue") {
       setCardValue(newValue);
+    } else if (name === "cardValueNext") {
+      setCardValueNext(newValue);
     }
   };
 
@@ -32,7 +35,8 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
       ...selectedMonthClosing,
     bank_value: bankValue,
     cash_value: cashValue,
-    card_value: cardValue
+    card_value: cardValue,
+    card_value_next_month: cardValueNext,
     };
 
     if (selectedMonthClosing.id === 0) {
@@ -66,11 +70,11 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
     }
   }
 
-  const sumValues = bankValue + cashValue + cardValue;
+  const sumValues = bankValue + cashValue + cardValue - cardValueNext;
 
   const diffValues = (): number => {
     const inputs = sumValues;
-    return inputs - totalMonthlyRevenue
+    return inputs - totalMonthlyRevenue;
   };
 
   useEffect(() => {
@@ -78,6 +82,7 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
       setBankValue(selectedMonthClosing.bank_value);
       setCashValue(selectedMonthClosing.cash_value);
       setCardValue(selectedMonthClosing.card_value);
+      setCardValueNext(selectedMonthClosing.card_value_next_month);
     }
   }, [selectedMonthClosing])
 
@@ -122,9 +127,19 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
         </div>
 
         <div className="flex form-item">
-          <label htmlFor="cardValue" className="form-label">PagBank:</label>
+          <label htmlFor="cardValue" className="form-label">Cartão:</label>
           <input id="cardValue" name="cardValue" type="number" className="form-input"
             value={cardValue} onChange={handleInputChange} min="0.001" step="0.001" required />
+        </div>
+
+        <div className="flex form-item">
+          <label htmlFor="cardValueNext" className="form-label">Cartão mês seguinte:</label>
+          <input id="cardValueNext" name="cardValueNext" type="number" className="form-input"
+            value={cardValueNext} onChange={handleInputChange} min="0.001" step="0.001" required />
+        </div>
+        <div className={styles.speechbubble}>
+          <strong>Cartão do mês seguinte: </strong>podem haver valores que são referentes a receita do mês que vem, mas que já estão liberados.
+          Esses valores devem ser subtraídos, pois entrarão apenas no mês seguinte.
         </div>
         <div className="flex justify-end w-full align-bottom mt-3">
           <button className="btn green size-fit" onClick={saveValues}>

@@ -8,6 +8,7 @@ export interface MonthClosingProps {
   bank_value: number;
   cash_value: number;
   card_value: number;
+  card_value_next_month: number;
   gross_revenue: number;
   net_revenue: number;
   expenses: number;
