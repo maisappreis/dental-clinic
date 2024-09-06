@@ -8,7 +8,7 @@ import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
 import styles from "./MonthClosing.module.css";
 
 export default function TabOne(
-  { revenue, setRevenue }: { revenue: RevenueList, setRevenue: (newRevenue: RevenueProps[]) => void; }
+  { orderedRevenue, setRevenue }: { orderedRevenue: RevenueList, setRevenue: (newRevenue: RevenueProps[]) => void }
 ) {
   const [updatedRevenue, setUpdatedRevenue] = useState<RevenueList>([]);
   const [alertMessage, setAlertMessage] = useState('');
@@ -78,60 +78,42 @@ export default function TabOne(
   const calculatedRevenue = useCallback((sortedRevenue: RevenueList) => {
     return sortedRevenue.map((item) => {
       let netValue = item.value;
-      let releaseDate = item.date
 
       if (item.payment === "Débito") {
         netValue -= (item.value * (formRate.debit / 100));
       } else if (item.payment === "Crédito à vista") {
         netValue -= (item.value * (formRate.cashCredit / 100));
-        releaseDate = addDaysToDate(item.date, 30);
       } else if (item.payment === "Crédito à prazo") {
         netValue -= (item.value * (formRate.installmentCredit / 100));
-        releaseDate = addDaysToDate(item.date, 30);
       }
 
       return {
         ...item,
         net_value: parseFloat(netValue.toFixed(2)),
-        release_date: releaseDate,
       };
     });
   }, [formRate]);
 
-  const addDaysToDate = (dateString: string, days: number) => {
-    const date = new Date(dateString);
-    date.setDate(date.getDate() + days);
-    return date.toISOString().split('T')[0];
-  };
+  const getReleaseDate = (dateString: string) => {
+    if (dateString && dateString !== "") {
+      return formatDate(dateString)
+    } else {
+      return ""
+    }
+  }
 
   useEffect(() => {
-    if (revenue && revenue.length > 0 && updatedRevenue && updatedRevenue.length === 0) { 
-      const priorityPayments = ["Débito", "Crédito à vista", "Crédito à prazo"];
-
-      const prioritizedRevenue = revenue.filter(item => 
-        priorityPayments.includes(item.payment)
-      );
-      
-      const otherRevenue = revenue.filter(item => 
-        !priorityPayments.includes(item.payment)
-      );
-
-      prioritizedRevenue.sort((a, b) => {
-        return new Date(a.date).getTime() - new Date(b.date).getTime();
-      });
-
-      const sortedRevenue = [...prioritizedRevenue, ...otherRevenue];
-
-      const allNetValuesZero = revenue.every(item => item.net_value === 0);
+    if (orderedRevenue && orderedRevenue.length > 0 && updatedRevenue && updatedRevenue.length === 0) { 
+      const allNetValuesZero = orderedRevenue.every(item => item.net_value === 0);
   
       if (allNetValuesZero) {
-        const updatedRevenueData = calculatedRevenue(sortedRevenue);
+        const updatedRevenueData = calculatedRevenue(orderedRevenue);
         setUpdatedRevenue(updatedRevenueData);
       } else {
-        setUpdatedRevenue(sortedRevenue);
+        setUpdatedRevenue(orderedRevenue);
       }
     }
-  }, [revenue, formRate, calculatedRevenue, updatedRevenue]);
+  }, [updatedRevenue, calculatedRevenue, orderedRevenue])
 
   useEffect(() => {
     if (alertMessage) {
@@ -197,7 +179,7 @@ export default function TabOne(
                           ) : column.key === 'date' ? (
                             formatDate(row[column.key])
                           ) : column.key === 'release_date' ? (
-                            formatDate(row[column.key])
+                            getReleaseDate(row[column.key])
                           ) : column.key === 'net_value' ? (
                             <input
                               id="net-value"

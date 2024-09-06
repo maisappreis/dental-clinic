@@ -9,7 +9,7 @@ import Modal from "@/app/components/modal";
 import { RevenueList, RevenueProps } from '@/types/revenue';
 import { MonthClosingList, MonthClosingProps } from '@/types/monthClosing';
 import { months, years } from "@/assets/data"
-import { getCurrentYear, getCurrentMonth } from "@/utils/date"
+import { getCurrentYear, getCurrentMonth, getNextMonthName } from "@/utils/date"
 import { fetchMonthClosing } from '@/utils/api';
 
 interface DataMonthClosing {
@@ -32,7 +32,7 @@ export default function MonthClosing(
   const [selectedNumberMonth, setSelectedNumberMonth] = useState(0);
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
-  const [filteredRevenue, setFilteredRevenue] = useState<RevenueList>([]);
+  const [orderedRevenue, setOrderedRevenue] = useState<RevenueList>([]);
   const [tabsOptions, setTabsOptions] = useState([
     { id: "reports", label: "Relatórios", disabled: false },
     { id: "tab1", label: "Passo 1", disabled: true },
@@ -92,12 +92,11 @@ export default function MonthClosing(
 
   const onConfirmationClick = () => {
     setShowModal(false);
-    setSelectedTab("tab1");
     setSelectedMonthClosing({
       id: 0,
-      reference: `${selectedMonth} ${selectedYear}`,
-      month: selectedNumberMonth,
-      year: parseInt(selectedYear, 10),
+      reference: `${selectedMonth} ${selectedYear}`, // TODO: será que é necessário um useEffect
+      month: selectedNumberMonth,                   // para o setSelectedYear e Month?
+      year: parseInt(selectedYear, 10),       // não poderia ser uma função chamada aqui?
       bank_value: 0,
       cash_value: 0,
       card_value: 0,
@@ -110,7 +109,9 @@ export default function MonthClosing(
       balance: 0
     });
 
+    filterRevenue(selectedNumberMonth, parseInt(selectedYear, 10));
     disableTabForward();
+    setSelectedTab("tab1");
   }
 
   const disableTabsOptions = () => {
@@ -143,34 +144,63 @@ export default function MonthClosing(
     }
   };
 
-  useEffect(() => {
+  const filterRevenue = (selectedNumberMonth: number, selectedYear: number) => {
     if (revenue && revenue.length > 0) {
-      const currentMonth = selectedMonthClosing.month;
-      const currentYear = selectedMonthClosing.year;
-
-      const getPreviousMonth = (month: number, year: number) => {
-        if (month === 1) {
-          return { previousMonth: 12, previousYear: year - 1 };
-        }
-        return { previousMonth: month - 1, previousYear: year };
+      const currentMonth = selectedNumberMonth;
+      const currentYear = selectedYear
+  
+      const addDaysToDate = (dateStr: string, days: number) => {
+        const date = new Date(dateStr);
+        date.setDate(date.getDate() + days);
+        return date;
       };
-
-      const filteredRevenue = revenue.filter(item => {
-        const itemMonth = parseInt(item.date.slice(5, 7));
-        const itemYear = parseInt(item.date.slice(0, 4));
+  
+      const updatedRevenue = revenue.map(item => {
         const isCredit = item.payment === "Crédito à vista" || item.payment === "Crédito à prazo";
-
+  
+        let releaseDate = new Date(item.date);
         if (isCredit) {
-          const { previousMonth, previousYear } = getPreviousMonth(currentMonth, currentYear);
-          return itemMonth === previousMonth && itemYear === previousYear;
+          releaseDate = addDaysToDate(item.date, 30);
         }
+  
+        return {
+          ...item,
+          release_date: releaseDate.toISOString().slice(0, 10),
+        };
+      });
+      setRevenue(updatedRevenue);
+  
+      const filteredRevenue = updatedRevenue.filter(item => {
+        const releaseMonth = parseInt(item.release_date.slice(5, 7));
+        const releaseYear = parseInt(item.release_date.slice(0, 4));
+  
+        return releaseMonth === currentMonth && releaseYear === currentYear;
+      });
+  
+      orderRevenue(filteredRevenue);
+    }
+  }
 
-        return itemMonth === currentMonth && itemYear === currentYear;
+  const orderRevenue = (filteredRevenue: RevenueList) => {
+    if (filteredRevenue && filteredRevenue.length > 0) { 
+      const priorityPayments = ["Débito", "Crédito à vista", "Crédito à prazo"];
+
+      const prioritizedRevenue = filteredRevenue.filter(item => 
+        priorityPayments.includes(item.payment)
+      );
+      
+      const otherRevenue = filteredRevenue.filter(item => 
+        !priorityPayments.includes(item.payment)
+      );
+
+      prioritizedRevenue.sort((a, b) => {
+        return new Date(a.date).getTime() - new Date(b.date).getTime();
       });
 
-      setFilteredRevenue(filteredRevenue);
+      const sortedRevenue = [...prioritizedRevenue, ...otherRevenue];
+      setOrderedRevenue(sortedRevenue);
     }
-  }, [revenue, selectedMonthClosing, setFilteredRevenue]);
+  }
 
   useEffect(() => {
     switch (selectedTab) {
@@ -220,10 +250,10 @@ export default function MonthClosing(
   switch (selectedTab) {
     case "reports":
       tabContent = <Reports monthClosingList={monthClosing} setSelectedMonthClosing={setSelectedMonthClosing}
-        setSelectedTab={setSelectedTab} disableTabForward={disableTabForward} />;
+        setSelectedTab={setSelectedTab} disableTabForward={disableTabForward} filterRevenue={filterRevenue} />;
       break;
     case "tab1":
-      tabContent = <TabOne revenue={filteredRevenue} setRevenue={setRevenue} />;
+      tabContent = <TabOne orderedRevenue={orderedRevenue} setRevenue={setRevenue} />;
       break;
     case "tab2":
       tabContent = <TabTwo revenue={revenue} selectedMonthClosing={selectedMonthClosing}
@@ -235,7 +265,7 @@ export default function MonthClosing(
 
     default:
       tabContent = <Reports monthClosingList={monthClosing} setSelectedMonthClosing={setSelectedMonthClosing}
-        setSelectedTab={setSelectedTab} disableTabForward={disableTabForward} />;
+        setSelectedTab={setSelectedTab} disableTabForward={disableTabForward} filterRevenue={filterRevenue} />;
   }
 
   return (
@@ -266,14 +296,14 @@ export default function MonthClosing(
             <select id="month" name="month" className="form-select mr-4"
               value={selectedMonth} onChange={handleInputChange} required>
               <option value="" disabled>Selecione:</option>
-              {months.map((option, i) => (
+              {months.slice(0, 12).map((option, i) => (
                 <option key={i} value={option}>{option}</option>
               ))}
             </select>
             <select id="year" name="year" className="form-select"
               value={selectedYear} onChange={handleInputChange} required>
               <option value="" disabled>Selecione:</option>
-              {years.map((option, i) => (
+              {years.slice(0, 12).map((option, i) => (
                 <option key={i} value={option}>{option}</option>
               ))}
             </select>
@@ -287,7 +317,7 @@ export default function MonthClosing(
               }}
             />
             <label htmlFor="has-installments" className="form-label">
-              Confirmo que todas as receitas do <strong>mês passado</strong> foram cadastras.
+              Confirmo que todas as receitas do <strong>{selectedMonth}</strong> foram cadastras.
             </label>
           </div>
           <div className="flex form-item">
@@ -298,7 +328,7 @@ export default function MonthClosing(
               }}
             />
             <label htmlFor="has-installments" className="form-label">
-              Confirmo que todas as despesas <strong>deste mês</strong> foram cadastras.
+              Confirmo que todas as despesas <strong>{getNextMonthName(selectedMonth)}</strong> foram cadastras.
             </label>
           </div>
           <div className="flex justify-around mt-4">

@@ -58,3 +58,17 @@ export function getNextMonth(date: string): string {
 
   return `${year}-${month}-${day}`;
 }
+
+// Receives a month name and returns the next month name.
+export function getNextMonthName(currentMonth: string): string {
+  const validMonths = months.slice(0, 12);
+  const currentIndex = validMonths.indexOf(currentMonth);
+
+  if (currentIndex === -1) {
+    throw new Error("Mês inválido");
+  }
+  
+  const nextIndex = (currentIndex + 1) % validMonths.length;
+  
+  return validMonths[nextIndex];
+}

@@ -6,10 +6,11 @@ interface ReportsProps {
   setSelectedMonthClosing: (newSelectedMonthClosing: MonthClosingProps) => void;
   setSelectedTab: (newSelectedTab: string) => void;
   disableTabForward: () => void;
+  filterRevenue: (month: number, year: number) => void;
 }
 
 export default function Reports(
-  { monthClosingList, setSelectedMonthClosing, setSelectedTab, disableTabForward }: ReportsProps
+  { monthClosingList, setSelectedMonthClosing, setSelectedTab, disableTabForward, filterRevenue }: ReportsProps
 ) {
 
   const openReport = (id: number)=> {
@@ -19,6 +20,8 @@ export default function Reports(
       setSelectedMonthClosing(selectedReport);
       setSelectedTab("tab1");
       disableTabForward();
+
+      filterRevenue(selectedReport.month, selectedReport.year);
     }
   }
 
