@@ -156,11 +156,11 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
         </div>
         <div className="flex-col">
           <div className="flex justify-between my-2">
-            <span className="mr-4 font-bold">Receita Bruta:</span>
+            <span className="mr-4 font-bold">Receita Líquida:</span>
             <span className="font-bold">R$ {totalMonthlyRevenue.toFixed(2).replace('.', ',')}</span>
           </div>
         </div>
-        <p className="my-4">A soma das entradas deve ser igual ao valor da receita bruta calculada.</p>
+        <p className="my-4">A soma das entradas deve ser igual ao valor da receita líquida calculada.</p>
         <div className="flex-col">
           <div className="flex justify-between my-2">
             <span className={`mr-4 font-bold ${diffValues() === 0 ? styles.green : styles.red}`}>

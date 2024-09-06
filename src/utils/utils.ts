@@ -13,18 +13,15 @@ export const capitalize = (str: string) => {
 };
 
 // Receives Revenue list, a month and a year and return the sum of this specific month.
-export function calculateMonthlyRevenue(revenue: RevenueList, currentMonth: number, currentYear: number): number {
-  return revenue.reduce((acc: number, curr: RevenueProps) => {
-    const month = parseInt(curr.date.slice(5, 7));
-    const year = parseInt(curr.date.slice(0, 4));
-    const key = `${year}-${month}`;
+export function calculateMonthlyRevenue(data: RevenueList, month: number, year: number, dateField: keyof RevenueProps = 'release_date', valueField: keyof RevenueProps = 'net_value'): number {
+  const filteredData = data.filter(item => {
+    const itemDate = new Date(item[dateField as keyof RevenueProps] as string);
+    return itemDate.getMonth() + 1 === month && itemDate.getFullYear() === year;
+  });
 
-    if (currentMonth === month && currentYear === year) {
-      return acc + curr.value;
-    }
+  const totalValue = filteredData.reduce((sum, item) => sum + (item[valueField as keyof RevenueProps] as number), 0);
 
-    return acc
-  }, 0);
+  return totalValue;
 }
 
 export function calculateMonthlyTotals(revenue: RevenueList, expenses: ExpenseList) {
