@@ -105,7 +105,7 @@ export default function TabOne(
   };
 
   useEffect(() => {
-    if (revenue && revenue.length > 0 && updatedRevenue.length === 0) { 
+    if (revenue && revenue.length > 0 && updatedRevenue && updatedRevenue.length === 0) { 
       const priorityPayments = ["Débito", "Crédito à vista", "Crédito à prazo"];
 
       const prioritizedRevenue = revenue.filter(item => 
@@ -131,7 +131,7 @@ export default function TabOne(
         setUpdatedRevenue(sortedRevenue);
       }
     }
-  }, [revenue, formRate, calculatedRevenue, updatedRevenue.length]);
+  }, [revenue, formRate, calculatedRevenue, updatedRevenue]);
 
   useEffect(() => {
     if (alertMessage) {
@@ -166,7 +166,7 @@ export default function TabOne(
         </div>
       </div>
       <div className={styles.overflow}>
-        {updatedRevenue.length > 0 ?
+        {updatedRevenue && updatedRevenue.length > 0 ?
           <>
             <table>
               <thead>
