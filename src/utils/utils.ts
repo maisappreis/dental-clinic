@@ -58,3 +58,14 @@ export function calculateMonthlyProfit(revenue: RevenueList, expenses: ExpenseLi
 
   return { monthsLabels, monthlyProfit };
 }
+
+export function formatValueToBRL(value: number): string {
+  if (isNaN(value)) {
+    return ""
+  }
+  const formattedValue = value.toFixed(2);
+  const [integerPart, decimalPart] = formattedValue.split('.');
+  const integerPartWithCommas = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+  return `R$ ${integerPartWithCommas},${decimalPart}`;
+}
