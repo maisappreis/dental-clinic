@@ -1,8 +1,8 @@
 'use client'
 import { useEffect, useState } from 'react';
 import styles from "./MonthClosing.module.css";
-import { DataMonthClosingProps, MonthClosingProps } from "@/types/monthClosing"
-import { calculateMonthlyRevenue } from "@/utils/utils"
+import { DataMonthClosingProps, MonthClosingProps } from "@/types/monthClosing";
+import { calculateMonthlyRevenue, formatValueToBRL } from "@/utils/utils";
 import Alert from '@/app/components/alert';
 import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
 import axios from "axios";
@@ -151,13 +151,13 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
         <div className="flex-col">
           <div className="flex justify-between my-2">
             <span className="mr-4 font-bold">Soma das entradas:</span>
-            <span className="font-bold">R$ {(sumValues).toFixed(2).replace('.', ',')}</span>
+            <span className="font-bold">{formatValueToBRL(sumValues)}</span>
           </div>
         </div>
         <div className="flex-col">
           <div className="flex justify-between my-2">
             <span className="mr-4 font-bold">Receita Líquida:</span>
-            <span className="font-bold">R$ {totalMonthlyRevenue.toFixed(2).replace('.', ',')}</span>
+            <span className="font-bold">{formatValueToBRL(totalMonthlyRevenue)}</span>
           </div>
         </div>
         <p className="my-4">A soma das entradas deve ser igual ao valor da receita líquida calculada.</p>
@@ -167,7 +167,7 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
               Diferença:
             </span>
             <span className={`font-bold ${diffValues() === 0 ? styles.green : styles.red}`}>
-              R$ {(diffValues()).toFixed(2).replace('.', ',')}
+              {formatValueToBRL(diffValues())}
             </span>
           </div>
         </div>

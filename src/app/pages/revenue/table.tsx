@@ -7,6 +7,7 @@ import Modal from "@/app/components/modal";
 import RevenueForm from "./form";
 import { formatDate } from "@/utils/date";
 import { apiURL, fetchRevenue, isAuthenticated, configureAxios } from '@/utils/api';
+import { formatValueToBRL } from "@/utils/utils";
 import { RevenueProps } from "@/types/revenue";
 import Alert from '@/app/components/alert';
 import axios from "axios";
@@ -114,7 +115,7 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
                   {columns.map((column, colIndex) => (
                     <td key={colIndex}>
                       {column.key === 'value' ?
-                        `R$ ${parseFloat(row[column.key]).toFixed(2).replace('.', ',')}`
+                        `${formatValueToBRL(row[column.key])}`
                         : column.key === 'nf' ?
                           <div>
                             {
@@ -158,8 +159,8 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
       {showDeleteModal && selectedRow &&
         <Modal title={modalTitle}>
           <h4 className="my-5 text-center">Tem certeza que deseja excluir o valor de
-            <strong> R$ {selectedRow.value.toFixed(2).replace('.', ',')} </strong>
-            do paciente <strong>{selectedRow.name}</strong>?
+            <strong> {formatValueToBRL(selectedRow.value)} </strong> do paciente
+            <strong> {selectedRow.name}</strong>?
           </h4>
           <div className="flex justify-around">
             <button onClick={deleteRevenue} className="btn red size">

@@ -1,5 +1,6 @@
 import styles from "./MonthClosing.module.css";
 import { MonthClosingProps } from '@/types/monthClosing';
+import { formatValueToBRL } from "@/utils/utils";
 
 interface ValuesProps {
   id: number;
@@ -45,7 +46,7 @@ export default function TabThree({ selectedMonthClosing }: { selectedMonthClosin
             <div key={item.id} className="flex-col">
               <div className="flex justify-between my-2">
                 <span className="mr-4">{item.label}</span>
-                <span>R$ {(item.value).toFixed(2).replace('.', ',')}</span>
+                <span>{formatValueToBRL(item.value)}</span>
               </div>
             </div>
           ))}
@@ -57,7 +58,7 @@ export default function TabThree({ selectedMonthClosing }: { selectedMonthClosin
             <div key={input.id} className="flex-col">
               <div className="flex justify-between my-2">
                 <span className="mr-4">{input.label}</span>
-                <span>R$ {(input.value).toFixed(2).replace('.', ',')}</span>
+                <span>{formatValueToBRL(input.value)}</span>
               </div>
             </div>
           ))}
@@ -65,7 +66,7 @@ export default function TabThree({ selectedMonthClosing }: { selectedMonthClosin
             <div className="flex justify-between mt-4">
               <h3 className="font-bold">Total:</h3>
               <h3 className="font-bold">
-                R$ {(sumValues(inputs)).toFixed(2).replace('.', ',')}
+                {formatValueToBRL(sumValues(inputs))}
               </h3>
             </div>
           </div>
@@ -77,7 +78,7 @@ export default function TabThree({ selectedMonthClosing }: { selectedMonthClosin
             <div key={input.id} className="flex-col">
               <div className="flex justify-between my-2">
                 <span className="mr-4">{input.label}</span>
-                <span>R$ {(input.value).toFixed(2).replace('.', ',')}</span>
+                <span>{formatValueToBRL(input.value)}</span>
               </div>
             </div>
           ))}
@@ -85,7 +86,7 @@ export default function TabThree({ selectedMonthClosing }: { selectedMonthClosin
             <div className="flex justify-between mt-4">
               <h3 className="font-bold">Total:</h3>
               <h3 className="font-bold">
-                R$ {(sumValues(outputs)).toFixed(2).replace('.', ',')}
+                {formatValueToBRL(sumValues(outputs))}
               </h3>
             </div>
           </div>
@@ -95,7 +96,7 @@ export default function TabThree({ selectedMonthClosing }: { selectedMonthClosin
       <div className="flex justify-center w-full mt-4">
         <div className={`flex ${styles.box}`}>
           <h3 className="font-bold">
-            Saldo consultório: R$ {(sumValues(inputs) - sumValues(outputs)).toFixed(2).replace('.', ',')}
+            Saldo consultório: {formatValueToBRL(sumValues(inputs) - sumValues(outputs))}
           </h3>
         </div>
       </div>

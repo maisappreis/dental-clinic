@@ -6,6 +6,7 @@ import { RevenueProps, RevenueList } from '@/types/revenue';
 import { ExpenseProps, ExpenseList } from '@/types/expense';
 import { ChartData, MonthNames, TooltipItem } from '@/types/chart';
 import { monthNames } from "@/assets/data";
+import { formatValueToBRL } from "@/utils/utils";
 
 export default function RevenueExpensesChart(
   { revenue, expenses }: { revenue: RevenueList, expenses: ExpenseList }
@@ -39,8 +40,8 @@ export default function RevenueExpensesChart(
           callbacks: {
             label: function (context: TooltipItem) {
               let label = ""
-              if (context.parsed.y !== null) {
-                label += `R$ ${context.raw?.toFixed(2).replace('.', ',')}`;
+              if (context.parsed.y !== null && context.raw) {
+                label += `${formatValueToBRL(context.raw)}`;
               }
               return label;
             }

@@ -5,6 +5,7 @@ import { RevenueProps, RevenueList } from '@/types/revenue';
 import axios from "axios";
 import Alert from '@/app/components/alert';
 import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
+import { formatValueToBRL } from "@/utils/utils";
 import styles from "./MonthClosing.module.css";
 
 export default function TabOne(
@@ -164,13 +165,12 @@ export default function TabOne(
                   <tr key={rowIndex}>
                     {columns.map((column, colIndex) => {
                       const isHighlighted = ["Débito", "Crédito à vista", "Crédito à prazo"].includes(row.payment);
-                      const formattedValue = `R$ ${parseFloat(row[column.key]).toFixed(2).replace('.', ',')}`;
 
                       return (
                         <td key={colIndex}>
                           {column.key === 'value' ? (
                             <span style={isHighlighted ? { color: 'red', fontWeight: 'bold' } : undefined}>
-                              {formattedValue}
+                              {formatValueToBRL(row[column.key])}
                             </span>
                           ) : column.key === 'payment' ? (
                             <span style={isHighlighted ? { color: 'red', fontWeight: 'bold' } : undefined}>

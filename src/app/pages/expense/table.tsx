@@ -10,6 +10,7 @@ import { apiURL, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/
 import Alert from '@/app/components/alert'
 import axios from "axios";
 import { ExpenseProps } from "@/types/expense";
+import { formatValueToBRL } from "@/utils/utils";
 
 interface Data {
   [key: string]: any;
@@ -194,7 +195,7 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
                   {columns.map((column, colIndex) => (
                     <td key={colIndex}>
                       {column.key === 'value' ?
-                        `R$ ${parseFloat(row[column.key]).toFixed(2).replace('.', ',')}`
+                        `${formatValueToBRL(row[column.key])}`
                         : column.key === 'date' ?
                           formatDate(row[column.key])
                           : column.key === 'is_paid' ?
@@ -236,7 +237,7 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
       {showDeleteModal && selectedRow &&
         <Modal title={modalTitle}>
           <h4 className="my-5 text-center">Tem certeza que deseja excluir o valor de
-            <strong> R$ {selectedRow.value.toFixed(2).replace('.', ',')}
+            <strong>{formatValueToBRL(selectedRow.value)}
             </strong> referente a despesa de <strong>{selectedRow.name}</strong>?
           </h4>
           <div className="flex justify-around">

@@ -6,6 +6,7 @@ import { RevenueList } from '@/types/revenue';
 import { ExpenseList } from '@/types/expense';
 import { ChartData, TooltipItem } from '@/types/chart';
 import { calculateMonthlyProfit } from '@/utils/utils';
+import { formatValueToBRL } from "@/utils/utils";
 
 export default function ProfitChart(
   { revenue, expenses }: { revenue: RevenueList, expenses: ExpenseList }
@@ -39,8 +40,8 @@ export default function ProfitChart(
           callbacks: {
             label: function (context: TooltipItem) {
               let label = ""
-              if (context.parsed.y !== null) {
-                label += `R$ ${context.raw?.toFixed(2).replace('.', ',')}`;
+              if (context.parsed.y !== null && context.raw) {
+                label += `${formatValueToBRL(context.raw)}`;
               }
               return label;
             }
