@@ -194,7 +194,7 @@ export default function MonthClosing(
       );
 
       prioritizedRevenue.sort((a, b) => {
-        return new Date(a.date).getTime() - new Date(b.date).getTime();
+        return new Date(a.release_date).getTime() - new Date(b.release_date).getTime();
       });
 
       const sortedRevenue = [...prioritizedRevenue, ...otherRevenue];
@@ -317,7 +317,7 @@ export default function MonthClosing(
               }}
             />
             <label htmlFor="has-installments" className="form-label">
-              Confirmo que todas as receitas do <strong>{selectedMonth}</strong> foram cadastras.
+              Confirmo que todas as <strong>receitas de {selectedMonth}</strong> foram cadastras.
             </label>
           </div>
           <div className="flex form-item">
@@ -328,7 +328,7 @@ export default function MonthClosing(
               }}
             />
             <label htmlFor="has-installments" className="form-label">
-              Confirmo que todas as despesas <strong>{getNextMonthName(selectedMonth)}</strong> foram cadastras.
+              Confirmo que todas as <strong>despesas de {getNextMonthName(selectedMonth)}</strong> foram cadastras.
             </label>
           </div>
           <div className="flex justify-around mt-4">
