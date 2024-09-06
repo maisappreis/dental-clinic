@@ -24,7 +24,7 @@ export default function Reports(
 
   return (
     <div className="flex justify-left w-full flex-wrap">
-      {monthClosingList.length > 0 ?
+      {monthClosingList && monthClosingList.length > 0 ?
         monthClosingList.map((report) => (
           <div
             key={report.id}
