@@ -47,3 +47,10 @@
   text-align: right;
   font-weight: bold;
 }
+
+@media only screen and (max-width: 500px) {
+  .form-item {
+    display: flex;
+    flex-direction: column;
+  }
+}

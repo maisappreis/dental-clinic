@@ -177,19 +177,19 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
   return (
     <>
       <form className="form-area" onSubmit={saveExpense}>
-        <div className="flex form-item">
+        <div className="form-item">
           <label htmlFor="name" className="form-label">Nome:</label>
           <input id="name" name="name" type="text" className="form-input" value={formData.name}
             onChange={handleInputChange} required />
         </div>
 
-        <div className="flex form-item">
+        <div className="form-item">
           <label htmlFor="date" className="form-label">Data de Vencimento:</label>
           <input id="date" name="date" type="date" className="form-input" value={formData.date}
             onChange={handleInputChange} required />
         </div>
 
-        <div className="flex form-item">
+        <div className="flex mt-3">
           <label htmlFor="has-installments" className="form-label">Possui parcelas?</label>
           <input id="has-installments" name="has-installments" type="checkbox" className="form-radio"
             checked={hasInstallments} onChange={(e) => {
@@ -200,7 +200,7 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
         </div>
 
         {hasInstallments &&
-          <div className="flex form-item">
+          <div className="form-item">
             <label htmlFor="installment" className="form-label">Número de parcelas:</label>
             <input id="installments" name="installments" type="text" className="form-input"
               value={formData.installments} onChange={handleInputChange} />
@@ -210,13 +210,13 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
           <p className="error">{validInstallments}</p>
         }
 
-        <div className="flex form-item">
+        <div className="form-item">
           <label htmlFor="value" className="form-label">Valor:</label>
           <input id="value" name="value" type="number" className="form-input"
             value={formData.value} onChange={handleInputChange} min="0.001" step="0.001" required />
         </div>
 
-        <div className="flex form-item">
+        <div className="form-item">
           <label htmlFor="notes" className="form-label">Notas:</label>
           <textarea id="notes" name="notes" className="form-textarea" value={formData.notes}
             onChange={handleInputChange} />
