@@ -1,12 +1,12 @@
 'use client'
 import { useState, useEffect, useMemo } from 'react';
 import { Bar } from "react-chartjs-2";
-import "@/utils/chart"
 import { RevenueList } from '@/types/revenue';
 import { ExpenseList } from '@/types/expense';
 import { ChartData, TooltipItem } from '@/types/chart';
 import { calculateMonthlyProfit } from '@/utils/utils';
 import { formatValueToBRL } from "@/utils/utils";
+import "@/utils/chart"
 
 export default function ProfitChart(
   { revenue, expenses }: { revenue: RevenueList, expenses: ExpenseList }

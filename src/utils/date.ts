@@ -1,6 +1,5 @@
 import { months } from "@/assets/data";
 
-
 // Returns the current date as string.
 export function getCurrentDate(): string {
   const today = new Date();

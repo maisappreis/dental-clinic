@@ -4,6 +4,7 @@ import { MonthNames } from '@/types/chart';
 import { monthNames } from "@/assets/data";
 import { RevenueProps } from "@/types/revenue"
 
+// Capitalizes the first letter of a string
 export const capitalize = (str: string) => {
   return str
     .toLowerCase()
@@ -13,7 +14,11 @@ export const capitalize = (str: string) => {
 };
 
 // Receives Revenue list, a month and a year and return the sum of this specific month.
-export function calculateMonthlyRevenue(data: RevenueList, month: number, year: number, dateField: keyof RevenueProps = 'release_date', valueField: keyof RevenueProps = 'net_value'): number {
+export function calculateMonthlyRevenue(
+  data: RevenueList, month: number, year: number,
+  dateField: keyof RevenueProps = 'release_date',
+  valueField: keyof RevenueProps = 'net_value'): number {
+
   const filteredData = data.filter(item => {
     const itemDate = new Date(item[dateField as keyof RevenueProps] as string);
     return itemDate.getMonth() + 1 === month && itemDate.getFullYear() === year;
@@ -24,6 +29,7 @@ export function calculateMonthlyRevenue(data: RevenueList, month: number, year: 
   return totalValue;
 }
 
+// Calculates total monthly Revenue and Expenses
 export function calculateMonthlyTotals(revenue: RevenueList, expenses: ExpenseList) {
   const months = Array.from({ length: 12 }, (_, i) =>
     new Date(new Date().setMonth(new Date().getMonth() - i)).toISOString().slice(0, 7)
@@ -49,6 +55,7 @@ export function calculateMonthlyTotals(revenue: RevenueList, expenses: ExpenseLi
   return { monthsLabels, monthlyRevenue, monthlyExpenses };
 }
 
+// Calculates total monthly Profit
 export function calculateMonthlyProfit(revenue: RevenueList, expenses: ExpenseList) {
   const { monthsLabels, monthlyRevenue, monthlyExpenses } = calculateMonthlyTotals(revenue, expenses);
 
@@ -59,6 +66,7 @@ export function calculateMonthlyProfit(revenue: RevenueList, expenses: ExpenseLi
   return { monthsLabels, monthlyProfit };
 }
 
+// Format monetary value to BRL
 export function formatValueToBRL(value: number): string {
   if (isNaN(value)) {
     return ""

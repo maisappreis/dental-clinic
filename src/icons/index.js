@@ -1,10 +1,7 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHeart, faTooth } from '@fortawesome/free-solid-svg-icons';
 import { faUsers, faCircleUser } from '@fortawesome/free-solid-svg-icons';
-// import { faChartLine } from '@fortawesome/free-solid-svg-icons';
-// import { faHandHoldingDollar } from '@fortawesome/free-solid-svg-icons';
 import { faMoneyBillTrendUp } from '@fortawesome/free-solid-svg-icons';
-// import { faMoneyBillTransfer } from '@fortawesome/free-solid-svg-icons';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
@@ -14,7 +11,6 @@ import { faCircleInfo, faRightToBracket } from '@fortawesome/free-solid-svg-icon
 
 library.add(faHeart, faTooth)
 library.add(faUsers, faCircleUser)
-// library.add(faChartLine)
 library.add(faHandHoldingDollar)
 library.add(faMoneyBillTrendUp)
 library.add(faMoneyBillTransfer)

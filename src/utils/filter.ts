@@ -1,3 +1,5 @@
+
+// Allows you to search for multiple terms separated by commas
 export function applySearch(data: any[], search: string): any[] {
   const searchedList = search.split(",").map(value => value.trim())
 
