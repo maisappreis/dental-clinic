@@ -4,7 +4,7 @@ export interface RevenueProps {
   release_date: string;
   name: string;
   cpf: string;
-  nf: string;
+  nf: "yes" | "no";
   procedure: string;
   payment: string;
   installments: number;

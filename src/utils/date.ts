@@ -23,7 +23,7 @@ export function getCurrentMonth(): string {
 }
 
 // Receives a month number and returns month name.
-function getMonthName(monthNumber: string): string {
+export function getMonthName(monthNumber: string): string {
   const index = parseInt(monthNumber, 10) - 1;
 
   if (index >= 0 && index < months.length) {

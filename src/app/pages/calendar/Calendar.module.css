@@ -8,7 +8,7 @@
     font-weight: bold;
     padding: 5px 30px;
     text-align: center;
-    border-radius: 30px;
+    border-radius: 10px;
     font-size: 15px;
 }
 
@@ -51,7 +51,7 @@
 .schedule {
     text-align: center;
     padding: 6px 15px;
-    border-radius: 30px;
+    border-radius: 10px;
 }
 
 .info {
@@ -76,8 +76,8 @@
 @media only screen and (max-width: 1000px) {
   .week {
     padding: 5px;
-    border-radius: 15px;
     font-size: 14px;
+    border-radius: 10px;
   }
 
   .time {
@@ -86,7 +86,7 @@
 
   .schedule {
     padding: 6px;
-    border-radius: 15px;
+    border-radius: 10px;
  }
 
  .info {
