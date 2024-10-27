@@ -11,11 +11,11 @@ export default function Dashboard(
 ) {
   return (
     <div className="content align-middle">
-      <div className={styles.area}>
+      <div id="area" className={styles.area}>
         <RevenueExpensesChart revenue={revenue} expenses={expenses} />
         <MostPerformedProceduresChart revenue={revenue} />
       </div>
-      <div className={styles.area}>
+      <div id="area" className={styles.area}>
         <NumberOfProceduresChart revenue={revenue} />
         <ProfitChart revenue={revenue} expenses={expenses} />
       </div>

@@ -23,7 +23,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
   const [formData, setFormData] = useState<RevenueProps>({
     id: 0,
     date: getCurrentDate(),
-    release_date: "",
+    release_date: getCurrentDate(),
     name: "",
     cpf: "",
     nf: "no",
@@ -144,7 +144,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
     setFormData({
       id: selectedRow?.id || 0,
       date: selectedRow?.date || getCurrentDate(),
-      release_date: "",
+      release_date: selectedRow?.release_date || getCurrentDate(),
       name: selectedRow?.name || "",
       cpf: selectedRow?.cpf || "",
       nf: selectedRow?.nf ? "yes" : "no",
