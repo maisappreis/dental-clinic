@@ -1,5 +1,5 @@
 import styles from "./styles/Search.module.css";
-import React, { ChangeEvent } from "react";
+import { ChangeEvent } from "react";
 
 interface SearchProps {
   search: string;
