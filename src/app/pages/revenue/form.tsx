@@ -4,7 +4,7 @@ import { procedureOptions, paymentOptions, installmentOptions } from '@/assets/d
 import { getCurrentDate } from "@/utils/date";
 import { apiURL, fetchRevenue, isAuthenticated, configureAxios } from '@/utils/api';
 import { capitalize } from '@/utils/utils';
-import Alert from '@/app/components/alert'
+import Alert from '@/app/common/alert'
 import axios from "axios";
 import { RevenueProps } from '@/types/revenue';
 

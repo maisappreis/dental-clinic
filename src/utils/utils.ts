@@ -1,8 +1,7 @@
-import { RevenueList } from "@/types/revenue";
-import { ExpenseList } from "@/types/expense";
+import { RevenueProps } from "@/types/revenue";
+import { ExpenseProps } from "@/types/expense";
 import { MonthNames } from '@/types/chart';
 import { monthNames } from "@/assets/data";
-import { RevenueProps } from "@/types/revenue"
 
 // Capitalizes the first letter of a string
 export const capitalize = (str: string) => {
@@ -15,7 +14,7 @@ export const capitalize = (str: string) => {
 
 // Receives Revenue list, a month and a year and return the sum of this specific month.
 export function calculateMonthlyRevenue(
-  data: RevenueList, month: number, year: number,
+  data: RevenueProps[], month: number, year: number,
   dateField: keyof RevenueProps = 'release_date',
   valueField: keyof RevenueProps = 'net_value'): number {
 
@@ -30,7 +29,7 @@ export function calculateMonthlyRevenue(
 }
 
 // Calculates total monthly Revenue and Expenses
-export function calculateMonthlyTotals(revenue: RevenueList, expenses: ExpenseList) {
+export function calculateMonthlyTotals(revenue: RevenueProps[], expenses: ExpenseProps[]) {
   const months = Array.from({ length: 12 }, (_, i) =>
     new Date(new Date().setMonth(new Date().getMonth() - i)).toISOString().slice(0, 7)
   ).reverse();
@@ -56,7 +55,7 @@ export function calculateMonthlyTotals(revenue: RevenueList, expenses: ExpenseLi
 }
 
 // Calculates total monthly Profit
-export function calculateMonthlyProfit(revenue: RevenueList, expenses: ExpenseList) {
+export function calculateMonthlyProfit(revenue: RevenueProps[], expenses: ExpenseProps[]) {
   const { monthsLabels, monthlyRevenue, monthlyExpenses } = calculateMonthlyTotals(revenue, expenses);
 
   const monthlyProfit = monthlyRevenue.map((revenue, index) => {

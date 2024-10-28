@@ -2,11 +2,11 @@
 'use client'
 import { useState, useEffect, useMemo } from 'react';
 import { Bar } from "react-chartjs-2";
-import { RevenueProps, RevenueList } from '@/types/revenue';
+import { RevenueProps } from '@/types/revenue';
 import { ChartData, TooltipItem } from '@/types/chart';
 import "@/utils/chart"
 
-export default function MostPerformedProceduresChart({ revenue }: { revenue: RevenueList }) {
+export default function MostPerformedProceduresChart({ revenue }: { revenue: RevenueProps[] }) {
   const [options, setOptions] = useState({});
   const [data, setData] = useState<ChartData>({
     labels: [],

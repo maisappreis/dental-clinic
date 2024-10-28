@@ -1,15 +1,15 @@
 'use client'
 import { useState, useEffect, useMemo } from 'react';
 import { Line } from "react-chartjs-2";
-import { RevenueProps, RevenueList } from '@/types/revenue';
-import { ExpenseProps, ExpenseList } from '@/types/expense';
+import { RevenueProps } from '@/types/revenue';
+import { ExpenseProps } from '@/types/expense';
 import { ChartData, MonthNames, TooltipItem } from '@/types/chart';
 import { monthNames } from "@/assets/data";
 import { formatValueToBRL } from "@/utils/utils";
 import "@/utils/chart"
 
 export default function RevenueExpensesChart(
-  { revenue, expenses }: { revenue: RevenueList, expenses: ExpenseList }
+  { revenue, expenses }: { revenue: RevenueProps[], expenses: ExpenseProps[] }
 ) {
   const [options, setOptions] = useState({});
   const [data, setData] = useState<ChartData>({

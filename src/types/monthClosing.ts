@@ -17,9 +17,7 @@ export interface MonthClosingProps {
   balance: number;
 }
 
-export type MonthClosingList = MonthClosingProps[];
-
-export interface DataMonthClosingProps {
+export interface MonthClosingData {
   selectedMonthClosing: MonthClosingProps;
   setSelectedMonthClosing: (newSelectedMonthClosing: MonthClosingProps) => void;
   revenue: RevenueProps[];

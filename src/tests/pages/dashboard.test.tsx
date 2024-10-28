@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import Dashboard from "@/app/pages/dashboard/page";
-import { RevenueList } from '@/types/revenue';
-import { ExpenseList } from '@/types/expense';
+import { RevenueProps } from '@/types/revenue';
+import { ExpenseProps } from '@/types/expense';
 
 jest.mock('@/app/charts/revenue', () => ({
   __esModule: true,
@@ -28,7 +28,7 @@ jest.mock('@/app/pages/dashboard/Charts.module.css', () => ({
 }));
 
 describe("Dashboard Component", () => {
-  const mockRevenue: RevenueList = [
+  const mockRevenue: RevenueProps[] = [
     {
       id: 1, date: "2024-01-01", release_date: "2024-09-01", name: "Paciente X",
       cpf: "000.000.000-11", nf: "no", procedure: "Restauração", payment: "Dinheiro",
@@ -41,7 +41,7 @@ describe("Dashboard Component", () => {
     },
   ];
 
-  const mockExpenses: ExpenseList = [
+  const mockExpenses: ExpenseProps[] = [
     {
       id: 1, year: 2024, month: "Setembro", name: "Aluguel", installments: "",
       date: "2024-01-01", value: 500, is_paid: false, notes: ""

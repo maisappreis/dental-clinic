@@ -6,15 +6,13 @@ export interface AgendaProps {
   notes: string;
 }
 
-export type AgendaList = AgendaProps[];
-
 export interface AppointmentsProps {
   time: string;
   patients: AgendaProps[];
   setAgenda: (newAgenda: AgendaProps[]) => void;
 }
 
-export interface DataAgendaProps {
+export interface AgendaData {
   agenda: AgendaProps[];
   setAgenda: (newAgenda: AgendaProps[]) => void;
   loading: boolean;

@@ -1,8 +1,8 @@
 import styles from "./MonthClosing.module.css";
-import { MonthClosingList, MonthClosingProps } from '@/types/monthClosing';
+import { MonthClosingProps } from '@/types/monthClosing';
 
 interface ReportsProps {
-  monthClosingList: MonthClosingList;
+  monthClosingList: MonthClosingProps[];
   setSelectedMonthClosing: (newSelectedMonthClosing: MonthClosingProps) => void;
   setSelectedTab: (newSelectedTab: string) => void;
   disableTabForward: () => void;

@@ -2,14 +2,14 @@
 import { useState, useMemo } from "react";
 import styles from "./Calendar.module.css";
 import Appointments from "./appointments";
-import Modal from "@/app/components/modal";
+import Modal from "@/app/common/modal";
 import AppointmentForm from "./form";
 import { scheduleOptions, initialAppointmentFormat } from "@/assets/data"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { DataAgendaProps } from "@/types/agenda";
+import { AgendaData } from "@/types/agenda";
 
-export default function Calendar({ agenda = [], setAgenda, loading }: DataAgendaProps) {
+export default function Calendar({ agenda = [], setAgenda, loading }: AgendaData) {
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
 

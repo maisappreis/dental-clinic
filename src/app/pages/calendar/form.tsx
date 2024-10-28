@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { AgendaProps } from "@/types/agenda";
 import { scheduleOptions } from "@/assets/data";
 import { capitalize } from '@/utils/utils';
-import Alert from '@/app/components/alert'
+import Alert from '@/app/common/alert'
 import axios from "axios";
 import { apiURL, fetchAgenda, isAuthenticated, configureAxios } from '@/utils/api';
 

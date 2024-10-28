@@ -2,11 +2,11 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Line } from "react-chartjs-2";
 import "@/utils/chart"
-import { RevenueProps, RevenueList } from '@/types/revenue';
+import { RevenueProps } from '@/types/revenue';
 import { ChartData, MonthNames, TooltipItem } from '@/types/chart';
 import { monthNames } from "@/assets/data";
 
-export default function NumberOfProceduresChart({ revenue }: { revenue: RevenueList }) {
+export default function NumberOfProceduresChart({ revenue }: { revenue: RevenueProps[] }) {
   const [options, setOptions] = useState({});
   const [data, setData] = useState<ChartData>({
     labels: [],
