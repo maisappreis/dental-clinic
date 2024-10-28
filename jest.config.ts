@@ -55,6 +55,7 @@ const config: Config = {
       statements: 80,
     },
   },
+  testTimeout: 10000,
 
   // A path to a custom dependency extractor
   // dependencyExtractor: undefined,

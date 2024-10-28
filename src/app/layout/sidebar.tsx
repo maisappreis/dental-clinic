@@ -3,7 +3,7 @@ import { useState } from "react";
 import Logotype from "./logotype";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChartLine, faCalendar, faHandHoldingDollar, faMoneyBillTransfer, faBook } from '@fortawesome/free-solid-svg-icons';
-import style from "./styles/Sidebar.module.css";
+import styles from "./styles/Sidebar.module.css";
 
 
 export default function Sidebar({ onOptionClick }: {onOptionClick: (option: string) => void}) {
@@ -23,20 +23,20 @@ export default function Sidebar({ onOptionClick }: {onOptionClick: (option: stri
   ];
 
   return (
-    <aside className={style.sidebar}>
+    <aside className={styles.sidebar}>
       <Logotype />
       <ul>
         {options.map(option => (
           <li
             key={option.id} 
-            className={`${style.option} ${selectedOption === option.id ? style.selected : ""}`} 
+            className={`${styles.option} ${selectedOption === option.id ? styles.selected : ""}`} 
             onClick={() => handleOptionClick(option.id)}
           >
             <FontAwesomeIcon 
               icon={option.icon} 
-              className={`${style.icon} ${selectedOption === option.id ? style.selectedIcon : ""}`} 
+              className={`${styles.icon} ${selectedOption === option.id ? styles.selectedIcon : ""}`} 
             />
-            <span className={style.text}>{option.label}</span>
+            <span className={styles.text}>{option.label}</span>
           </li>
         ))}
       </ul>

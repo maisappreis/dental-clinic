@@ -5,17 +5,17 @@ import Reports from './reports';
 import TabOne from './tab1';
 import TabTwo from './tab2';
 import TabThree from './tab3';
-import Modal from "@/app/components/modal";
-import { RevenueList, RevenueProps } from '@/types/revenue';
-import { MonthClosingList, MonthClosingProps } from '@/types/monthClosing';
+import Modal from "@/app/common/modal";
+import { RevenueProps } from '@/types/revenue';
+import { MonthClosingProps } from '@/types/monthClosing';
 import { months, years } from "@/assets/data"
 import { getCurrentYear, getCurrentMonth, getNextMonthName } from "@/utils/date"
 import { fetchMonthClosing } from '@/utils/api';
 
 interface DataMonthClosing {
-  revenue: RevenueList;
+  revenue: RevenueProps[];
   setRevenue: (newRevenue: RevenueProps[]) => void;
-  monthClosing: MonthClosingList;
+  monthClosing: MonthClosingProps[];
   setMonthClosing: (newRevenue: MonthClosingProps[]) => void;
 }
 
@@ -32,7 +32,7 @@ export default function MonthClosing(
   const [selectedNumberMonth, setSelectedNumberMonth] = useState(0);
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
-  const [orderedRevenue, setOrderedRevenue] = useState<RevenueList>([]);
+  const [orderedRevenue, setOrderedRevenue] = useState<RevenueProps[]>([]);
   const [tabsOptions, setTabsOptions] = useState([
     { id: "reports", label: "Relatórios", disabled: false },
     { id: "tab1", label: "Passo 1", disabled: true },
@@ -181,7 +181,7 @@ export default function MonthClosing(
     }
   }
 
-  const orderRevenue = (filteredRevenue: RevenueList) => {
+  const orderRevenue = (filteredRevenue: RevenueProps[]) => {
     if (filteredRevenue && filteredRevenue.length > 0) { 
       const priorityPayments = ["Débito", "Crédito à vista", "Crédito à prazo"];
 

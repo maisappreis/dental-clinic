@@ -1,31 +1,8 @@
 "use client";
 import { createContext, useState, useEffect, useContext, ReactNode } from "react";
 import { fetchRevenue, fetchExpenses } from "@/utils/api";
-
-interface RevenueProps {
-  id: number;
-  date: string;
-  name: string;
-  cpf: string | null;
-  nf: string;
-  procedure: string;
-  payment: string;
-  installments: number | null;
-  value: number | null;
-  notes: string;
-}
-
-interface ExpenseProps {
-  id: number;
-  year: number;
-  month: string;
-  name: string;
-  installments: string;
-  date: string;
-  value: number;
-  is_paid: boolean;
-  notes: string;
-}
+import { RevenueProps } from '@/types/revenue';
+import { ExpenseProps } from '@/types/expense';
 
 interface DataContextType {
   revenue: RevenueProps[];

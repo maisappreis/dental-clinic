@@ -4,7 +4,7 @@ import { procedureOptions, paymentOptions, installmentOptions } from '@/assets/d
 import { getCurrentDate } from "@/utils/date";
 import { apiURL, fetchRevenue, isAuthenticated, configureAxios } from '@/utils/api';
 import { capitalize } from '@/utils/utils';
-import Alert from '@/app/components/alert'
+import Alert from '@/app/common/alert'
 import axios from "axios";
 import { RevenueProps } from '@/types/revenue';
 
@@ -23,7 +23,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
   const [formData, setFormData] = useState<RevenueProps>({
     id: 0,
     date: getCurrentDate(),
-    release_date: "",
+    release_date: getCurrentDate(),
     name: "",
     cpf: "",
     nf: "no",
@@ -144,7 +144,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
     setFormData({
       id: selectedRow?.id || 0,
       date: selectedRow?.date || getCurrentDate(),
-      release_date: "",
+      release_date: selectedRow?.release_date || getCurrentDate(),
       name: selectedRow?.name || "",
       cpf: selectedRow?.cpf || "",
       nf: selectedRow?.nf ? "yes" : "no",

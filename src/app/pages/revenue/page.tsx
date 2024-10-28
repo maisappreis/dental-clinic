@@ -1,17 +1,17 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import Table from "./table";
-import Button from "@/app/components/button";
-import MonthFilter from "@/app/components/monthFilter";
-import Search from "@/app/components/search";
-import Modal from "@/app/components/modal";
+import Button from "@/app/common/button";
+import MonthFilter from "@/app/common/monthFilter";
+import Search from "@/app/common/search";
+import Modal from "@/app/common/modal";
 import RevenueForm from "./form";
 import { getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
 // import { useRouter } from 'next/navigation';
-import { DataRevenueProps } from '@/types/revenue';
+import { RevenueData } from '@/types/revenue';
 
-export default function Revenue({ revenue = [], setRevenue, loading }: DataRevenueProps) {
+export default function Revenue({ revenue = [], setRevenue, loading }: RevenueData) {
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());

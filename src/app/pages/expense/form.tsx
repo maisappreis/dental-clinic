@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { apiURL, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api';
 import { capitalize } from '@/utils/utils';
 import { getMonthAndYear } from "@/utils/date";
-import Alert from '@/app/components/alert'
+import Alert from '@/app/common/alert'
 import axios from "axios";
 import { ExpenseProps } from '@/types/expense';
 

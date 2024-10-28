@@ -1,4 +1,3 @@
-import React from "react"
 import styles from './styles/Alert.module.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';

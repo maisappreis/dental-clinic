@@ -13,9 +13,7 @@ export interface RevenueProps {
   notes: string;
 }
 
-export type RevenueList = RevenueProps[];
-
-export interface DataRevenueProps {
+export interface RevenueData {
   revenue: RevenueProps[];
   setRevenue: (newRevenue: RevenueProps[]) => void;
   loading: boolean;

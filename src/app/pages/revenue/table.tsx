@@ -2,14 +2,14 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan, faCircleInfo, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
-import Tooltip from "@/app/components/tooltip";
-import Modal from "@/app/components/modal";
+import Tooltip from "@/app/common/tooltip";
+import Modal from "@/app/common/modal";
 import RevenueForm from "./form";
 import { formatDate } from "@/utils/date";
 import { apiURL, fetchRevenue, isAuthenticated, configureAxios } from '@/utils/api';
 import { formatValueToBRL } from "@/utils/utils";
 import { RevenueProps } from "@/types/revenue";
-import Alert from '@/app/components/alert';
+import Alert from '@/app/common/alert';
 import axios from "axios";
 
 interface Data {

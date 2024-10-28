@@ -1,8 +1,6 @@
-// "use client";
 import styles from "./styles/Filter.module.css";
-import React, { ChangeEvent } from "react";
+import { ChangeEvent } from "react";
 import { months, years } from '@/assets/data';
-
 
 interface MonthFilterProps {
   month: string;
@@ -31,6 +29,7 @@ export default function MonthFilter({ month, year, onFilterChange}: MonthFilterP
         value={month}
         onChange={handleMonthChange}
         required
+        aria-label="month"
       >
         <option disabled value="">Mês:</option>
         {months.map((month, index) => (
@@ -46,6 +45,7 @@ export default function MonthFilter({ month, year, onFilterChange}: MonthFilterP
         value={year}
         onChange={handleYearChange}
         required
+        aria-label="year"
       >
         <option disabled value="">Ano:</option>
         {years.map((year, index) => (

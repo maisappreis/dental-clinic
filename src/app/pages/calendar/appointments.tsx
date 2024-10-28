@@ -1,13 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
 import styles from "./Calendar.module.css";
-import Modal from "@/app/components/modal";
+import Modal from "@/app/common/modal";
 import AppointmentForm from "./form";
 import { formatDate } from "@/utils/date";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { AgendaProps, AppointmentsProps } from "@/types/agenda";
-import Alert from '@/app/components/alert'
+import Alert from '@/app/common/alert'
 import axios from "axios";
 import { apiURL, fetchAgenda, isAuthenticated, configureAxios } from '@/utils/api';
 

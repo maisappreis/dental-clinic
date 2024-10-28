@@ -6,11 +6,14 @@ import Revenue from "@/app/pages/revenue/page";
 import Expense from "@/app/pages/expense/page";
 import MonthClosing from "@/app/pages/monthclosing/page";
 import styles from "./styles/Content.module.css";
-import { fetchAgenda, fetchRevenue, fetchExpenses, fetchMonthClosing, isAuthenticated, configureAxios } from "@/utils/api";
 import { RevenueProps } from '@/types/revenue';
 import { ExpenseProps } from '@/types/expense';
 import { AgendaProps } from "@/types/agenda";
 import { MonthClosingProps } from "@/types/monthClosing";
+import { fetchAgenda, fetchRevenue,
+  fetchExpenses, fetchMonthClosing,
+  isAuthenticated, configureAxios
+} from "@/utils/api";
 
 export default function Content({ selectedOption }: { selectedOption: string }) {
   let contentComponent: React.ReactNode;

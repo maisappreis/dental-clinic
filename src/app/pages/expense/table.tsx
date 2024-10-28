@@ -2,12 +2,12 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
-import Tooltip from "@/app/components/tooltip"
-import Modal from "@/app/components/modal";
+import Tooltip from "@/app/common/tooltip"
+import Modal from "@/app/common/modal";
 import ExpenseForm from "./form";
 import { formatDate, getNextMonth, getMonthAndYear } from "@/utils/date";
 import { apiURL, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api';
-import Alert from '@/app/components/alert'
+import Alert from '@/app/common/alert'
 import axios from "axios";
 import { ExpenseProps } from "@/types/expense";
 import { formatValueToBRL } from "@/utils/utils";

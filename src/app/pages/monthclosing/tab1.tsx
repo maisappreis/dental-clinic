@@ -1,17 +1,17 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import { formatDate } from "@/utils/date";
-import { RevenueProps, RevenueList } from '@/types/revenue';
+import { RevenueProps } from '@/types/revenue';
 import axios from "axios";
-import Alert from '@/app/components/alert';
+import Alert from '@/app/common/alert';
 import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
 import { formatValueToBRL } from "@/utils/utils";
 import styles from "./MonthClosing.module.css";
 
 export default function TabOne(
-  { orderedRevenue, setRevenue }: { orderedRevenue: RevenueList, setRevenue: (newRevenue: RevenueProps[]) => void }
+  { orderedRevenue, setRevenue }: { orderedRevenue: RevenueProps[], setRevenue: (newRevenue: RevenueProps[]) => void }
 ) {
-  const [updatedRevenue, setUpdatedRevenue] = useState<RevenueList>([]);
+  const [updatedRevenue, setUpdatedRevenue] = useState<RevenueProps[]>([]);
   const [alertMessage, setAlertMessage] = useState('');
   const [formRate, setFormRate] = useState({
     debit: 1.99,
@@ -76,7 +76,7 @@ export default function TabOne(
     }
   }
 
-  const calculatedRevenue = useCallback((sortedRevenue: RevenueList) => {
+  const calculatedRevenue = useCallback((sortedRevenue: RevenueProps[]) => {
     return sortedRevenue.map((item) => {
       let netValue = item.value;
 

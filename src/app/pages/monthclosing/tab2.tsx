@@ -1,13 +1,13 @@
 'use client'
 import { useEffect, useState } from 'react';
 import styles from "./MonthClosing.module.css";
-import { DataMonthClosingProps, MonthClosingProps } from "@/types/monthClosing";
+import { MonthClosingData, MonthClosingProps } from "@/types/monthClosing";
 import { calculateMonthlyRevenue, formatValueToBRL } from "@/utils/utils";
-import Alert from '@/app/components/alert';
+import Alert from '@/app/common/alert';
 import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
 import axios from "axios";
 
-export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonthClosing }: DataMonthClosingProps) {
+export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonthClosing }: MonthClosingData) {
   const [bankValue, setBankValue] = useState(0);
   const [cashValue, setCashValue] = useState(0);
   const [cardValue, setCardValue] = useState(0);
