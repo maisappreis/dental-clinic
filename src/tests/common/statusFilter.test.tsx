@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import StatusFilter from "@/app/components/statusFilter";
+import StatusFilter from "@/app/common/statusFilter";
 import "@testing-library/jest-dom";
 
 describe("StatusFilter Component", () => {

@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import Alert from "@/app/components/alert";
+import Alert from "@/app/common/alert";
 import '@testing-library/jest-dom';
 
 describe("Alert Component", () => {

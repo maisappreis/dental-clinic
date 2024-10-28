@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import Modal from "@/app/components/modal";
+import Modal from "@/app/common/modal";
 import '@testing-library/jest-dom';
 
 describe("Modal Component", () => {

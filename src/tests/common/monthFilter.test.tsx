@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import MonthFilter from "@/app/components/monthFilter";
+import MonthFilter from "@/app/common/monthFilter";
 import "@testing-library/jest-dom";
 
 // Mock of month and years options

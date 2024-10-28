@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import Search from "@/app/components/search";
+import Search from "@/app/common/search";
 import "@testing-library/jest-dom";
 
 describe("Search Component", () => {

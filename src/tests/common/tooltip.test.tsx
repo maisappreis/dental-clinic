@@ -1,6 +1,6 @@
 
 import { render, screen } from "@testing-library/react";
-import Tooltip from "@/app/components/tooltip";
+import Tooltip from "@/app/common/tooltip";
 import "@testing-library/jest-dom";
 
 describe("Tooltip Component", () => {
