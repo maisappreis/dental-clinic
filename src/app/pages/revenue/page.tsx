@@ -74,7 +74,7 @@ export default function Revenue({ revenue = [], setRevenue, loading }: RevenueDa
       revenue.sort((a, b) => {
         const dateA: Date = new Date(a.date);
         const dateB: Date = new Date(b.date);
-        return dateA.getTime() - dateB.getTime();
+        return dateA.getTime() + dateB.getTime();
       });
 
       filterData({ selectedMonth: month, selectedYear: year });
