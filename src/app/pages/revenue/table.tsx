@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan, faCircleInfo, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from "@/app/common/tooltip";
+import Loading from "@/app/common/loading";
 import Modal from "@/app/common/modal";
 import RevenueForm from "./form";
 import { formatDate } from "@/utils/date";
@@ -35,6 +36,7 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
   const [modalTitle, setModalTitle] = useState('');
   const [selectedRow, setSelectedRow] = useState<RevenueProps | null>(null);
   const [alertMessage, setAlertMessage] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const openNotes = (row: RevenueProps, e: React.MouseEvent): void => {
     setSelectedRow(row);
@@ -59,6 +61,7 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
 
 
   const deleteRevenue = async () => {
+    setLoading(true);
     try {
       if (selectedRow && selectedRow.id) {
         await axios.delete(`${apiURL()}/revenue/${selectedRow.id}/`)
@@ -73,6 +76,8 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
     } catch (error) {
       console.error('Erro ao excluir receita.', error)
       setAlertMessage("Erro ao excluir receita.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -95,6 +100,14 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
     isAuthenticated();
     configureAxios();
   }, []);
+
+  if (loading) {
+    return (
+      <Loading>
+        Excluindo...
+      </Loading>
+    );
+  }
 
   return (
     <div>

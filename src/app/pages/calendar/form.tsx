@@ -7,6 +7,7 @@ import { capitalize } from '@/utils/utils';
 import Alert from '@/app/common/alert'
 import axios from "axios";
 import { apiURL, fetchAgenda, isAuthenticated, configureAxios } from '@/utils/api';
+import Loading from "@/app/common/loading";
 
 interface AppointmentFormProps {
   selectedPatient?: AgendaProps;
@@ -17,6 +18,7 @@ interface AppointmentFormProps {
 export default function AppointmentForm({ selectedPatient, closeModal, setAgenda }: AppointmentFormProps) {
   const [isFormValid, setIsFormValid] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     id: 0,
     date: "",
@@ -69,28 +71,32 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
   }
 
   const createAppointment = async () => {
+    setLoading(true);
     try {
       await axios.post(`${apiURL()}/agenda/create/`, formData);
       setAlertMessage("Agendamento criado com sucesso!");
       const newAppointment = await fetchAgenda();
       setAgenda(newAppointment);
-
     } catch (error) {
       console.error('Erro ao criar agendamento.', error)
       setAlertMessage("Erro ao criar agendamento.");
+    } finally {
+      setLoading(false);
     }
   }
 
   const updateAppointment = async (id: number) => {
+    setLoading(true);
     try {
       await axios.patch(`${apiURL()}/agenda/${id}/`, formData)
       setAlertMessage("Agendamento atualizado com sucesso!");
       const newAppointment = await fetchAgenda();
       setAgenda(newAppointment);
-
     } catch (error) {
       console.error('Erro ao atualizar agendamento.', error)
       setAlertMessage("Erro ao atualizar agendamento.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -118,6 +124,14 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
     isAuthenticated();
     configureAxios();
   }, []);
+
+  if (loading) {
+    return (
+      <Loading>
+        Salvando...
+      </Loading>
+    );
+  }
 
   return (
     <form className="form-area" onSubmit={saveAppointment}>

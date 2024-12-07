@@ -92,20 +92,10 @@ export default function Revenue({ revenue = [], setRevenue, loading }: RevenueDa
   //   }
   // }, [revenue, loading, router]);
 
-  if (loading) {
-    return (
-      <div className="content">
-        <div className="w-full h-full flex justify-center">
-          <h1 className="mt-5 font-bold text-xl">Carregando receitas...</h1>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="content">
       <div className="flex flex-column justify-between">
-        <Button onClick={openModal} disabled={false} >
+        <Button onClick={openModal} disabled={false}>
           Nova Receita
         </Button>
         <div className="flex justify-end" style={{ marginBottom: 15 }}>

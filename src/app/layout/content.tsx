@@ -5,6 +5,7 @@ import Dashboard from "@/app/pages/dashboard/page";
 import Revenue from "@/app/pages/revenue/page";
 import Expense from "@/app/pages/expense/page";
 import MonthClosing from "@/app/pages/monthclosing/page";
+import Loading from "@/app/common/loading";
 import styles from "./styles/Content.module.css";
 import { RevenueProps } from '@/types/revenue';
 import { ExpenseProps } from '@/types/expense';
@@ -70,7 +71,7 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
 
   switch (selectedOption) {
     case "calendar":
-      contentComponent = <Calendar agenda={agenda} setAgenda={setAgenda} loading={loading} />;
+      contentComponent = <Calendar agenda={agenda} setAgenda={setAgenda} />;
       break;
     case "dashboard":
       contentComponent = <Dashboard revenue={revenue} expenses={expenses} />;
@@ -87,6 +88,14 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
 
     default:
       contentComponent = null;
+  }
+
+  if (loading) {
+    return (
+      <Loading>
+        Carregando...
+      </Loading>
+    );
   }
 
   return (

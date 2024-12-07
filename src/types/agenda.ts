@@ -15,6 +15,5 @@ export interface AppointmentsProps {
 export interface AgendaData {
   agenda: AgendaProps[];
   setAgenda: (newAgenda: AgendaProps[]) => void;
-  loading: boolean;
 }
 

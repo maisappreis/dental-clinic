@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { AgendaData } from "@/types/agenda";
 
-export default function Calendar({ agenda = [], setAgenda, loading }: AgendaData) {
+export default function Calendar({ agenda = [], setAgenda }: AgendaData) {
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
 
@@ -69,16 +69,6 @@ export default function Calendar({ agenda = [], setAgenda, loading }: AgendaData
 
   const closeModal = () => {
     setShowModal(false);
-  }
-
-  if (loading) {
-    return (
-      <div className="content">
-        <div className="w-full h-full flex justify-center">
-          <h1 className="mt-5 font-bold text-xl">Carregando agenda...</h1>
-        </div>
-      </div>
-    );
   }
 
   return (

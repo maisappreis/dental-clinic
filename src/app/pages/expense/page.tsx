@@ -125,16 +125,6 @@ export default function Expense({ expenses = [], setExpenses, loading }: Expense
   //   }
   // }, [expenses, loading, router]);
 
-  if (loading) {
-    return (
-      <div className="content">
-        <div className="w-full h-full flex justify-center">
-          <h1 className="mt-5 font-bold text-xl">Carregando despesas...</h1>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="content">
       <div className="flex flex-column justify-between">

@@ -7,6 +7,7 @@ import { capitalize } from '@/utils/utils';
 import Alert from '@/app/common/alert'
 import axios from "axios";
 import { RevenueProps } from '@/types/revenue';
+import Loading from "@/app/common/loading";
 
 interface RevenueFormProps {
   selectedRow?: RevenueProps;
@@ -18,6 +19,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
   const [showCpf, setShowCpf] = useState(false);
   const [showInstallments, setShowInstallments] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
   const [validCPF, setValidCPF] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
   const [formData, setFormData] = useState<RevenueProps>({
@@ -95,6 +97,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
   }
 
   const createRevenue = async () => {
+    setLoading(true);
     try {
       const preparedData = prepareDataForSubmission(formData);
 
@@ -102,14 +105,16 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
       setAlertMessage("Receita criada com sucesso!");
       const newRevenue = await fetchRevenue();
       setRevenue(newRevenue)
-
     } catch (error) {
       console.error('Erro ao criar receita.', error)
       setAlertMessage("Erro ao criar receita.");
+    } finally {
+      setLoading(false);
     }
   }
 
   const updateRevenue = async (id: number) => {
+    setLoading(true);
     try {
       const preparedData = prepareDataForSubmission(formData);
 
@@ -117,10 +122,11 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
       setAlertMessage("Receita atualizada com sucesso!");
       const newRevenue = await fetchRevenue();
       setRevenue(newRevenue)
-
     } catch (error) {
       console.error('Erro ao atualizar receita.', error)
       setAlertMessage("Erro ao atualizar receita.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -192,6 +198,14 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
     isAuthenticated();
     configureAxios();
   }, []);
+
+  if (loading) {
+    return (
+      <Loading>
+        Salvando...
+      </Loading>
+    );
+  }
 
   return (
     <>

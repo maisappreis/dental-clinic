@@ -4,6 +4,7 @@ import styles from './Login.module.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTooth } from '@fortawesome/free-solid-svg-icons';
 import Alert from '@/app/common/alert';
+import Loading from "@/app/common/loading";
 import { apiBase, fetchRevenue, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api'
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
@@ -12,12 +13,14 @@ export default function Login() {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [alertMessage, setAlertMessage] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
   const isFormValid = username !== '' && password !== '';
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
 
     try {
       const loginData = {
@@ -42,6 +45,8 @@ export default function Login() {
       }      
     } catch (error) {
       setAlertMessage("Erro ao realizar o login.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -59,6 +64,14 @@ export default function Login() {
     isAuthenticated();
     configureAxios();
   }, []);
+
+  if (loading) {
+    return (
+      <Loading>
+        Carregando...
+      </Loading>
+    );
+  }
 
   return (
     <div className={styles.area}>

@@ -5,6 +5,7 @@ import { faPenToSquare, faTrashCan, faCircleInfo } from '@fortawesome/free-solid
 import Tooltip from "@/app/common/tooltip"
 import Modal from "@/app/common/modal";
 import ExpenseForm from "./form";
+import Loading from "@/app/common/loading";
 import { formatDate, getNextMonth, getMonthAndYear } from "@/utils/date";
 import { apiURL, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api';
 import Alert from '@/app/common/alert'
@@ -37,6 +38,7 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
   const [modalTitle, setModalTitle] = useState('');
   const [selectedRow, setSelectedRow] = useState<ExpenseProps | null>(null);
   const [alertMessage, setAlertMessage] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const openNotes = (row: ExpenseProps, e: React.MouseEvent): void => {
     setSelectedRow(row);
@@ -80,6 +82,7 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
   };
 
   const updateExpense = async (row: ExpenseProps) => {
+    setLoading(true);
     try {
       const response = await axios.patch(`${apiURL()}/expense/${row.id}/`, {
         is_paid: !row.is_paid
@@ -102,10 +105,13 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
     } catch (error) {
       console.error('Erro ao atualizar despesa.', error)
       setAlertMessage("Erro ao atualizar despesa.");
+    } finally {
+      setLoading(false);
     }
   }
 
   const createNextMonthExpense = async (row: ExpenseProps) => {
+    setLoading(true);
     try {
       const selectedRowClone = {...row}
       const nextMonthDate = getNextMonth(selectedRowClone.date);
@@ -127,10 +133,13 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
     } catch (error) {
       console.error('Erro ao criar despesa do mês seguinte.', error)
       setAlertMessage("Erro ao criar despesa do mês seguinte.");
+    } finally {
+      setLoading(false);
     }
   }
 
   const deleteExpense = async () => {
+    setLoading(true);
     try {
       if (selectedRow && selectedRow.id) {
         await axios.delete(`${apiURL()}/expense/${selectedRow.id}/`)
@@ -145,6 +154,8 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
     } catch (error) {
       console.error('Erro ao excluir despesa.', error)
       setAlertMessage("Erro ao excluir despesa.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -175,6 +186,14 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
     isAuthenticated();
     configureAxios();
   }, []);
+
+  if (loading) {
+    return (
+      <Loading>
+        Salvando...
+      </Loading>
+    );
+  }
 
   return (
     <div>

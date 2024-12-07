@@ -1,9 +1,10 @@
 'use client'
 import { useEffect, useState } from 'react';
 import styles from "./MonthClosing.module.css";
+import Alert from '@/app/common/alert';
+import Loading from "@/app/common/loading";
 import { MonthClosingData, MonthClosingProps } from "@/types/monthClosing";
 import { calculateMonthlyRevenue, formatValueToBRL } from "@/utils/utils";
-import Alert from '@/app/common/alert';
 import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
 import axios from "axios";
 
@@ -14,6 +15,7 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
   const [cardValueNext, setCardValueNext] = useState(0);
   const [totalMonthlyRevenue, setTotalMonthlyRevenue] = useState(0);
   const [alertMessage, setAlertMessage] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -47,6 +49,7 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
   };
 
   const createMonthClosing = async (updatedMonthClosing: MonthClosingProps) => {
+    setLoading(true);
     try {
       const response = await axios.post(`${apiURL()}/month_closing/create/`, updatedMonthClosing)
       setSelectedMonthClosing(response.data);
@@ -55,10 +58,13 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
     } catch (error) {
       console.error('Erro ao salvar os dados.', error)
       setAlertMessage("Erro ao salvar os dados.");
+    } finally {
+      setLoading(false);
     }
   }
 
   const updateMonthClosing = async (updatedMonthClosing: MonthClosingProps) => {
+    setLoading(true);
     try {
       const response = await axios.put(`${apiURL()}/month_closing/${selectedMonthClosing.id}/`, updatedMonthClosing);
       setSelectedMonthClosing(response.data);
@@ -67,6 +73,8 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
     } catch (error) {
       console.error('Erro ao salvar os dados.', error)
       setAlertMessage("Erro ao salvar os dados.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -110,6 +118,14 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
     isAuthenticated();
     configureAxios();
   }, []);
+
+  if (loading) {
+    return (
+      <Loading>
+        Salvando...
+      </Loading>
+    );
+  }
 
   return (
     <div className="flex justify-center">

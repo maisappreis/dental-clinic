@@ -6,6 +6,7 @@ import { getMonthAndYear } from "@/utils/date";
 import Alert from '@/app/common/alert'
 import axios from "axios";
 import { ExpenseProps } from '@/types/expense';
+import Loading from "@/app/common/loading";
 
 interface ExpenseFormProps {
   selectedRow?: ExpenseProps;
@@ -17,6 +18,7 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
   const [hasInstallments, setHasInstallments] = useState(false);
   const [validInstallments, setValidInstallments] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [formData, setFormData] = useState({
     id: 0,
@@ -97,6 +99,7 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
   }
 
   const createExpense = async () => {
+    setLoading(true);
     try {
       const preparedData = prepareDataForSubmission(formData);
 
@@ -104,14 +107,16 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
       setAlertMessage("Despesa criada com sucesso!");
       const newExpense = await fetchExpenses();
       setExpenses(newExpense)
-
     } catch (error) {
       console.error('Erro ao criar despesa.', error)
       setAlertMessage("Erro ao criar despesa.");
+    } finally {
+      setLoading(false);
     }
   }
 
   const updateExpense = async (id: number) => {
+    setLoading(true);
     try {
       const preparedData = prepareDataForSubmission(formData);
 
@@ -119,10 +124,11 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
       setAlertMessage("Despesa atualizada com sucesso!");
       const newExpense = await fetchExpenses();
       setExpenses(newExpense)
-
     } catch (error) {
       console.error('Erro ao atualizar despesa.', error)
       setAlertMessage("Erro ao atualizar despesa.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -174,6 +180,14 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
     configureAxios();
   }, []);
 
+  if (loading) {
+    return (
+      <Loading>
+        Salvando...
+      </Loading>
+    );
+  }
+  
   return (
     <>
       <form className="form-area" onSubmit={saveExpense}>

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import styles from "./Calendar.module.css";
 import Modal from "@/app/common/modal";
 import AppointmentForm from "./form";
+import Loading from "@/app/common/loading";
 import { formatDate } from "@/utils/date";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
@@ -18,6 +19,7 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
   const [modalTitle, setModalTitle] = useState('');
   const [mode, setMode] = useState('view');
   const [alertMessage, setAlertMessage] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
   const [selectedPatient, setSelectedPatient] = useState({
     id: 0,
     date: "",
@@ -50,6 +52,7 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
   };
 
   const deleteAppointment = async () => {
+    setLoading(true);
     try {
       if (selectedPatient && selectedPatient.id) {
         await axios.delete(`${apiURL()}/agenda/${selectedPatient.id}/`)
@@ -65,6 +68,8 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
     } catch (error) {
       console.error('Erro ao excluir agendamento.', error)
       setAlertMessage("Erro ao excluir agendamento.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -96,6 +101,14 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
     isAuthenticated();
     configureAxios();
   }, []);
+
+  if (loading) {
+    return (
+      <Loading>
+        Excluindo...
+      </Loading>
+    );
+  }
 
   return (
     <>

@@ -4,6 +4,7 @@ import { formatDate } from "@/utils/date";
 import { RevenueProps } from '@/types/revenue';
 import axios from "axios";
 import Alert from '@/app/common/alert';
+import Loading from "@/app/common/loading";
 import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
 import { formatValueToBRL } from "@/utils/utils";
 import styles from "./MonthClosing.module.css";
@@ -13,6 +14,7 @@ export default function TabOne(
 ) {
   const [updatedRevenue, setUpdatedRevenue] = useState<RevenueProps[]>([]);
   const [alertMessage, setAlertMessage] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
   const [formRate, setFormRate] = useState({
     debit: 1.99,
     cashCredit: 4.99,
@@ -61,6 +63,7 @@ export default function TabOne(
   }
 
   const updateRevenue = async () => {
+    setLoading(true);
     try {
       const updatedNetValues = updatedRevenue.map(item => ({
         id: item.id,
@@ -73,6 +76,8 @@ export default function TabOne(
     } catch (error) {
       console.error('Erro ao atualizar receita.', error)
       setAlertMessage("Erro ao atualizar receita.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -130,6 +135,14 @@ export default function TabOne(
     isAuthenticated();
     configureAxios();
   }, []);
+
+  if (loading) {
+    return (
+      <Loading>
+        Salvando...
+      </Loading>
+    );
+  }
 
   return (
     <div>
