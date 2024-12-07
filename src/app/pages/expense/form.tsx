@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { apiURL, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api';
 import { capitalize } from '@/utils/utils';
 import { getMonthAndYear } from "@/utils/date";
-import Alert from '@/app/common/alert'
 import axios from "axios";
 import { ExpenseProps } from '@/types/expense';
 import Loading from "@/app/common/loading";
@@ -12,14 +11,14 @@ interface ExpenseFormProps {
   selectedRow?: ExpenseProps;
   closeModal: () => void;
   setExpenses: (newExpenses: any[]) => void;
+  setAlertMessage: (newAlert: string) => void;
 }
 
-export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: ExpenseFormProps) {
-  const [hasInstallments, setHasInstallments] = useState(false);
-  const [validInstallments, setValidInstallments] = useState('');
-  const [alertMessage, setAlertMessage] = useState('');
+export default function ExpenseForm({ selectedRow, closeModal, setExpenses, setAlertMessage }: ExpenseFormProps) {
+  const [hasInstallments, setHasInstallments] = useState<boolean>(false);
+  const [validInstallments, setValidInstallments] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [isFormValid, setIsFormValid] = useState(false);
+  const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     id: 0,
     year: 0,
@@ -92,10 +91,6 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
     } else {
       await createExpense();
     }
-
-    setTimeout(() => {
-      closeModal();
-    }, 1000);
   }
 
   const createExpense = async () => {
@@ -111,6 +106,7 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
       console.error('Erro ao criar despesa.', error)
       setAlertMessage("Erro ao criar despesa.");
     } finally {
+      closeModal();
       setLoading(false);
     }
   }
@@ -128,6 +124,7 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
       console.error('Erro ao atualizar despesa.', error)
       setAlertMessage("Erro ao atualizar despesa.");
     } finally {
+      closeModal();
       setLoading(false);
     }
   }
@@ -145,16 +142,6 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
       notes: selectedRow?.notes || ""
     });
   }, [selectedRow]);
-
-  useEffect(() => {
-    if (alertMessage) {
-      const timer = setTimeout(() => {
-        setAlertMessage("")
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [alertMessage]);
 
   useEffect(() => {
     if (
@@ -244,7 +231,6 @@ export default function ExpenseForm({ selectedRow, closeModal, setExpenses }: Ex
           </button>
         </div>
       </form>
-      <Alert message={alertMessage} />
     </>
   )
 }

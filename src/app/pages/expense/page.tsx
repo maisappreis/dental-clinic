@@ -6,21 +6,21 @@ import MonthFilter from "@/app/common/monthFilter";
 import StatusFilter from "@/app/common/statusFilter";
 import Search from "@/app/common/search";
 import Modal from "@/app/common/modal";
+import Alert from '@/app/common/alert';
 import ExpenseForm from "./form";
 import { getCurrentYear, getCurrentMonth } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
-// import { useRouter } from 'next/navigation';
 import { ExpenseData } from '@/types/expense';
 
 export default function Expense({ expenses = [], setExpenses, loading }: ExpenseData) {
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());
-  const [statusPayment, setStatusPayment] = useState("Todos");
-  const [search, setSearch] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState('');
-  // const router = useRouter();
+  const [statusPayment, setStatusPayment] = useState<string>("Todos");
+  const [search, setSearch] = useState<string>("");
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [modalTitle, setModalTitle] = useState<string>("");
+  const [alertMessage, setAlertMessage] = useState<string>("");
 
   const columns: { key: string; name: string; }[] = [
     { key: "year", name: "Ano" },
@@ -66,14 +66,6 @@ export default function Expense({ expenses = [], setExpenses, loading }: Expense
 
   }, [month, year, statusPayment, expenses]);
 
-  // const searchData = useCallback((month: string, year: string,) => {
-  //   const filteredData = applySearch(expenses, search)
-  //   setFilteredData(filteredData);
-
-  //   setMonth(month)
-  //   setYear(year)
-  // }, [search, expenses])
-
   const searchData = (search: string) => {
     setSearch(search);
 
@@ -102,28 +94,15 @@ export default function Expense({ expenses = [], setExpenses, loading }: Expense
     }
   }, [expenses, loading, filterData, month, year, statusPayment]);
 
-  // useEffect(() => {
-  //   if (search === "") {
-  //     const month = getCurrentMonth()
-  //     const year = getCurrentYear()
+  useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => {
+        setAlertMessage("")
+      }, 1000);
 
-  //     setMonth(month)
-  //     setYear(year)
-  //   } else {
-  //     setMonth("Todos os meses")
-  //     setYear("Todos")
-  //   }
-  // },[search])
-
-  // useEffect(() => {
-  //   searchData("Todos os meses", "Todos")
-  // }, [search, searchData])
-
-  // useEffect(() => {
-  //   if (!loading && (!expenses || expenses.length === 0)) {
-  //     router.push('/error');
-  //   }
-  // }, [expenses, loading, router]);
+      return () => clearTimeout(timer);
+    }
+  }, [alertMessage]);
 
   return (
     <div className="content">
@@ -135,15 +114,19 @@ export default function Expense({ expenses = [], setExpenses, loading }: Expense
           <MonthFilter month={month} year={year} onFilterChange={filterData} />
           <StatusFilter statusPayment={statusPayment} onStatusChange={filterData} />
           <Search search={search} onSearchChange={searchData} />
-          {/* <Search search={search} onSearchChange={setSearch} /> */}
         </div>
       </div>
       <Table columns={columns} data={filteredData} setExpenses={setExpenses} />
       {showModal &&
         <Modal title={modalTitle}>
-          <ExpenseForm closeModal={closeModal} setExpenses={setExpenses} />
+          <ExpenseForm
+            closeModal={closeModal}
+            setExpenses={setExpenses}
+            setAlertMessage={setAlertMessage}
+          />
         </Modal>
       }
+      <Alert message={alertMessage} />
     </div>
   )
 }

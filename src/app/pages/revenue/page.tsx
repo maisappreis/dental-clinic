@@ -6,9 +6,9 @@ import MonthFilter from "@/app/common/monthFilter";
 import Search from "@/app/common/search";
 import Modal from "@/app/common/modal";
 import RevenueForm from "./form";
+import Alert from '@/app/common/alert';
 import { getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
-// import { useRouter } from 'next/navigation';
 import { RevenueData } from '@/types/revenue';
 
 export default function Revenue({ revenue = [], setRevenue, loading }: RevenueData) {
@@ -18,7 +18,7 @@ export default function Revenue({ revenue = [], setRevenue, loading }: RevenueDa
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
-  // const router = useRouter();
+  const [alertMessage, setAlertMessage] = useState('');
 
   const columns: { key: string; name: string; }[] = [
     { key: "date", name: "Data" },
@@ -79,18 +79,16 @@ export default function Revenue({ revenue = [], setRevenue, loading }: RevenueDa
 
       filterData({ selectedMonth: month, selectedYear: year });
     }
-
   }, [revenue, loading, filterData, month, year]);
 
-  // useEffect(() => {
-  //   searchData(search);
-  // }, [search, searchData]);
-
-  // useEffect(() => {
-  //   if (!loading && (!revenue || revenue.length === 0)) {
-  //     router.push('/error');
-  //   }
-  // }, [revenue, loading, router]);
+  useEffect(() => {
+    if (alertMessage) {
+      const timer = setTimeout(() => {
+        setAlertMessage("")
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [alertMessage]);
 
   return (
     <div className="content">
@@ -101,15 +99,19 @@ export default function Revenue({ revenue = [], setRevenue, loading }: RevenueDa
         <div className="flex justify-end" style={{ marginBottom: 15 }}>
           <MonthFilter month={month} year={year} onFilterChange={filterData} />
           <Search search={search} onSearchChange={searchData} />
-          {/* <Search search={search} onSearchChange={setSearch} /> */}
         </div>
       </div>
       <Table columns={columns} data={filteredData} setRevenue={setRevenue} />
       {showModal &&
         <Modal title={modalTitle}>
-          <RevenueForm closeModal={closeModal} setRevenue={setRevenue} />
+          <RevenueForm
+            closeModal={closeModal}
+            setRevenue={setRevenue}
+            setAlertMessage={setAlertMessage}
+          />
         </Modal>
       }
+      <Alert message={alertMessage} />
     </div>
   )
 }

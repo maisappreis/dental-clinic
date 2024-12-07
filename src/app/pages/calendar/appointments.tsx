@@ -144,7 +144,12 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
               </div>
             </div>
             :
-            <AppointmentForm selectedPatient={selectedPatient} setAgenda={setAgenda} closeModal={closeModal} />
+            <AppointmentForm
+              selectedPatient={selectedPatient}
+              setAgenda={setAgenda}
+              closeModal={closeModal}
+              setAlertMessage={setAlertMessage}
+            />
           }
         </Modal>
       }

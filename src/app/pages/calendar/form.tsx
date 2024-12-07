@@ -4,20 +4,19 @@ import React, { useState, useEffect } from "react";
 import { AgendaProps } from "@/types/agenda";
 import { scheduleOptions } from "@/assets/data";
 import { capitalize } from '@/utils/utils';
-import Alert from '@/app/common/alert'
-import axios from "axios";
 import { apiURL, fetchAgenda, isAuthenticated, configureAxios } from '@/utils/api';
 import Loading from "@/app/common/loading";
+import axios from "axios";
 
 interface AppointmentFormProps {
   selectedPatient?: AgendaProps;
   closeModal: () => void;
   setAgenda: (newAgenda: AgendaProps[]) => void;
+  setAlertMessage: (newAlert: string) => void;
 }
 
-export default function AppointmentForm({ selectedPatient, closeModal, setAgenda }: AppointmentFormProps) {
-  const [isFormValid, setIsFormValid] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
+export default function AppointmentForm({ selectedPatient, closeModal, setAgenda, setAlertMessage }: AppointmentFormProps) {
+  const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     id: 0,
@@ -33,28 +32,13 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
     const { name, value } = e.target;
 
     let newValue = value;
-
-    if (name === "name") {
-      newValue = capitalize(value);
-    }
+    if (name === "name") newValue = capitalize(value);
 
     setFormData((prevData) => ({
       ...prevData,
       [name]: newValue,
     }));
   };
-
-  useEffect(() => {
-    if (
-      formData.name !== "" &&
-      formData.date !== "" &&
-      formData.time !== ""
-    ) {
-      setIsFormValid(true);
-    } else {
-      setIsFormValid(false);
-    }
-  }, [formData]);
 
   const saveAppointment = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -64,10 +48,6 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
     } else {
       await createAppointment();
     }
-
-    setTimeout(() => {
-      closeModal();
-    }, 1000);
   }
 
   const createAppointment = async () => {
@@ -81,6 +61,7 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
       console.error('Erro ao criar agendamento.', error)
       setAlertMessage("Erro ao criar agendamento.");
     } finally {
+      closeModal();
       setLoading(false);
     }
   }
@@ -96,6 +77,7 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
       console.error('Erro ao atualizar agendamento.', error)
       setAlertMessage("Erro ao atualizar agendamento.");
     } finally {
+      closeModal();
       setLoading(false);
     }
   }
@@ -111,14 +93,16 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
   }, [selectedPatient]);
 
   useEffect(() => {
-    if (alertMessage) {
-      const timer = setTimeout(() => {
-        setAlertMessage("")
-      }, 1000);
-
-      return () => clearTimeout(timer);
+    if (
+      formData.name !== "" &&
+      formData.date !== "" &&
+      formData.time !== ""
+    ) {
+      setIsFormValid(true);
+    } else {
+      setIsFormValid(false);
     }
-  }, [alertMessage]);
+  }, [formData]);
 
   useEffect(() => {
     isAuthenticated();
@@ -171,7 +155,6 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
           Cancelar
         </button>
       </div>
-      <Alert message={alertMessage} />
     </form>
   )
 }

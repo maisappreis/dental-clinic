@@ -29,13 +29,13 @@ interface TableProps {
 }
 
 export default function Table({ columns, data, setRevenue }: TableProps) {
-  const [showTooltip, setShowTooltip] = useState(false);
+  const [showTooltip, setShowTooltip] = useState<boolean>(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState('');
+  const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [modalTitle, setModalTitle] = useState<string>("");
   const [selectedRow, setSelectedRow] = useState<RevenueProps | null>(null);
-  const [alertMessage, setAlertMessage] = useState('');
+  const [alertMessage, setAlertMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const openNotes = (row: RevenueProps, e: React.MouseEvent): void => {
@@ -166,7 +166,12 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
       )}
       {showUpdateModal && selectedRow &&
         <Modal title={modalTitle}>
-          <RevenueForm selectedRow={selectedRow} closeModal={closeModal} setRevenue={setRevenue} />
+          <RevenueForm
+            selectedRow={selectedRow}
+            closeModal={closeModal}
+            setRevenue={setRevenue}
+            setAlertMessage={setAlertMessage}
+          />
         </Modal>
       }
       {showDeleteModal && selectedRow &&

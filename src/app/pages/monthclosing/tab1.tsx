@@ -224,7 +224,6 @@ export default function TabOne(
           </>
           : <div className="no-data">Nenhum resultado encontrado.</div>
         }
-
       </div>
       <Alert message={alertMessage} />
     </div>

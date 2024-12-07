@@ -9,12 +9,12 @@ import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
 import axios from "axios";
 
 export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonthClosing }: MonthClosingData) {
-  const [bankValue, setBankValue] = useState(0);
-  const [cashValue, setCashValue] = useState(0);
-  const [cardValue, setCardValue] = useState(0);
-  const [cardValueNext, setCardValueNext] = useState(0);
-  const [totalMonthlyRevenue, setTotalMonthlyRevenue] = useState(0);
-  const [alertMessage, setAlertMessage] = useState('');
+  const [bankValue, setBankValue] = useState<number>(0);
+  const [cashValue, setCashValue] = useState<number>(0);
+  const [cardValue, setCardValue] = useState<number>(0);
+  const [cardValueNext, setCardValueNext] = useState<number>(0);
+  const [totalMonthlyRevenue, setTotalMonthlyRevenue] = useState<number>(0);
+  const [alertMessage, setAlertMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -154,7 +154,8 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
             value={cardValueNext} onChange={handleInputChange} min="0.001" step="0.001" required />
         </div>
         <div className={styles.speechbubble}>
-          <strong>Cartão do mês seguinte: </strong>podem haver valores que são referentes a receita do mês que vem, mas que já estão liberados.
+          <strong>Cartão do mês seguinte: </strong>
+          podem haver valores que são referentes a receita do mês que vem, mas que já estão liberados.
           Esses valores devem ser subtraídos, pois entrarão apenas no mês seguinte.
         </div>
         <div className="flex justify-end w-full align-bottom mt-3">

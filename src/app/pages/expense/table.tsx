@@ -30,14 +30,14 @@ interface TableProps {
 
 export default function Table({ columns, data, setExpenses }: TableProps) {
   const [statusClasses, setStatusClasses] = useState<string[]>([]);
-  const [showTooltip, setShowTooltip] = useState(false);
+  const [showTooltip, setShowTooltip] = useState<boolean>(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState('');
+  const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
+  const [modalTitle, setModalTitle] = useState<string>("");
   const [selectedRow, setSelectedRow] = useState<ExpenseProps | null>(null);
-  const [alertMessage, setAlertMessage] = useState('');
+  const [alertMessage, setAlertMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const openNotes = (row: ExpenseProps, e: React.MouseEvent): void => {
@@ -250,7 +250,12 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
       )}
       {showUpdateModal && selectedRow &&
         <Modal title={modalTitle}>
-          <ExpenseForm selectedRow={selectedRow} closeModal={closeModal} setExpenses={setExpenses} />
+          <ExpenseForm
+            selectedRow={selectedRow}
+            closeModal={closeModal}
+            setExpenses={setExpenses}
+            setAlertMessage={setAlertMessage}
+          />
         </Modal>
       }
       {showDeleteModal && selectedRow &&

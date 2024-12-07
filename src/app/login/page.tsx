@@ -5,14 +5,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTooth } from '@fortawesome/free-solid-svg-icons';
 import Alert from '@/app/common/alert';
 import Loading from "@/app/common/loading";
-import { apiBase, fetchRevenue, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api'
+import { apiBase, fetchRevenue, fetchExpenses, isAuthenticated,
+  configureAxios } from '@/utils/api'
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
 export default function Login() {
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [alertMessage, setAlertMessage] = useState('');
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [alertMessage, setAlertMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 

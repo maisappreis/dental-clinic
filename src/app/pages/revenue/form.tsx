@@ -4,7 +4,6 @@ import { procedureOptions, paymentOptions, installmentOptions } from '@/assets/d
 import { getCurrentDate } from "@/utils/date";
 import { apiURL, fetchRevenue, isAuthenticated, configureAxios } from '@/utils/api';
 import { capitalize } from '@/utils/utils';
-import Alert from '@/app/common/alert'
 import axios from "axios";
 import { RevenueProps } from '@/types/revenue';
 import Loading from "@/app/common/loading";
@@ -13,15 +12,15 @@ interface RevenueFormProps {
   selectedRow?: RevenueProps;
   closeModal: () => void;
   setRevenue: (newRevenue: any[]) => void;
+  setAlertMessage: (newAlert: string) => void;
 }
 
-export default function RevenueForm({ selectedRow, closeModal, setRevenue }: RevenueFormProps) {
-  const [showCpf, setShowCpf] = useState(false);
-  const [showInstallments, setShowInstallments] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
+export default function RevenueForm({ selectedRow, closeModal, setRevenue, setAlertMessage }: RevenueFormProps) {
+  const [showCpf, setShowCpf] = useState<boolean>(false);
+  const [showInstallments, setShowInstallments] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [validCPF, setValidCPF] = useState('');
-  const [isFormValid, setIsFormValid] = useState(false);
+  const [validCPF, setValidCPF] = useState<string>("");
+  const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [formData, setFormData] = useState<RevenueProps>({
     id: 0,
     date: getCurrentDate(),
@@ -90,10 +89,6 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
     } else {
       await createRevenue();
     }
-
-    setTimeout(() => {
-      closeModal();
-    }, 1000);
   }
 
   const createRevenue = async () => {
@@ -109,6 +104,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
       console.error('Erro ao criar receita.', error)
       setAlertMessage("Erro ao criar receita.");
     } finally {
+      closeModal();
       setLoading(false);
     }
   }
@@ -126,6 +122,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
       console.error('Erro ao atualizar receita.', error)
       setAlertMessage("Erro ao atualizar receita.");
     } finally {
+      closeModal();
       setLoading(false);
     }
   }
@@ -162,16 +159,6 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
       notes: selectedRow?.notes || ""
     });
   }, [selectedRow]);
-
-  useEffect(() => {
-    if (alertMessage) {
-      const timer = setTimeout(() => {
-        setAlertMessage("")
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [alertMessage]);
 
   useEffect(() => {
     if (
@@ -299,7 +286,6 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
           </button>
         </div>
       </form>
-      <Alert message={alertMessage} />
     </>
   )
 }
