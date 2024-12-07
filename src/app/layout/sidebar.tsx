@@ -2,7 +2,8 @@
 import { useState } from "react";
 import Logotype from "./logotype";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChartLine, faCalendar, faHandHoldingDollar, faMoneyBillTransfer, faBook } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faCalendar, faHandHoldingDollar,
+  faMoneyBillTransfer, faBook } from '@fortawesome/free-solid-svg-icons';
 import styles from "./styles/Sidebar.module.css";
 
 

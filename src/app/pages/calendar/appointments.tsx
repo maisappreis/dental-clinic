@@ -8,17 +8,17 @@ import { formatDate } from "@/utils/date";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { AgendaProps, AppointmentsProps } from "@/types/agenda";
+import { apiURL, fetchAgenda, isAuthenticated, configureAxios } from '@/utils/api';
 import Alert from '@/app/common/alert'
 import axios from "axios";
-import { apiURL, fetchAgenda, isAuthenticated, configureAxios } from '@/utils/api';
 
 export default function Appointments({ time, patients, setAgenda }: AppointmentsProps) {
-  const [showModal, setShowModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteModalTitle, setDeleteModalTitle] = useState('');
-  const [modalTitle, setModalTitle] = useState('');
-  const [mode, setMode] = useState('view');
-  const [alertMessage, setAlertMessage] = useState('');
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [deleteModalTitle, setDeleteModalTitle] = useState<string>("");
+  const [modalTitle, setModalTitle] = useState<string>("");
+  const [mode, setMode] = useState<string>("view");
+  const [alertMessage, setAlertMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedPatient, setSelectedPatient] = useState({
     id: 0,
@@ -60,15 +60,12 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
         setAlertMessage("Agendamento excluído com sucesso!");
         const newAppointment = await fetchAgenda();
         setAgenda(newAppointment);
-
-        setTimeout(() => {
-          closeModal();
-        }, 1000);
       }
     } catch (error) {
       console.error('Erro ao excluir agendamento.', error)
       setAlertMessage("Erro ao excluir agendamento.");
     } finally {
+      closeModal();
       setLoading(false);
     }
   };
@@ -114,7 +111,9 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
     <>
       <div className={`${styles.schedule} ${styles.blue} ${styles.text}`}>{time}</div>
       {patients.map((patient, index) => (
-        <button key={index} className={`${styles.schedule} ${styles.graylight}`} onClick={() => openModal(patient)}>
+        <button key={index}
+          className={`${styles.schedule} ${styles.graylight}`}
+          onClick={() => openModal(patient)}>
           <div className="flex justify-center">
             <p className={`${styles.text}`}>{shortName(patient.name)}</p>
           </div>

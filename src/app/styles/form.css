@@ -30,17 +30,6 @@
   font-size: 16px;
 }
 
-.autocomplete-list {
-  position: absolute;
-  transform: "translate(-50%, -100%)";
-  z-index: 10;
-  background-color: rgb(255, 255, 255);
-  padding: 10px;
-  border: rgb(141, 141, 141) solid 1px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
 .error {
   font-size: 14px;
   color: red;

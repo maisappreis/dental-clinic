@@ -2,16 +2,16 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { formatDate, getNextMonth, getMonthAndYear } from "@/utils/date";
+import { apiURL, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api';
+import { ExpenseProps } from "@/types/expense";
+import { formatValueToBRL } from "@/utils/utils";
 import Tooltip from "@/app/common/tooltip"
 import Modal from "@/app/common/modal";
 import ExpenseForm from "./form";
 import Loading from "@/app/common/loading";
-import { formatDate, getNextMonth, getMonthAndYear } from "@/utils/date";
-import { apiURL, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api';
 import Alert from '@/app/common/alert'
 import axios from "axios";
-import { ExpenseProps } from "@/types/expense";
-import { formatValueToBRL } from "@/utils/utils";
 
 interface Data {
   [key: string]: any;
@@ -98,14 +98,11 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
         const newExpense = await fetchExpenses();
         setExpenses(newExpense)
       }
-
-      setTimeout(() => {
-        closeModal();
-      }, 1000);
     } catch (error) {
       console.error('Erro ao atualizar despesa.', error)
       setAlertMessage("Erro ao atualizar despesa.");
     } finally {
+      closeModal();
       setLoading(false);
     }
   }
@@ -126,14 +123,11 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
       setAlertMessage("Despesa do mês seguinte criada com sucesso!");
       const newExpense = await fetchExpenses();
       setExpenses(newExpense);
-
-      setTimeout(() => {
-        closeModal();
-      }, 1000);
     } catch (error) {
       console.error('Erro ao criar despesa do mês seguinte.', error)
       setAlertMessage("Erro ao criar despesa do mês seguinte.");
     } finally {
+      closeModal();
       setLoading(false);
     }
   }
@@ -146,15 +140,12 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
         setAlertMessage("Despesa excluída com sucesso!");
         const newExpense = await fetchExpenses();
         setExpenses(newExpense)
-
-        setTimeout(() => {
-          closeModal();
-        }, 1000);
       }
     } catch (error) {
       console.error('Erro ao excluir despesa.', error)
       setAlertMessage("Erro ao excluir despesa.");
     } finally {
+      closeModal();
       setLoading(false);
     }
   }
@@ -230,10 +221,22 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
                   <td>
                     <div>
                       {row['notes'] !== "" &&
-                        <FontAwesomeIcon icon={faCircleInfo} className="table-icon" onClick={(e) => openNotes(row, e)} />
+                        <FontAwesomeIcon
+                          icon={faCircleInfo}
+                          className="table-icon"
+                          onClick={(e) => openNotes(row, e)}
+                        />
                       }
-                      <FontAwesomeIcon icon={faPenToSquare} className="table-icon" onClick={() => openUpdateModal(row)} />
-                      <FontAwesomeIcon icon={faTrashCan} className="table-icon" onClick={() => openDeleteModal(row)} />
+                      <FontAwesomeIcon
+                        icon={faPenToSquare}
+                        className="table-icon"
+                        onClick={() => openUpdateModal(row)}
+                      />
+                      <FontAwesomeIcon
+                        icon={faTrashCan}
+                        className="table-icon"
+                        onClick={() => openDeleteModal(row)}
+                      />
                     </div>
                   </td>
                 </tr>

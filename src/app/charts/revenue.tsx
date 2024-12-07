@@ -6,7 +6,7 @@ import { ExpenseProps } from '@/types/expense';
 import { ChartData, MonthNames, TooltipItem } from '@/types/chart';
 import { monthNames } from "@/assets/data";
 import { formatValueToBRL } from "@/utils/utils";
-import "@/utils/chart"
+import "@/utils/chart";
 
 export default function RevenueExpensesChart(
   { revenue, expenses }: { revenue: RevenueProps[], expenses: ExpenseProps[] }

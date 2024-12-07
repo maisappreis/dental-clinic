@@ -13,7 +13,7 @@ export default function TabOne(
   { orderedRevenue, setRevenue }: { orderedRevenue: RevenueProps[], setRevenue: (newRevenue: RevenueProps[]) => void }
 ) {
   const [updatedRevenue, setUpdatedRevenue] = useState<RevenueProps[]>([]);
-  const [alertMessage, setAlertMessage] = useState('');
+  const [alertMessage, setAlertMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [formRate, setFormRate] = useState({
     debit: 1.99,
@@ -102,9 +102,9 @@ export default function TabOne(
 
   const getReleaseDate = (dateString: string) => {
     if (dateString && dateString !== "") {
-      return formatDate(dateString)
+      return formatDate(dateString);
     } else {
-      return ""
+      return "";
     }
   }
 

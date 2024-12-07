@@ -97,7 +97,12 @@ export default function Calendar({ agenda = [], setAgenda }: AgendaData) {
           </div>
         ))}
         {appointments.map((appointment) => (
-          <Appointments key={appointment.time} time={appointment.time} patients={appointment.patients} setAgenda={setAgenda} />
+          <Appointments
+            key={appointment.time}
+            time={appointment.time}
+            patients={appointment.patients}
+            setAgenda={setAgenda}
+          />
         ))}
       </div>
       {showModal &&

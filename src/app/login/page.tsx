@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTooth } from '@fortawesome/free-solid-svg-icons';
 import Alert from '@/app/common/alert';
 import Loading from "@/app/common/loading";
-import { apiBase, fetchRevenue, fetchExpenses, isAuthenticated,
-  configureAxios } from '@/utils/api'
+import { apiBase, fetchRevenue, fetchExpenses,
+  isAuthenticated,   configureAxios } from '@/utils/api'
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 

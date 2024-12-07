@@ -3,9 +3,9 @@ import React, { useState, useEffect } from "react";
 import { apiURL, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api';
 import { capitalize } from '@/utils/utils';
 import { getMonthAndYear } from "@/utils/date";
-import axios from "axios";
 import { ExpenseProps } from '@/types/expense';
 import Loading from "@/app/common/loading";
+import axios from "axios";
 
 interface ExpenseFormProps {
   selectedRow?: ExpenseProps;
@@ -14,7 +14,9 @@ interface ExpenseFormProps {
   setAlertMessage: (newAlert: string) => void;
 }
 
-export default function ExpenseForm({ selectedRow, closeModal, setExpenses, setAlertMessage }: ExpenseFormProps) {
+export default function ExpenseForm(
+    {selectedRow, closeModal, setExpenses, setAlertMessage }: ExpenseFormProps
+  ) {
   const [hasInstallments, setHasInstallments] = useState<boolean>(false);
   const [validInstallments, setValidInstallments] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);

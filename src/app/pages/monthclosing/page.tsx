@@ -23,15 +23,15 @@ export default function MonthClosing(
   { revenue, setRevenue, monthClosing, setMonthClosing }: DataMonthClosing
 ) {
   let tabContent: React.ReactNode;
-  const [selectedTab, setSelectedTab] = useState("reports");
-  const [buttonText, setButtonText] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState('');
-  const [revenueDone, setRevenueDone] = useState(false);
-  const [expensesDone, setExpensesDone] = useState(false);
-  const [selectedNumberMonth, setSelectedNumberMonth] = useState(0);
-  const [selectedMonth, setSelectedMonth] = useState("");
-  const [selectedYear, setSelectedYear] = useState("");
+  const [selectedTab, setSelectedTab] = useState<string>("reports");
+  const [buttonText, setButtonText] = useState<string>("");
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [modalTitle, setModalTitle] = useState<string>("");
+  const [revenueDone, setRevenueDone] = useState<boolean>(false);
+  const [expensesDone, setExpensesDone] = useState<boolean>(false);
+  const [selectedNumberMonth, setSelectedNumberMonth] = useState<number>(0);
+  const [selectedMonth, setSelectedMonth] = useState<string>("");
+  const [selectedYear, setSelectedYear] = useState<string>("");
   const [orderedRevenue, setOrderedRevenue] = useState<RevenueProps[]>([]);
   const [tabsOptions, setTabsOptions] = useState([
     { id: "reports", label: "Relatórios", disabled: false },

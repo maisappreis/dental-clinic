@@ -1,13 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChartLine, faCalendar, faHandHoldingDollar, faMoneyBillTransfer, faBook, faRightToBracket, faCircleUser } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faCalendar, faHandHoldingDollar, faMoneyBillTransfer,
+  faBook, faRightToBracket, faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import styles from "./styles/Header.module.css"
 import { useRouter } from 'next/navigation';
 
 export default function Header({ selectedOption }: { selectedOption: string }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showDropdownLogout, setShowDropdownLogout] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [showDropdownLogout, setShowDropdownLogout] = useState<boolean>(false);
   const router = useRouter();
   let title;
   let subtitle;

@@ -2,12 +2,12 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan, faCircleInfo, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { apiURL, fetchRevenue, isAuthenticated, configureAxios } from '@/utils/api';
 import Tooltip from "@/app/common/tooltip";
 import Loading from "@/app/common/loading";
 import Modal from "@/app/common/modal";
 import RevenueForm from "./form";
 import { formatDate } from "@/utils/date";
-import { apiURL, fetchRevenue, isAuthenticated, configureAxios } from '@/utils/api';
 import { formatValueToBRL } from "@/utils/utils";
 import { RevenueProps } from "@/types/revenue";
 import Alert from '@/app/common/alert';
@@ -59,7 +59,6 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
     setSelectedRow(row);
   };
 
-
   const deleteRevenue = async () => {
     setLoading(true);
     try {
@@ -68,15 +67,12 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
         setAlertMessage("Receita excluída com sucesso!");
         const newRevenue = await fetchRevenue();
         setRevenue(newRevenue)
-
-        setTimeout(() => {
-          closeModal();
-        }, 1000);
       }
     } catch (error) {
       console.error('Erro ao excluir receita.', error)
       setAlertMessage("Erro ao excluir receita.");
     } finally {
+      closeModal();
       setLoading(false);
     }
   }
@@ -146,10 +142,22 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
                   <td>
                     <div>
                       {row['notes'] !== "" &&
-                        <FontAwesomeIcon icon={faCircleInfo} className="table-icon" onClick={(e) => openNotes(row, e)} />
+                        <FontAwesomeIcon
+                          icon={faCircleInfo}
+                          className="table-icon"
+                          onClick={(e) => openNotes(row, e)}
+                        />
                       }
-                      <FontAwesomeIcon icon={faPenToSquare} className="table-icon" onClick={() => openUpdateModal(row)} />
-                      <FontAwesomeIcon icon={faTrashCan} className="table-icon" onClick={() => openDeleteModal(row)} />
+                      <FontAwesomeIcon
+                        icon={faPenToSquare}
+                        className="table-icon"
+                        onClick={() => openUpdateModal(row)}
+                      />
+                      <FontAwesomeIcon
+                        icon={faTrashCan}
+                        className="table-icon"
+                        onClick={() => openDeleteModal(row)}
+                      />
                     </div>
                   </td>
                 </tr>
