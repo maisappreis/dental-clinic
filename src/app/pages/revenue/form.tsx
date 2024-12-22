@@ -53,6 +53,8 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue, setAl
       }
     }
 
+    if (name === "nf" && value === "no") setValidCPF("");
+
     setFormData((prevData) => ({
       ...prevData,
       [name]: newValue,

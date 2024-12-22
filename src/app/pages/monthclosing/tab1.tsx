@@ -41,6 +41,9 @@ export default function TabOne(
       ...prevData,
       [name]: parsedValue,
     }));
+
+    const updatedRevenueData = calculatedRevenue(orderedRevenue);
+    setUpdatedRevenue(updatedRevenueData);
   };
 
   const handleInputChange = (
