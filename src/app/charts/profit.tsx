@@ -49,7 +49,7 @@ export default function ProfitChart(
   };
 
   const drawChart = useMemo(() => {
-    if (profit.profit.length > 0) {
+    if (profit.profit.length > 0 && profit.labels.length > 0) {
       const options = setLayout();
       setOptions(options);
 
