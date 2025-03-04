@@ -1,12 +1,12 @@
 'use client'
 import { useState, useEffect, useMemo } from 'react';
 import { Bar } from "react-chartjs-2";
-import { ChartData, TooltipItem } from '@/types/chart';
+import { ChartData, TooltipItem, ProfitData } from '@/types/chart';
 import { formatValueToBRL } from "@/utils/utils";
 import "@/utils/chart";
 
 export default function ProfitChart(
-  { profit }: { profit: {profit: number[], labels: string[]} }
+  { profit }: { profit: ProfitData }
 ) {
   const [options, setOptions] = useState({});
   const [data, setData] = useState<ChartData>({

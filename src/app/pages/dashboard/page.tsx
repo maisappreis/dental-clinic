@@ -5,9 +5,10 @@ import MostPerformedProceduresChart from "@/app/charts/proceduresFrequency";
 import styles from "@/app/pages/dashboard/Charts.module.css";
 import { RevenueProps } from '@/types/revenue';
 import { ExpenseProps } from '@/types/expense';
+import { ProfitData } from '@/types/chart';
 
 export default function Dashboard(
-  { revenue, expenses, profit }: { revenue: RevenueProps[], expenses: ExpenseProps[], profit: {profit: number[], labels: string[]} }
+  { revenue, expenses, profit }: { revenue: RevenueProps[], expenses: ExpenseProps[], profit: ProfitData }
 ) {
   return (
     <div className="content align-middle">

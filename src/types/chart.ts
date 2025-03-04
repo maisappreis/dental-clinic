@@ -33,3 +33,8 @@ export interface MonthNames {
   "11": string;
   "12": string;
 }
+
+export interface ProfitData {
+  profit: number[];
+  labels: string[];
+}

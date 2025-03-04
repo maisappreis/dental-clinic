@@ -16,6 +16,7 @@ import { fetchAgenda, fetchRevenue,
   isAuthenticated, configureAxios
 } from "@/utils/api";
 import { getCurrentYear } from "@/utils/date";
+import { ProfitData } from '@/types/chart';
 
 export default function Content({ selectedOption }: { selectedOption: string }) {
   let contentComponent: React.ReactNode;
@@ -24,7 +25,7 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
   const [agenda, setAgenda] = useState<AgendaProps[]>([]);
   const [monthClosing, setMonthClosing] = useState<MonthClosingProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [profit, setProfit] = useState<{profit: number[], labels: string[]}>({
+  const [profit, setProfit] = useState<ProfitData>({
     profit: [], labels: []
   });
 
