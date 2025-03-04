@@ -157,12 +157,8 @@ export default function MonthClosing(
       };
   
       const updatedRevenue = revenue.map(item => {
-        // const isCredit = item.payment === "Crédito à vista" || item.payment === "Crédito à prazo";
   
         let releaseDate = new Date(item.date);
-        // if (isCredit) {
-        //   releaseDate = addDaysToDate(item.date, 30);
-        // }
   
         return {
           ...item,
