@@ -1,6 +1,5 @@
 import {
   capitalize,
-  calculateMonthlyRevenue,
   calculateMonthlyTotals,
   calculateMonthlyProfit,
   formatValueToBRL
@@ -46,11 +45,6 @@ describe("Utils Functions", () => {
   it("capitalize should capitalize the first letter of each word", () => {
     expect(capitalize("hello world")).toBe("Hello World");
     expect(capitalize("javaScript is awesome")).toBe("Javascript Is Awesome");
-  });
-
-  it("calculateMonthlyRevenue should return the total revenue for a specific month and year", () => {
-    const result = calculateMonthlyRevenue(mockRevenueData, 9, 2024);
-    expect(result).toBe(500);
   });
 
   it("calculateMonthlyTotals should return the correct monthly revenue and expenses", () => {

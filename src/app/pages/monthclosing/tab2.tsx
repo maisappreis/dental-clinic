@@ -4,7 +4,7 @@ import styles from "./MonthClosing.module.css";
 import Alert from '@/app/common/alert';
 import Loading from "@/app/common/loading";
 import { MonthClosingData, MonthClosingProps } from "@/types/monthClosing";
-import { calculateMonthlyRevenue, formatValueToBRL } from "@/utils/utils";
+import { formatValueToBRL } from "@/utils/utils";
 import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
 import axios from "axios";
 
@@ -91,18 +91,9 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
       setCashValue(selectedMonthClosing.cash_value);
       setCardValue(selectedMonthClosing.card_value);
       setCardValueNext(selectedMonthClosing.card_value_next_month);
+      setTotalMonthlyRevenue(selectedMonthClosing.net_revenue);
     }
   }, [selectedMonthClosing])
-
-  useEffect(() => {
-    if (revenue && revenue.length > 0) {
-      const currentMonth = selectedMonthClosing.month;
-      const currentYear = selectedMonthClosing.year;
-      const totalRevenue = calculateMonthlyRevenue(revenue, currentMonth, currentYear);
-
-      setTotalMonthlyRevenue(totalRevenue);
-    }
-  }, [revenue, setTotalMonthlyRevenue, selectedMonthClosing]);
 
   useEffect(() => {
     if (alertMessage) {
@@ -174,7 +165,7 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
         <div className="flex-col">
           <div className="flex justify-between my-2">
             <span className="mr-4 font-bold">Receita Líquida:</span>
-            <span className="font-bold">{formatValueToBRL(totalMonthlyRevenue)}</span>
+            <span className="font-bold">{formatValueToBRL(selectedMonthClosing.net_revenue)}</span>
           </div>
         </div>
         <p className="my-4">A soma das entradas deve ser igual ao valor da receita líquida calculada.</p>
