@@ -150,11 +150,6 @@ export default function MonthClosing(
       const currentMonth = selectedNumberMonth;
       const currentYear = selectedYear
   
-      const addDaysToDate = (dateStr: string, days: number) => {
-        const date = new Date(dateStr);
-        date.setDate(date.getDate() + days);
-        return date;
-      };
   
       const updatedRevenue = revenue.map(item => {
   
@@ -261,7 +256,7 @@ export default function MonthClosing(
       tabContent = <TabOne orderedRevenue={orderedRevenue} setRevenue={setRevenue} />;
       break;
     case "tab2":
-      tabContent = <TabTwo revenue={revenue} selectedMonthClosing={selectedMonthClosing}
+      tabContent = <TabTwo selectedMonthClosing={selectedMonthClosing} orderedRevenue={orderedRevenue}
         setSelectedMonthClosing={setSelectedMonthClosing} />;
       break;
     case "tab3":

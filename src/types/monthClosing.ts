@@ -20,5 +20,5 @@ export interface MonthClosingProps {
 export interface MonthClosingData {
   selectedMonthClosing: MonthClosingProps;
   setSelectedMonthClosing: (newSelectedMonthClosing: MonthClosingProps) => void;
-  revenue: RevenueProps[];
+  orderedRevenue: RevenueProps[]
 }

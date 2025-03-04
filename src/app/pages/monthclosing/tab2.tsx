@@ -8,7 +8,7 @@ import { formatValueToBRL } from "@/utils/utils";
 import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
 import axios from "axios";
 
-export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonthClosing }: MonthClosingData) {
+export default function TabTwo({ selectedMonthClosing, setSelectedMonthClosing, orderedRevenue }: MonthClosingData) {
   const [bankValue, setBankValue] = useState<number>(0);
   const [cashValue, setCashValue] = useState<number>(0);
   const [cardValue, setCardValue] = useState<number>(0);
@@ -91,9 +91,17 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
       setCashValue(selectedMonthClosing.cash_value);
       setCardValue(selectedMonthClosing.card_value);
       setCardValueNext(selectedMonthClosing.card_value_next_month);
-      setTotalMonthlyRevenue(selectedMonthClosing.net_revenue);
     }
   }, [selectedMonthClosing])
+
+  useEffect(() => {
+    if (orderedRevenue && orderedRevenue.length > 0) {
+      const netValue = orderedRevenue.map(e => e.net_value);
+      const sumNetValue = netValue.reduce((acc, num) => acc + num, 0);
+
+      setTotalMonthlyRevenue(sumNetValue);
+    }
+  }, [orderedRevenue])
 
   useEffect(() => {
     if (alertMessage) {
@@ -165,7 +173,7 @@ export default function TabTwo({ revenue, selectedMonthClosing, setSelectedMonth
         <div className="flex-col">
           <div className="flex justify-between my-2">
             <span className="mr-4 font-bold">Receita Líquida:</span>
-            <span className="font-bold">{formatValueToBRL(selectedMonthClosing.net_revenue)}</span>
+            <span className="font-bold">{formatValueToBRL(totalMonthlyRevenue)}</span>
           </div>
         </div>
         <p className="my-4">A soma das entradas deve ser igual ao valor da receita líquida calculada.</p>
