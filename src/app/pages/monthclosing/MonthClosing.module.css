@@ -118,6 +118,12 @@
   font-size: 16px;
 }
 
+.select {
+  flex-direction: row;
+  width: 100px;
+  margin-left: 20px;
+}
+
 @media only screen and (min-width: 1600px) {
   .overflow {
     max-height: 465px;

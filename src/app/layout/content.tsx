@@ -15,6 +15,7 @@ import { fetchAgenda, fetchRevenue,
   fetchExpenses, fetchMonthClosing,
   isAuthenticated, configureAxios
 } from "@/utils/api";
+import { getCurrentYear } from "@/utils/date";
 
 export default function Content({ selectedOption }: { selectedOption: string }) {
   let contentComponent: React.ReactNode;
@@ -34,7 +35,7 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
         const agendaData = await fetchAgenda();
         const revenueData = await fetchRevenue();
         const expenseData = await fetchExpenses();
-        const monthClosingData = await fetchMonthClosing();
+        const monthClosingData = await fetchMonthClosing(Number(getCurrentYear()));
 
         if (agendaData && agendaData.length > 0) {
           setAgenda(agendaData);

@@ -46,9 +46,9 @@ export const fetchExpenses = async () => {
   }
 }
 
-export const fetchMonthClosing = async () => {
+export const fetchMonthClosing = async (year: number) => {
   try {
-    const response = await axios.get(`${apiURL()}/month_closing/`)
+    const response = await axios.get(`${apiURL()}/month_closing/?year=${year}`)
     return response.data
   } catch (error) {
     console.error('Erro ao salvar os dados.', error)

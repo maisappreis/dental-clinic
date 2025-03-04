@@ -71,7 +71,7 @@ export default function TabOne(
       const updatedNetValues = updatedRevenue.map(item => ({
         id: item.id,
         net_value: item.net_value,
-        release_date: item.release_date
+        date: item.date
       }));
 
       await axios.put(`${apiURL()}/update-net-values/`, updatedNetValues)

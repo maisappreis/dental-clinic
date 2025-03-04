@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ChangeEvent } from 'react';
 import styles from "./MonthClosing.module.css";
 import Reports from './reports';
 import TabOne from './tab1';
@@ -32,6 +32,7 @@ export default function MonthClosing(
   const [selectedNumberMonth, setSelectedNumberMonth] = useState<number>(0);
   const [selectedMonth, setSelectedMonth] = useState<string>("");
   const [selectedYear, setSelectedYear] = useState<string>("");
+  const [year, setYear] = useState<number>(Number(getCurrentYear()));
   const [orderedRevenue, setOrderedRevenue] = useState<RevenueProps[]>([]);
   const [tabsOptions, setTabsOptions] = useState([
     { id: "reports", label: "Relatórios", disabled: false },
@@ -70,7 +71,7 @@ export default function MonthClosing(
       disableTabForward();
       setSelectedTab("tab3");
     } else {
-      const monthClosingData = await fetchMonthClosing();
+      const monthClosingData = await fetchMonthClosing(year);
       setMonthClosing(monthClosingData);
       setSelectedTab("reports");
       disableTabsOptions();
@@ -156,12 +157,12 @@ export default function MonthClosing(
       };
   
       const updatedRevenue = revenue.map(item => {
-        const isCredit = item.payment === "Crédito à vista" || item.payment === "Crédito à prazo";
+        // const isCredit = item.payment === "Crédito à vista" || item.payment === "Crédito à prazo";
   
         let releaseDate = new Date(item.date);
-        if (isCredit) {
-          releaseDate = addDaysToDate(item.date, 30);
-        }
+        // if (isCredit) {
+        //   releaseDate = addDaysToDate(item.date, 30);
+        // }
   
         return {
           ...item,
@@ -200,7 +201,15 @@ export default function MonthClosing(
       const sortedRevenue = [...prioritizedRevenue, ...otherRevenue];
       setOrderedRevenue(sortedRevenue);
     }
-  }
+  };
+
+  const handleYearChange = async (event: ChangeEvent<HTMLSelectElement>) => {
+    const selectedYear = Number(event.target.value);
+    setYear(selectedYear);
+
+    const monthClosingData = await fetchMonthClosing(selectedYear);
+    setMonthClosing(monthClosingData);
+  };
 
   useEffect(() => {
     switch (selectedTab) {
@@ -284,6 +293,25 @@ export default function MonthClosing(
 
       <div className={styles.content}>
         {tabContent}
+      </div>
+      <div className="flex">
+      <label htmlFor="year">Ano:</label>
+        <select
+          className={styles.select}
+          id="year"
+          name="year"
+          value={year}
+          onChange={handleYearChange}
+          required
+          aria-label="year"
+        >
+          <option disabled value="">Ano:</option>
+          {years.map((year, index) => (
+            <option key={index} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
       </div>
       <div className="flex justify-end w-full align-bottom mt-3">
         <button className="btn blue size-fit" onClick={handleButtonClick}>
