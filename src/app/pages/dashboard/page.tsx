@@ -7,7 +7,7 @@ import { RevenueProps } from '@/types/revenue';
 import { ExpenseProps } from '@/types/expense';
 
 export default function Dashboard(
-  { revenue, expenses }: { revenue: RevenueProps[], expenses: ExpenseProps[] }
+  { revenue, expenses, profit }: { revenue: RevenueProps[], expenses: ExpenseProps[], profit: {profit: number[], labels: string[]} }
 ) {
   return (
     <div className="content align-middle">
@@ -17,7 +17,7 @@ export default function Dashboard(
       </div>
       <div id="area" className={styles.area}>
         <NumberOfProceduresChart revenue={revenue} />
-        <ProfitChart revenue={revenue} expenses={expenses} />
+        <ProfitChart profit={profit} />
       </div>
     </div>
   );

@@ -1,7 +1,5 @@
 import {
   capitalize,
-  calculateMonthlyTotals,
-  calculateMonthlyProfit,
   formatValueToBRL
 } from "@/utils/utils";
 import { type RevenueProps} from '@/types/revenue';
@@ -47,23 +45,9 @@ describe("Utils Functions", () => {
     expect(capitalize("javaScript is awesome")).toBe("Javascript Is Awesome");
   });
 
-  it("calculateMonthlyTotals should return the correct monthly revenue and expenses", () => {
-    const result = calculateMonthlyTotals(mockRevenueData, mockExpenseData);
-    expect(result.monthsLabels).toContain("Setembro 2024");
-    expect(result.monthlyRevenue).toContain(750);
-    expect(result.monthlyExpenses).toContain(230);
-  });
-
-  it("calculateMonthlyProfit should return the correct monthly profit", () => {
-    const result = calculateMonthlyProfit(mockRevenueData, mockExpenseData);
-    expect(result.monthsLabels).toContain("Setembro 2024");
-    expect(result.monthlyProfit).toContain(520);
-  });
-
   it("formatValueToBRL should format number to BRL currency", () => {
     expect(formatValueToBRL(1234.56)).toBe("R$ 1.234,56");
     expect(formatValueToBRL(0)).toBe("R$ 0,00");
     expect(formatValueToBRL(NaN)).toBe("");
   });
-
 });

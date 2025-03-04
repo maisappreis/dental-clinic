@@ -1,15 +1,12 @@
 'use client'
 import { useState, useEffect, useMemo } from 'react';
 import { Bar } from "react-chartjs-2";
-import { RevenueProps } from '@/types/revenue';
-import { ExpenseProps } from '@/types/expense';
 import { ChartData, TooltipItem } from '@/types/chart';
-import { calculateMonthlyProfit } from '@/utils/utils';
 import { formatValueToBRL } from "@/utils/utils";
 import "@/utils/chart";
 
 export default function ProfitChart(
-  { revenue, expenses }: { revenue: RevenueProps[], expenses: ExpenseProps[] }
+  { profit }: { profit: {profit: number[], labels: string[]} }
 ) {
   const [options, setOptions] = useState({});
   const [data, setData] = useState<ChartData>({
@@ -52,20 +49,18 @@ export default function ProfitChart(
   };
 
   const drawChart = useMemo(() => {
-    if (revenue && expenses && revenue.length > 0 && expenses.length > 0) {
-      const { monthsLabels, monthlyProfit } = calculateMonthlyProfit(revenue, expenses);
-
+    if (profit.profit.length > 0) {
       const options = setLayout();
       setOptions(options);
 
       return {
-        labels: monthsLabels,
+        labels: profit.labels,
         datasets: [
           {
-            label: 'Lucro mensal',
+            label: 'Lucro bruto mensal',
             backgroundColor: 'rgba(19, 163, 0, 0.7)',
             borderColor: 'rgba(75,192,192,1)',
-            data: monthlyProfit,
+            data: profit.profit,
           }
         ]
       };
@@ -74,11 +69,11 @@ export default function ProfitChart(
       labels: [],
       datasets: []
     };
-  }, [revenue, expenses]);
+  }, [profit.labels, profit.profit]);
 
   useEffect(() => {
     setData(drawChart);
-  }, [drawChart]);
+  }, [drawChart, profit]);
 
   return (
     data.labels.length > 0 ? (

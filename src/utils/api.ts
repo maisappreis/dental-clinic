@@ -1,67 +1,76 @@
 import axios from 'axios';
 
-export const apiBase: string = "https://django-apis-two.vercel.app/api"
-// export const apiBase: string = "http://localhost:8000/api"
+export const apiBase: string = "https://django-apis-two.vercel.app/api";
+// export const apiBase: string = "http://localhost:8000/api";
 
 export const isAuthenticated = () => {
   const token = localStorage.getItem('accessToken');
   if (token) {
-    return true
+    return true;
   }
-  return false
-}
+  return false;
+};
 
 export const apiURL = (): string => {
   if (isAuthenticated()) {
-    return `${apiBase}/dental`
+    return `${apiBase}/dental`;
   } else {
-    return `${apiBase}/dental/test`
+    return `${apiBase}/dental/test`;
   }
-}
+};
 
 export const fetchAgenda = async () => {
   try {
-    const response = await axios.get(`${apiURL()}/agenda/`)
-    return response.data
+    const response = await axios.get(`${apiURL()}/agenda/`);
+    return response.data;
   } catch (error) {
-    console.error('Erro ao requisitar a lista de agendamentos.', error)
+    console.error('Erro ao requisitar a lista de agendamentos.', error);
   }
-}
+};
 
 export const fetchRevenue = async () => {
   try {
-    const response = await axios.get(`${apiURL()}/revenue/`)
-    return response.data
+    const response = await axios.get(`${apiURL()}/revenue/`);
+    return response.data;
   } catch (error) {
-    console.error('Erro ao requisitar a lista de receitas.', error)
+    console.error('Erro ao requisitar a lista de receitas.', error);
   }
-}
+};
 
 export const fetchExpenses = async () => {
   try {
-    const response = await axios.get(`${apiURL()}/expense/`)
-    return response.data
+    const response = await axios.get(`${apiURL()}/expense/`);
+    return response.data;
   } catch (error) {
-    console.error('Erro ao requisitar a lista de despesas.', error)
+    console.error('Erro ao requisitar a lista de despesas.', error);
   }
-}
+};
 
 export const fetchMonthClosing = async (year: number) => {
   try {
-    const response = await axios.get(`${apiURL()}/month_closing/?year=${year}`)
-    return response.data
+    const response = await axios.get(`${apiURL()}/month_closing/?year=${year}`);
+    return response.data;
   } catch (error) {
-    console.error('Erro ao salvar os dados.', error)
+    console.error('Erro ao salvar os dados.', error);
   }
-}
+};
+
+export const fetchProfitList = async () => {
+  try {
+    const response = await axios.get(`${apiURL()}/profit_list/`);
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao salvar os dados.', error);
+  }
+};
 
 export const configureAxios = () => {
   axios.defaults.headers.common['Content-Type'] = 'application/json';
 
   axios.interceptors.request.use(
     (config) => {
-      axios.defaults.baseURL = `${apiBase}`
-      const token = localStorage.getItem('accessToken')
+      axios.defaults.baseURL = `${apiBase}`;
+      const token = localStorage.getItem('accessToken');
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }

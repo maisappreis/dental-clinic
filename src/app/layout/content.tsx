@@ -12,7 +12,7 @@ import { ExpenseProps } from '@/types/expense';
 import { AgendaProps } from "@/types/agenda";
 import { MonthClosingProps } from "@/types/monthClosing";
 import { fetchAgenda, fetchRevenue,
-  fetchExpenses, fetchMonthClosing,
+  fetchExpenses, fetchMonthClosing, fetchProfitList,
   isAuthenticated, configureAxios
 } from "@/utils/api";
 import { getCurrentYear } from "@/utils/date";
@@ -24,6 +24,9 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
   const [agenda, setAgenda] = useState<AgendaProps[]>([]);
   const [monthClosing, setMonthClosing] = useState<MonthClosingProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [profit, setProfit] = useState<{profit: number[], labels: string[]}>({
+    profit: [], labels: []
+  });
 
   useEffect(() => {
     const loadData = async () => {
@@ -36,6 +39,7 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
         const revenueData = await fetchRevenue();
         const expenseData = await fetchExpenses();
         const monthClosingData = await fetchMonthClosing(Number(getCurrentYear()));
+        const profit = await fetchProfitList();
 
         if (agendaData && agendaData.length > 0) {
           setAgenda(agendaData);
@@ -60,6 +64,12 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
         } else {
           setMonthClosing([]);
         }
+
+        if (profit && profit.profit.length > 0) {
+          setProfit(profit);
+        } else {
+          setProfit({profit: [], labels: []});
+        }
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
       } finally {
@@ -75,7 +85,7 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
       contentComponent = <Calendar agenda={agenda} setAgenda={setAgenda} />;
       break;
     case "dashboard":
-      contentComponent = <Dashboard revenue={revenue} expenses={expenses} />;
+      contentComponent = <Dashboard revenue={revenue} expenses={expenses} profit={profit} />;
       break;
     case "revenue":
       contentComponent = <Revenue revenue={revenue} setRevenue={setRevenue} loading={loading} />;
