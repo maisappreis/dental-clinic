@@ -65,7 +65,7 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
           setMonthClosing([]);
         }
 
-        if (profit && profit.profit.length > 0) {
+        if (profit && profit.profit.length > 0 && profit.labels.length) {
           setProfit(profit);
         } else {
           setProfit({profit: [], labels: []});
