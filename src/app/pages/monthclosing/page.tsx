@@ -259,7 +259,7 @@ export default function MonthClosing(
         setSelectedTab={setSelectedTab} disableTabForward={disableTabForward} filterRevenue={filterRevenue} />;
       break;
     case "tab1":
-      tabContent = <TabOne orderedRevenue={orderedRevenue} setRevenue={setRevenue} />;
+      tabContent = <TabOne orderedRevenue={orderedRevenue} setOrderedRevenue={setOrderedRevenue} setRevenue={setRevenue} />;
       break;
     case "tab2":
       tabContent = <TabTwo selectedMonthClosing={selectedMonthClosing} orderedRevenue={orderedRevenue}

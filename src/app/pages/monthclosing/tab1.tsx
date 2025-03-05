@@ -10,15 +10,23 @@ import { formatValueToBRL } from "@/utils/utils";
 import styles from "./MonthClosing.module.css";
 
 export default function TabOne(
-  { orderedRevenue, setRevenue }: { orderedRevenue: RevenueProps[], setRevenue: (newRevenue: RevenueProps[]) => void }
+  {
+    orderedRevenue,
+    setRevenue,
+    setOrderedRevenue
+  }: {
+    orderedRevenue: RevenueProps[],
+    setOrderedRevenue: (newRevenue: RevenueProps[]) => void,
+    setRevenue: (newRevenue: RevenueProps[]) => void
+  }
 ) {
   const [updatedRevenue, setUpdatedRevenue] = useState<RevenueProps[]>([]);
   const [alertMessage, setAlertMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [formRate, setFormRate] = useState({
-    debit: 1.99,
-    cashCredit: 4.99,
-    installmentCredit: 5.59
+    debit: 1.09,
+    cashCredit: 3,
+    installmentCredit: 3.4
   });
 
   const columns: { key: string; name: string; }[] = [
@@ -62,6 +70,7 @@ export default function TabOne(
 
   const saveRevenue = () => {
     setRevenue(updatedRevenue);
+    setOrderedRevenue(updatedRevenue);
     updateRevenue();
   }
 
@@ -118,11 +127,13 @@ export default function TabOne(
       if (allNetValuesZero) {
         const updatedRevenueData = calculatedRevenue(orderedRevenue);
         setUpdatedRevenue(updatedRevenueData);
+        setOrderedRevenue(updatedRevenueData);
       } else {
         setUpdatedRevenue(orderedRevenue);
+        setOrderedRevenue(orderedRevenue);
       }
     }
-  }, [updatedRevenue, calculatedRevenue, orderedRevenue])
+  }, [updatedRevenue, calculatedRevenue, orderedRevenue, setOrderedRevenue])
 
   useEffect(() => {
     if (alertMessage) {
