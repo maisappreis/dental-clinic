@@ -49,7 +49,7 @@ export default function ProfitChart(
   };
 
   const drawChart = useMemo(() => {
-    if (profit.profit.length > 0 && profit.labels.length > 0) {
+    if (profit && profit.profit.length > 0 && profit.labels.length > 0) {
       const options = setLayout();
       setOptions(options);
 
@@ -69,11 +69,11 @@ export default function ProfitChart(
       labels: [],
       datasets: []
     };
-  }, [profit.labels, profit.profit]);
+  }, [profit]);
 
   useEffect(() => {
     setData(drawChart);
-  }, [drawChart, profit]);
+  }, [drawChart]);
 
   return (
     data.labels.length > 0 ? (

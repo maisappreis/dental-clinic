@@ -25,10 +25,8 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
   const [agenda, setAgenda] = useState<AgendaProps[]>([]);
   const [monthClosing, setMonthClosing] = useState<MonthClosingProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [profit, setProfit] = useState<ProfitData>({
-    profit: [], labels: []
-  });
-
+  const [profit, setProfit] = useState<ProfitData>({profit: [], labels: []});
+ 
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
@@ -40,7 +38,7 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
         const revenueData = await fetchRevenue();
         const expenseData = await fetchExpenses();
         const monthClosingData = await fetchMonthClosing(Number(getCurrentYear()));
-        const profit = await fetchProfitList();
+        const profitList = await fetchProfitList();
 
         if (agendaData && agendaData.length > 0) {
           setAgenda(agendaData);
@@ -66,8 +64,8 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
           setMonthClosing([]);
         }
 
-        if (profit) {
-          setProfit(profit);
+        if (profitList && Object.keys(profitList).length > 0) {
+          setProfit(profitList);
         } else {
           setProfit({profit: [], labels: []});
         }
