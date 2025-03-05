@@ -6,6 +6,7 @@ import TabOne from './tab1';
 import TabTwo from './tab2';
 import TabThree from './tab3';
 import Modal from "@/app/common/modal";
+import Loading from "@/app/common/loading";
 import { RevenueProps } from '@/types/revenue';
 import { MonthClosingProps } from '@/types/monthClosing';
 import { months, years } from "@/assets/data"
@@ -34,6 +35,7 @@ export default function MonthClosing(
   const [selectedYear, setSelectedYear] = useState<string>("");
   const [year, setYear] = useState<number>(Number(getCurrentYear()));
   const [orderedRevenue, setOrderedRevenue] = useState<RevenueProps[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [tabsOptions, setTabsOptions] = useState([
     { id: "reports", label: "Relatórios", disabled: false },
     { id: "tab1", label: "Passo 1", disabled: true },
@@ -71,9 +73,11 @@ export default function MonthClosing(
       disableTabForward();
       setSelectedTab("tab3");
     } else {
+      setLoading(true);
       const monthClosingData = await fetchMonthClosing(year);
       setMonthClosing(monthClosingData);
       setSelectedTab("reports");
+      setLoading(false);
       disableTabsOptions();
     }
   }
@@ -198,8 +202,10 @@ export default function MonthClosing(
     const selectedYear = Number(event.target.value);
     setYear(selectedYear);
 
+    setLoading(true);
     const monthClosingData = await fetchMonthClosing(selectedYear);
     setMonthClosing(monthClosingData);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -268,6 +274,14 @@ export default function MonthClosing(
         setSelectedTab={setSelectedTab} disableTabForward={disableTabForward} filterRevenue={filterRevenue} />;
   }
 
+  if (loading) {
+    return (
+      <Loading>
+        Carregando...
+      </Loading>
+    );
+  }
+
   return (
     <div className="content">
       <div className={styles.tabs}>
@@ -285,25 +299,27 @@ export default function MonthClosing(
       <div className={styles.content}>
         {tabContent}
       </div>
-      <div className="flex">
-      <label htmlFor="year">Ano:</label>
-        <select
-          className={styles.select}
-          id="year"
-          name="year"
-          value={year}
-          onChange={handleYearChange}
-          required
-          aria-label="year"
-        >
-          <option disabled value="">Ano:</option>
-          {years.map((year, index) => (
-            <option key={index} value={year}>
-              {year}
-            </option>
-          ))}
-        </select>
-      </div>
+      {selectedTab === "reports" &&
+        <div className="flex">
+          <label htmlFor="year">Ano:</label>
+          <select
+            className={styles.select}
+            id="year"
+            name="year"
+            value={year}
+            onChange={handleYearChange}
+            required
+            aria-label="year"
+          >
+            <option disabled value="">Ano:</option>
+            {years.map((year, index) => (
+              <option key={index} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
+      }
       <div className="flex justify-end w-full align-bottom mt-3">
         <button className="btn blue size-fit" onClick={handleButtonClick}>
           {buttonText}
