@@ -69,7 +69,6 @@ export default function TabOne(
   };
 
   const saveRevenue = () => {
-    setRevenue(updatedRevenue);
     setOrderedRevenue(updatedRevenue);
     updateRevenue();
   }
