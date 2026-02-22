@@ -1,27 +1,84 @@
-# Web Application for a Dental Clinic
+# Dental Clinic — Web Application
 
-This web application was developed to manage a dental clinic. <br>
-Back-end code on: https://github.com/maisappreis/django-APIs
+![Coverage](https://img.shields.io/badge/coverage-10%25-yellowgreen) ![Last Commit](https://img.shields.io/github/last-commit/maisappreis/dental-clinic)
 
-You can try it out in this production test version: https://maisappreis.github.io/dental-clinic/
+- Web application developed to manage a dental clinic's **customers, revenues, expenses and monthly cash closing**, focusing on a clean UI and scalable frontend architecture.
 
-## Technologies:
+🌐 **Live demo:**  
+https://maisappreis.github.io/dental-clinic/
+
+🔗 **Backend repository:**  
+https://github.com/maisappreis/django-APIs
+
+
+---
+
+## 🧠 Overview
+
+This project was built as part of a fullstack architecture, where the frontend communicates with a REST API developed in Django.  
+It focuses on **state management, authentication flows and modular frontend structure**, following modern React and Next.js best practices.
+
+---
+
+## 🛠️ Tech Stack
+
 - Next.js
 - React.js
 - TypeScript
+- Zustand
+
+---
+
+## 📸 Preview
 
 ![dental](https://github.com/user-attachments/assets/5842745c-7d3a-4e9b-aa8b-5d392182b393)
 
+---
 
-### 🛠️ Installation
-```
+## 🧩 Architecture
+
+This application follows a **frontend–backend decoupled architecture**, where the React frontend communicates with a REST API built in Django.
+
+- The **frontend** is developed with React and Next.js, using a modular component-based structure.
+- **Global state management** is handled with Zustand, centralizing authentication state, API configuration, and shared application data.
+- **Authentication** is implemented using JWT tokens, managed on the frontend and validated by the backend.
+- The **backend API** is responsible for business logic, data persistence, and permissions, exposing secure REST endpoints.
+- The project is structured to support scalability, maintainability, and clear separation of concerns.
+
+---
+
+## 🔐 Authentication Flow
+
+Authentication is implemented using **JWT (JSON Web Tokens)**, enabling stateless and secure communication between the frontend and backend.
+
+1. The user submits credentials through the frontend login form.
+2. The frontend sends the credentials to the Django REST API.
+3. Upon successful authentication, the backend issues an **access token** (and refresh token).
+4. The frontend stores the token and attaches it to subsequent API requests via the `Authorization` header.
+5. Protected routes and resources are validated on the backend using JWT authentication.
+6. Authentication state is centrally managed on the frontend using **Zustand**.
+
+---
+
+## 🌱 Project Status
+
+🚧 This project is under active development.  
+New features, refactors, and improvements are added incrementally.
+
+---
+
+## 📦 Getting Started
+
+### Installation
+
+```sh
 npm install
 ```
 
-### 🌱 On Development
+### Development
 
-To run the development server in the browser:
-```
+Start the development server with hot reload:
+```sh
 npm run dev
 # or
 yarn dev
@@ -31,17 +88,37 @@ pnpm dev
 bun dev
 ```
 
-## 💻 On Production
-```
+---
+
+## 🏗️ Build & Production
+
+Type-Check, Compile and Minify for Production
+
+Build the production version:
+```sh
 npm run build
 ```
 
-## On Tests
-```
+---
+
+## 🧪 Testing
+
+Run **Unit Tests** with React Testing Library
+```sh
 npm run test
 ```
 
-## Learn More
+---
+
+## 🚀 Deployment
+
+The frontend is deployed on **GitHub Pages** using **GitHub Actions** deployment flow targeting "main" branch.
+
+A production build is generated with Next.js and published to the `main` branch.
+
+---
+
+## Learn More about Next.js
 
 To learn more about Next.js, take a look at the following resources:
 
@@ -50,10 +127,21 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 👩‍💻 Author
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Maisa Pierini Preis
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Frontend‑focused Full Stack Developer
+
+- GitHub: https://github.com/maisappreis
+- LinkedIn: https://www.linkedin.com/in/maisa-pp-2303/
+- Portfolio: https://maisappreis.github.io/
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
