@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import styles from "./Calendar.module.css";
 import Modal from "@/app/common/modal";
 import AppointmentForm from "./form";
-import Loading from "@/app/common/loading";
+import { Loading } from "@/components/Loading/Loading";
 import { formatDate } from "@/utils/date";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
@@ -18,7 +18,7 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
   const [deleteModalTitle, setDeleteModalTitle] = useState<string>("");
   const [modalTitle, setModalTitle] = useState<string>("");
   const [mode, setMode] = useState<string>("view");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedPatient, setSelectedPatient] = useState({
     id: 0,
     date: "",
@@ -53,7 +53,7 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
   };
 
   const deleteAppointment = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       if (selectedPatient && selectedPatient.id) {
         await axios.delete(`${apiURL()}/agenda/${selectedPatient.id}/`)
@@ -75,7 +75,7 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
       });
     } finally {
       closeModal();
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -98,11 +98,11 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
     configureAxios();
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <Loading>
-        Excluindo...
-      </Loading>
+      <Loading
+        label="Excluindo agendamento..."
+      />
     );
   }
 

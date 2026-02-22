@@ -6,7 +6,7 @@ import TabOne from './tab1';
 import TabTwo from './tab2';
 import TabThree from './tab3';
 import Modal from "@/app/common/modal";
-import Loading from "@/app/common/loading";
+import { Loading } from "@/components/Loading/Loading";
 import { RevenueProps } from '@/types/revenue';
 import { MonthClosingProps } from '@/types/monthClosing';
 import { months, years } from "@/assets/data"
@@ -35,7 +35,7 @@ export default function MonthClosing(
   const [selectedYear, setSelectedYear] = useState<string>("");
   const [year, setYear] = useState<number>(Number(getCurrentYear()));
   const [orderedRevenue, setOrderedRevenue] = useState<RevenueProps[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [tabsOptions, setTabsOptions] = useState([
     { id: "reports", label: "Relatórios", disabled: false },
     { id: "tab1", label: "Passo 1", disabled: true },
@@ -73,11 +73,11 @@ export default function MonthClosing(
       disableTabForward();
       setSelectedTab("tab3");
     } else {
-      setLoading(true);
+      setIsLoading(true);
       const monthClosingData = await fetchMonthClosing(year);
       setMonthClosing(monthClosingData);
       setSelectedTab("reports");
-      setLoading(false);
+      setIsLoading(false);
       disableTabsOptions();
     }
   }
@@ -202,10 +202,10 @@ export default function MonthClosing(
     const selectedYear = Number(event.target.value);
     setYear(selectedYear);
 
-    setLoading(true);
+    setIsLoading(true);
     const monthClosingData = await fetchMonthClosing(selectedYear);
     setMonthClosing(monthClosingData);
-    setLoading(false);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -274,11 +274,11 @@ export default function MonthClosing(
         setSelectedTab={setSelectedTab} disableTabForward={disableTabForward} filterRevenue={filterRevenue} />;
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <Loading>
-        Carregando...
-      </Loading>
+      <Loading
+        label="Carregando..."
+      />
     );
   }
 

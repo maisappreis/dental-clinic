@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan, faCircleInfo, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { apiURL, fetchRevenue, isAuthenticated, configureAxios } from '@/utils/api';
 import Tooltip from "@/app/common/tooltip";
-import Loading from "@/app/common/loading";
+import { Loading } from "@/components/Loading/Loading";
 import Modal from "@/app/common/modal";
 import RevenueForm from "./form";
 import { formatDate } from "@/utils/date";
@@ -35,7 +35,7 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [selectedRow, setSelectedRow] = useState<RevenueProps | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { showAlert } = useAlertStore();
 
@@ -61,7 +61,7 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
   };
 
   const deleteRevenue = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       if (selectedRow && selectedRow.id) {
         await axios.delete(`${apiURL()}/revenue/${selectedRow.id}/`)
@@ -84,7 +84,7 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
       });
     } finally {
       closeModal();
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
@@ -98,11 +98,11 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
     configureAxios();
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <Loading>
-        Excluindo...
-      </Loading>
+      <Loading
+        label="Excluindo..."
+      />
     );
   }
 

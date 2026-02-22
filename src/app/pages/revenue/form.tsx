@@ -7,7 +7,7 @@ import { capitalize } from '@/utils/utils';
 import axios from "axios";
 import { RevenueProps } from '@/types/revenue';
 import { useAlertStore } from "@/stores/alert.store";
-import Loading from "@/app/common/loading";
+import { Loading } from "@/components/Loading/Loading";
 
 interface RevenueFormProps {
   selectedRow?: RevenueProps;
@@ -18,7 +18,7 @@ interface RevenueFormProps {
 export default function RevenueForm({ selectedRow, closeModal, setRevenue }: RevenueFormProps) {
   const [showCpf, setShowCpf] = useState<boolean>(false);
   const [showInstallments, setShowInstallments] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [validCPF, setValidCPF] = useState<string>("");
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [formData, setFormData] = useState<RevenueProps>({
@@ -96,7 +96,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
   }
 
   const createRevenue = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const preparedData = prepareDataForSubmission(formData);
 
@@ -119,12 +119,12 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
       });
     } finally {
       closeModal();
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
   const updateRevenue = async (id: number) => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const preparedData = prepareDataForSubmission(formData);
 
@@ -147,7 +147,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
       });
     } finally {
       closeModal();
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
@@ -210,11 +210,11 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
     configureAxios();
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <Loading>
-        Salvando...
-      </Loading>
+      <Loading
+        label="Salvando..."
+      />
     );
   }
 

@@ -2,7 +2,7 @@
 
 ![Coverage](https://img.shields.io/badge/coverage-10%25-yellowgreen) ![Last Commit](https://img.shields.io/github/last-commit/maisappreis/dental-clinic)
 
-- Web application developed to manage a dental clinic's **customers, revenues, expenses and monthly cash closing**, focusing on a clean UI and scalable frontend architecture.
+- Web application developed to manage a dental clinic's **revenues, expenses and monthly cash closing**, focusing on a clean UI and scalable frontend architecture.
 
 🌐 **Live demo:**  
 https://maisappreis.github.io/dental-clinic/

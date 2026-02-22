@@ -6,7 +6,7 @@ import { scheduleOptions } from "@/assets/data";
 import { capitalize } from '@/utils/utils';
 import { apiURL, fetchAgenda, isAuthenticated, configureAxios } from '@/utils/api';
 import { useAlertStore } from '@/stores/alert.store';
-import Loading from "@/app/common/loading";
+import { Loading } from "@/components/Loading/Loading";
 import axios from "axios";
 
 interface AppointmentFormProps {
@@ -17,7 +17,7 @@ interface AppointmentFormProps {
 
 export default function AppointmentForm({ selectedPatient, closeModal, setAgenda }: AppointmentFormProps) {
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     id: 0,
     date: "",
@@ -53,7 +53,7 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
   }
 
   const createAppointment = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       await axios.post(`${apiURL()}/agenda/create/`, formData);
 
@@ -75,12 +75,12 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
       });
     } finally {
       closeModal();
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
   const updateAppointment = async (id: number) => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       await axios.patch(`${apiURL()}/agenda/${id}/`, formData);
 
@@ -102,7 +102,7 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
       });
     } finally {
       closeModal();
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
@@ -133,11 +133,11 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
     configureAxios();
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <Loading>
-        Salvando...
-      </Loading>
+      <Loading
+        label="Salvando..."
+      />
     );
   }
 

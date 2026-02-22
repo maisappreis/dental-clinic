@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { formatDate } from "@/utils/date";
 import { RevenueProps } from '@/types/revenue';
 import axios from "axios";
-import Loading from "@/app/common/loading";
+import { Loading } from "@/components/Loading/Loading";
 import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
 import { formatValueToBRL } from "@/utils/utils";
 import { useAlertStore } from "@/stores/alert.store";
@@ -21,7 +21,7 @@ export default function TabOne(
   }
 ) {
   const [updatedRevenue, setUpdatedRevenue] = useState<RevenueProps[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formRate, setFormRate] = useState({
     debit: 1.09,
     cashCredit: 3,
@@ -75,7 +75,7 @@ export default function TabOne(
   }
 
   const updateRevenue = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const updatedNetValues = updatedRevenue.map(item => ({
         id: item.id,
@@ -99,7 +99,7 @@ export default function TabOne(
         autoCloseAfter: 2000,
       });
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
@@ -150,11 +150,11 @@ export default function TabOne(
     configureAxios();
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <Loading>
-        Salvando...
-      </Loading>
+      <Loading
+        label="Salvando..."
+      />
     );
   }
 

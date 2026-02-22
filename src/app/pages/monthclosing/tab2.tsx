@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react';
 import styles from "./MonthClosing.module.css";
-import Loading from "@/app/common/loading";
+import { Loading } from "@/components/Loading/Loading";
 import { MonthClosingData, MonthClosingProps } from "@/types/monthClosing";
 import { formatValueToBRL } from "@/utils/utils";
 import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
@@ -14,7 +14,7 @@ export default function TabTwo({ selectedMonthClosing, setSelectedMonthClosing, 
   const [cardValue, setCardValue] = useState<number>(0);
   const [cardValueNext, setCardValueNext] = useState<number>(0);
   const [totalMonthlyRevenue, setTotalMonthlyRevenue] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { showAlert } = useAlertStore();
 
@@ -50,7 +50,7 @@ export default function TabTwo({ selectedMonthClosing, setSelectedMonthClosing, 
   };
 
   const createMonthClosing = async (updatedMonthClosing: MonthClosingProps) => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const response = await axios.post(`${apiURL()}/month_closing/create/`, updatedMonthClosing)
       setSelectedMonthClosing(response.data);
@@ -70,12 +70,12 @@ export default function TabTwo({ selectedMonthClosing, setSelectedMonthClosing, 
         autoCloseAfter: 2000,
       });
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
   const updateMonthClosing = async (updatedMonthClosing: MonthClosingProps) => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const response = await axios.put(`${apiURL()}/month_closing/${selectedMonthClosing.id}/`, updatedMonthClosing);
       setSelectedMonthClosing(response.data);
@@ -94,7 +94,7 @@ export default function TabTwo({ selectedMonthClosing, setSelectedMonthClosing, 
         autoCloseAfter: 2000,
       });
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
@@ -128,11 +128,11 @@ export default function TabTwo({ selectedMonthClosing, setSelectedMonthClosing, 
     configureAxios();
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <Loading>
-        Salvando...
-      </Loading>
+      <Loading
+        label="Salvando..."
+      />
     );
   }
 

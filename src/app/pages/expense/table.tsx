@@ -9,7 +9,7 @@ import { formatValueToBRL } from "@/utils/utils";
 import Tooltip from "@/app/common/tooltip"
 import Modal from "@/app/common/modal";
 import ExpenseForm from "./form";
-import Loading from "@/app/common/loading";
+import { Loading } from "@/components/Loading/Loading";
 import { useAlertStore } from "@/stores/alert.store";
 import axios from "axios";
 
@@ -37,7 +37,7 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
   const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [selectedRow, setSelectedRow] = useState<ExpenseProps | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { showAlert } = useAlertStore();
 
@@ -83,7 +83,7 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
   };
 
   const updateExpense = async (row: ExpenseProps) => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const response = await axios.patch(`${apiURL()}/expense/${row.id}/`, {
         is_paid: !row.is_paid
@@ -112,12 +112,12 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
       });
     } finally {
       closeModal();
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
   const createNextMonthExpense = async (row: ExpenseProps) => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const selectedRowClone = {...row}
       const nextMonthDate = getNextMonth(selectedRowClone.date);
@@ -148,12 +148,12 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
       });
     } finally {
       closeModal();
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
   const deleteExpense = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       if (selectedRow && selectedRow.id) {
         await axios.delete(`${apiURL()}/expense/${selectedRow.id}/`)
@@ -176,7 +176,7 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
       });
     } finally {
       closeModal();
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
@@ -198,11 +198,11 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
     configureAxios();
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <Loading>
-        Salvando...
-      </Loading>
+      <Loading
+        label="Salvando..."
+      />
     );
   }
 

@@ -5,7 +5,7 @@ import { capitalize } from '@/utils/utils';
 import { getMonthAndYear } from "@/utils/date";
 import { ExpenseProps } from '@/types/expense';
 import { useAlertStore } from '@/stores/alert.store';
-import Loading from "@/app/common/loading";
+import { Loading } from "@/components/Loading/Loading";
 import axios from "axios";
 
 interface ExpenseFormProps {
@@ -19,7 +19,7 @@ export default function ExpenseForm(
   ) {
   const [hasInstallments, setHasInstallments] = useState<boolean>(false);
   const [validInstallments, setValidInstallments] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     id: 0,
@@ -98,7 +98,7 @@ export default function ExpenseForm(
   }
 
   const createExpense = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const preparedData = prepareDataForSubmission(formData);
 
@@ -120,12 +120,12 @@ export default function ExpenseForm(
       });
     } finally {
       closeModal();
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
   const updateExpense = async (id: number) => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const preparedData = prepareDataForSubmission(formData);
 
@@ -148,7 +148,7 @@ export default function ExpenseForm(
       });
     } finally {
       closeModal();
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
@@ -190,11 +190,11 @@ export default function ExpenseForm(
     configureAxios();
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <Loading>
-        Salvando...
-      </Loading>
+      <Loading
+        label="Salvando..."
+      />
     );
   }
   

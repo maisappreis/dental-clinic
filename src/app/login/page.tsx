@@ -1,27 +1,28 @@
-'use client'
-import React, { useState, useEffect } from 'react';
-import styles from './Login.module.css';
+"use client"
+import React, { useState, useEffect } from "react";
+import styles from "./Login.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTooth } from '@fortawesome/free-solid-svg-icons';
-import Loading from "@/app/common/loading";
+import { faTooth } from "@fortawesome/free-solid-svg-icons";
 import { apiBase, fetchRevenue, fetchExpenses,
-  isAuthenticated,   configureAxios } from '@/utils/api'
-import { useRouter } from 'next/navigation';
-import { useAlertStore } from '@/stores/alert.store';
-import axios from 'axios';
+  isAuthenticated,   configureAxios } from "@/utils/api"
+import { useRouter } from "next/navigation";
+import { useAlertStore } from "@/stores/alert.store";
+import { useLoadingStore } from "@/stores/loading.store";
+import axios from "axios";
 
 export default function Login() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
   const isFormValid = username !== '' && password !== '';
+
+  const loading = useLoadingStore.getState();
   const { showAlert } = useAlertStore();
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setLoading(true);
+    loading.show('Fazendo login...');
 
     try {
       const loginData = {
@@ -51,27 +52,19 @@ export default function Login() {
       }      
     } catch (error) {
       showAlert({
-          message: "Erro ao realizar o login.",
-          variant: "error",
-          autoCloseAfter: 2000,
-        });
+        message: "Erro ao realizar o login.",
+        variant: "error",
+        autoCloseAfter: 2000,
+      });
     } finally {
-      setLoading(false);
+      loading.hide();
     }
-  }
+  };
 
   useEffect(() => {
     isAuthenticated();
     configureAxios();
   }, []);
-
-  if (loading) {
-    return (
-      <Loading>
-        Carregando...
-      </Loading>
-    );
-  }
 
   return (
     <div className={styles.area}>
@@ -98,4 +91,4 @@ export default function Login() {
       </div>
     </div>
   )
-}
+};
