@@ -3,10 +3,10 @@ import React, { useState, useEffect, useCallback } from "react";
 import { formatDate } from "@/utils/date";
 import { RevenueProps } from '@/types/revenue';
 import axios from "axios";
-import Alert from '@/app/common/alert';
 import Loading from "@/app/common/loading";
 import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
 import { formatValueToBRL } from "@/utils/utils";
+import { useAlertStore } from "@/stores/alert.store";
 import styles from "./MonthClosing.module.css";
 
 export default function TabOne(
@@ -21,13 +21,14 @@ export default function TabOne(
   }
 ) {
   const [updatedRevenue, setUpdatedRevenue] = useState<RevenueProps[]>([]);
-  const [alertMessage, setAlertMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [formRate, setFormRate] = useState({
     debit: 1.09,
     cashCredit: 3,
     installmentCredit: 3.4
   });
+
+  const { showAlert } = useAlertStore();
 
   const columns: { key: string; name: string; }[] = [
     { key: "date", name: "Data Pgto" },
@@ -83,10 +84,20 @@ export default function TabOne(
       }));
 
       await axios.put(`${apiURL()}/update-net-values/`, updatedNetValues)
-      setAlertMessage("Receita atualizada com sucesso!");
+
+      showAlert({
+        message: "Receita atualizada com sucesso!",
+        variant: "success",
+        autoCloseAfter: 2000,
+      });
     } catch (error) {
-      console.error('Erro ao atualizar receita.', error)
-      setAlertMessage("Erro ao atualizar receita.");
+      console.error('Erro ao atualizar receita.', error);
+
+      showAlert({
+        message: "Erro ao atualizar receita.",
+        variant: "error",
+        autoCloseAfter: 2000,
+      });
     } finally {
       setLoading(false);
     }
@@ -133,16 +144,6 @@ export default function TabOne(
       }
     }
   }, [updatedRevenue, calculatedRevenue, orderedRevenue, setOrderedRevenue])
-
-  useEffect(() => {
-    if (alertMessage) {
-      const timer = setTimeout(() => {
-        setAlertMessage("")
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [alertMessage]);
 
   useEffect(() => {
     isAuthenticated();
@@ -238,7 +239,6 @@ export default function TabOne(
           : <div className="no-data">Nenhum resultado encontrado.</div>
         }
       </div>
-      <Alert message={alertMessage} />
     </div>
   )
 }

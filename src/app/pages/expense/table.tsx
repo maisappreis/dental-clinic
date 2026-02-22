@@ -10,7 +10,7 @@ import Tooltip from "@/app/common/tooltip"
 import Modal from "@/app/common/modal";
 import ExpenseForm from "./form";
 import Loading from "@/app/common/loading";
-import Alert from '@/app/common/alert'
+import { useAlertStore } from "@/stores/alert.store";
 import axios from "axios";
 
 interface Data {
@@ -37,8 +37,9 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
   const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [selectedRow, setSelectedRow] = useState<ExpenseProps | null>(null);
-  const [alertMessage, setAlertMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+
+  const { showAlert } = useAlertStore();
 
   const openNotes = (row: ExpenseProps, e: React.MouseEvent): void => {
     setSelectedRow(row);
@@ -87,7 +88,11 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
       const response = await axios.patch(`${apiURL()}/expense/${row.id}/`, {
         is_paid: !row.is_paid
       })
-      setAlertMessage("Despesa atualizada com sucesso!");
+      showAlert({
+        message: "Despesa atualizada com sucesso!",
+        variant: "success",
+        autoCloseAfter: 2000,
+      });
 
       const isPaid = response.data.is_paid;
       const hasInstallments = response.data.installments !== "";
@@ -100,7 +105,11 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
       }
     } catch (error) {
       console.error('Erro ao atualizar despesa.', error)
-      setAlertMessage("Erro ao atualizar despesa.");
+      showAlert({
+        message: "Erro ao atualizar despesa.",
+        variant: "error",
+        autoCloseAfter: 2000,
+      });
     } finally {
       closeModal();
       setLoading(false);
@@ -120,12 +129,23 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
       selectedRowClone.year = parseInt(year);
 
       await axios.post(`${apiURL()}/expense/create/`, selectedRowClone)
-      setAlertMessage("Despesa do mês seguinte criada com sucesso!");
+
+      showAlert({
+        message: "Despesa do mês seguinte criada com sucesso!",
+        variant: "success",
+        autoCloseAfter: 2000,
+      });
+
       const newExpense = await fetchExpenses();
       setExpenses(newExpense);
     } catch (error) {
       console.error('Erro ao criar despesa do mês seguinte.', error)
-      setAlertMessage("Erro ao criar despesa do mês seguinte.");
+
+      showAlert({
+        message: "Erro ao criar despesa do mês seguinte.",
+        variant: "error",
+        autoCloseAfter: 2000,
+      });
     } finally {
       closeModal();
       setLoading(false);
@@ -137,13 +157,23 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
     try {
       if (selectedRow && selectedRow.id) {
         await axios.delete(`${apiURL()}/expense/${selectedRow.id}/`)
-        setAlertMessage("Despesa excluída com sucesso!");
+
+        showAlert({
+          message: "Despesa excluída com sucesso!",
+          variant: "success",
+          autoCloseAfter: 2000,
+        });
         const newExpense = await fetchExpenses();
         setExpenses(newExpense)
       }
     } catch (error) {
       console.error('Erro ao excluir despesa.', error)
-      setAlertMessage("Erro ao excluir despesa.");
+
+      showAlert({
+        message: "Erro ao excluir despesa.",
+        variant: "error",
+        autoCloseAfter: 2000,
+      });
     } finally {
       closeModal();
       setLoading(false);
@@ -162,16 +192,6 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
     );
     setStatusClasses(classes);
   }, [data]);
-
-  useEffect(() => {
-    if (alertMessage) {
-      const timer = setTimeout(() => {
-        setAlertMessage("")
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [alertMessage]);
 
   useEffect(() => {
     isAuthenticated();
@@ -257,7 +277,6 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
             selectedRow={selectedRow}
             closeModal={closeModal}
             setExpenses={setExpenses}
-            setAlertMessage={setAlertMessage}
           />
         </Modal>
       }
@@ -289,7 +308,6 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
           </div>
         </Modal>
       }
-      <Alert message={alertMessage} />
     </div >
   )
 }

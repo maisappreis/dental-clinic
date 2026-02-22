@@ -6,16 +6,16 @@ import { getCurrentDate } from "@/utils/date";
 import { capitalize } from '@/utils/utils';
 import axios from "axios";
 import { RevenueProps } from '@/types/revenue';
+import { useAlertStore } from "@/stores/alert.store";
 import Loading from "@/app/common/loading";
 
 interface RevenueFormProps {
   selectedRow?: RevenueProps;
   closeModal: () => void;
   setRevenue: (newRevenue: any[]) => void;
-  setAlertMessage: (newAlert: string) => void;
 }
 
-export default function RevenueForm({ selectedRow, closeModal, setRevenue, setAlertMessage }: RevenueFormProps) {
+export default function RevenueForm({ selectedRow, closeModal, setRevenue }: RevenueFormProps) {
   const [showCpf, setShowCpf] = useState<boolean>(false);
   const [showInstallments, setShowInstallments] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -35,6 +35,8 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue, setAl
     net_value: 0,
     notes: ""
   });
+
+  const { showAlert } = useAlertStore();
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -99,12 +101,22 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue, setAl
       const preparedData = prepareDataForSubmission(formData);
 
       await axios.post(`${apiURL()}/revenue/create/`, preparedData)
-      setAlertMessage("Receita criada com sucesso!");
+
+      showAlert({
+        message: "Receita criada com sucesso!",
+        variant: "success",
+        autoCloseAfter: 2000,
+      });
       const newRevenue = await fetchRevenue();
       setRevenue(newRevenue)
     } catch (error) {
       console.error('Erro ao criar receita.', error)
-      setAlertMessage("Erro ao criar receita.");
+
+      showAlert({
+        message: "Erro ao criar receita.",
+        variant: "error",
+        autoCloseAfter: 2000,
+      });
     } finally {
       closeModal();
       setLoading(false);
@@ -117,12 +129,22 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue, setAl
       const preparedData = prepareDataForSubmission(formData);
 
       await axios.patch(`${apiURL()}/revenue/${id}/`, preparedData)
-      setAlertMessage("Receita atualizada com sucesso!");
+
+      showAlert({
+        message: "Receita atualizada com sucesso!",
+        variant: "success",
+        autoCloseAfter: 2000,
+      });
       const newRevenue = await fetchRevenue();
       setRevenue(newRevenue)
     } catch (error) {
       console.error('Erro ao atualizar receita.', error)
-      setAlertMessage("Erro ao atualizar receita.");
+
+      showAlert({
+        message: "Erro ao atualizar receita",
+        variant: "error",
+        autoCloseAfter: 2000,
+      });
     } finally {
       closeModal();
       setLoading(false);

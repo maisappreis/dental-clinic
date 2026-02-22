@@ -10,7 +10,7 @@ import RevenueForm from "./form";
 import { formatDate } from "@/utils/date";
 import { formatValueToBRL } from "@/utils/utils";
 import { RevenueProps } from "@/types/revenue";
-import Alert from '@/app/common/alert';
+import { useAlertStore } from "@/stores/alert.store";
 import axios from "axios";
 
 interface Data {
@@ -35,8 +35,9 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [selectedRow, setSelectedRow] = useState<RevenueProps | null>(null);
-  const [alertMessage, setAlertMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+
+  const { showAlert } = useAlertStore();
 
   const openNotes = (row: RevenueProps, e: React.MouseEvent): void => {
     setSelectedRow(row);
@@ -64,13 +65,23 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
     try {
       if (selectedRow && selectedRow.id) {
         await axios.delete(`${apiURL()}/revenue/${selectedRow.id}/`)
-        setAlertMessage("Receita excluída com sucesso!");
+
+        showAlert({
+          message: "Receita excluída com sucesso!",
+          variant: "success",
+          autoCloseAfter: 2000,
+        });
         const newRevenue = await fetchRevenue();
         setRevenue(newRevenue)
       }
     } catch (error) {
       console.error('Erro ao excluir receita.', error)
-      setAlertMessage("Erro ao excluir receita.");
+
+      showAlert({
+        message: "Erro ao excluir receita.",
+        variant: "error",
+        autoCloseAfter: 2000,
+      });
     } finally {
       closeModal();
       setLoading(false);
@@ -81,16 +92,6 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
     setShowUpdateModal(false);
     setShowDeleteModal(false);
   }
-
-  useEffect(() => {
-    if (alertMessage) {
-      const timer = setTimeout(() => {
-        setAlertMessage("")
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [alertMessage]);
 
   useEffect(() => {
     isAuthenticated();
@@ -178,7 +179,6 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
             selectedRow={selectedRow}
             closeModal={closeModal}
             setRevenue={setRevenue}
-            setAlertMessage={setAlertMessage}
           />
         </Modal>
       }
@@ -198,7 +198,6 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
           </div>
         </Modal>
       }
-      <Alert message={alertMessage} />
     </div >
   )
 }

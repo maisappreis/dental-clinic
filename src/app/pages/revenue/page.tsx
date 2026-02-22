@@ -6,7 +6,6 @@ import MonthFilter from "@/app/common/monthFilter";
 import Search from "@/app/common/search";
 import Modal from "@/app/common/modal";
 import RevenueForm from "./form";
-import Alert from '@/app/common/alert';
 import { getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
 import { RevenueData } from '@/types/revenue';
@@ -18,7 +17,6 @@ export default function Revenue({ revenue = [], setRevenue, loading }: RevenueDa
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
-  const [alertMessage, setAlertMessage] = useState('');
 
   const columns: { key: string; name: string; }[] = [
     { key: "date", name: "Data" },
@@ -81,15 +79,6 @@ export default function Revenue({ revenue = [], setRevenue, loading }: RevenueDa
     }
   }, [revenue, loading, filterData, month, year]);
 
-  useEffect(() => {
-    if (alertMessage) {
-      const timer = setTimeout(() => {
-        setAlertMessage("")
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [alertMessage]);
-
   return (
     <div className="content">
       <div className="flex flex-column justify-between">
@@ -107,11 +96,9 @@ export default function Revenue({ revenue = [], setRevenue, loading }: RevenueDa
           <RevenueForm
             closeModal={closeModal}
             setRevenue={setRevenue}
-            setAlertMessage={setAlertMessage}
           />
         </Modal>
       }
-      <Alert message={alertMessage} />
     </div>
   )
 }

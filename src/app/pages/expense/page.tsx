@@ -6,11 +6,10 @@ import MonthFilter from "@/app/common/monthFilter";
 import StatusFilter from "@/app/common/statusFilter";
 import Search from "@/app/common/search";
 import Modal from "@/app/common/modal";
-import Alert from '@/app/common/alert';
 import ExpenseForm from "./form";
 import { getCurrentYear, getCurrentMonth } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
-import { ExpenseData } from '@/types/expense';
+import { ExpenseData } from "@/types/expense";
 
 export default function Expense({ expenses = [], setExpenses, loading }: ExpenseData) {
   const [filteredData, setFilteredData] = useState<any[]>([]);
@@ -20,7 +19,6 @@ export default function Expense({ expenses = [], setExpenses, loading }: Expense
   const [search, setSearch] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
-  const [alertMessage, setAlertMessage] = useState<string>("");
 
   const columns: { key: string; name: string; }[] = [
     { key: "year", name: "Ano" },
@@ -94,16 +92,6 @@ export default function Expense({ expenses = [], setExpenses, loading }: Expense
     }
   }, [expenses, loading, filterData, month, year, statusPayment]);
 
-  useEffect(() => {
-    if (alertMessage) {
-      const timer = setTimeout(() => {
-        setAlertMessage("")
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [alertMessage]);
-
   return (
     <div className="content">
       <div className="flex flex-column justify-between">
@@ -122,11 +110,9 @@ export default function Expense({ expenses = [], setExpenses, loading }: Expense
           <ExpenseForm
             closeModal={closeModal}
             setExpenses={setExpenses}
-            setAlertMessage={setAlertMessage}
           />
         </Modal>
       }
-      <Alert message={alertMessage} />
     </div>
   )
 }

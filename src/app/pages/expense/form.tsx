@@ -4,6 +4,7 @@ import { apiURL, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/
 import { capitalize } from '@/utils/utils';
 import { getMonthAndYear } from "@/utils/date";
 import { ExpenseProps } from '@/types/expense';
+import { useAlertStore } from '@/stores/alert.store';
 import Loading from "@/app/common/loading";
 import axios from "axios";
 
@@ -11,11 +12,10 @@ interface ExpenseFormProps {
   selectedRow?: ExpenseProps;
   closeModal: () => void;
   setExpenses: (newExpenses: any[]) => void;
-  setAlertMessage: (newAlert: string) => void;
 }
 
 export default function ExpenseForm(
-    {selectedRow, closeModal, setExpenses, setAlertMessage }: ExpenseFormProps
+    {selectedRow, closeModal, setExpenses }: ExpenseFormProps
   ) {
   const [hasInstallments, setHasInstallments] = useState<boolean>(false);
   const [validInstallments, setValidInstallments] = useState<string>("");
@@ -32,6 +32,8 @@ export default function ExpenseForm(
     is_paid: false,
     notes: ""
   });
+
+  const { showAlert } = useAlertStore();
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -101,12 +103,21 @@ export default function ExpenseForm(
       const preparedData = prepareDataForSubmission(formData);
 
       await axios.post(`${apiURL()}/expense/create/`, preparedData)
-      setAlertMessage("Despesa criada com sucesso!");
+
+      showAlert({
+        message: "Despesa criada com sucesso!",
+        variant: "success",
+        autoCloseAfter: 2000,
+      });
       const newExpense = await fetchExpenses();
       setExpenses(newExpense)
     } catch (error) {
       console.error('Erro ao criar despesa.', error)
-      setAlertMessage("Erro ao criar despesa.");
+      showAlert({
+        message: "Erro ao criar despesa.",
+        variant: "error",
+        autoCloseAfter: 2000,
+      });
     } finally {
       closeModal();
       setLoading(false);
@@ -119,12 +130,22 @@ export default function ExpenseForm(
       const preparedData = prepareDataForSubmission(formData);
 
       await axios.patch(`${apiURL()}/expense/${id}/`, preparedData)
-      setAlertMessage("Despesa atualizada com sucesso!");
+
+      showAlert({
+        message: "Despesa atualizada com sucesso!",
+        variant: "success",
+        autoCloseAfter: 2000,
+      });
       const newExpense = await fetchExpenses();
       setExpenses(newExpense)
     } catch (error) {
       console.error('Erro ao atualizar despesa.', error)
-      setAlertMessage("Erro ao atualizar despesa.");
+
+      showAlert({
+        message: "Erro ao atualizar despesa.",
+        variant: "error",
+        autoCloseAfter: 2000,
+      });
     } finally {
       closeModal();
       setLoading(false);

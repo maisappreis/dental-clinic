@@ -1,11 +1,10 @@
 "use client";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import styles from "./Calendar.module.css";
 import Appointments from "./appointments";
 import Modal from "@/app/common/modal";
 import AppointmentForm from "./form";
-import Alert from '@/app/common/alert'
-import { scheduleOptions, initialAppointmentFormat } from "@/assets/data"
+import { scheduleOptions, initialAppointmentFormat } from "@/assets/data";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { AgendaData } from "@/types/agenda";
@@ -13,7 +12,6 @@ import { AgendaData } from "@/types/agenda";
 export default function Calendar({ agenda = [], setAgenda }: AgendaData) {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
-  const [alertMessage, setAlertMessage] = useState<string>("");
 
   const daysOfWeek = useMemo(() => {
     const today = new Date();
@@ -73,16 +71,6 @@ export default function Calendar({ agenda = [], setAgenda }: AgendaData) {
     setShowModal(false);
   }
 
-  useEffect(() => {
-    if (alertMessage) {
-      const timer = setTimeout(() => {
-        setAlertMessage("")
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [alertMessage]);
-
   return (
     <div className="content">
       <div className={styles.grid}>
@@ -110,11 +98,9 @@ export default function Calendar({ agenda = [], setAgenda }: AgendaData) {
           <AppointmentForm
             setAgenda={setAgenda}
             closeModal={closeModal}
-            setAlertMessage={setAlertMessage}
           />
         </Modal>
       }
-      <Alert message={alertMessage} />
     </div>
   )
 }

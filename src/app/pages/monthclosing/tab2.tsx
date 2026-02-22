@@ -1,11 +1,11 @@
 'use client'
 import { useEffect, useState } from 'react';
 import styles from "./MonthClosing.module.css";
-import Alert from '@/app/common/alert';
 import Loading from "@/app/common/loading";
 import { MonthClosingData, MonthClosingProps } from "@/types/monthClosing";
 import { formatValueToBRL } from "@/utils/utils";
 import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
+import { useAlertStore } from "@/stores/alert.store";
 import axios from "axios";
 
 export default function TabTwo({ selectedMonthClosing, setSelectedMonthClosing, orderedRevenue }: MonthClosingData) {
@@ -14,8 +14,9 @@ export default function TabTwo({ selectedMonthClosing, setSelectedMonthClosing, 
   const [cardValue, setCardValue] = useState<number>(0);
   const [cardValueNext, setCardValueNext] = useState<number>(0);
   const [totalMonthlyRevenue, setTotalMonthlyRevenue] = useState<number>(0);
-  const [alertMessage, setAlertMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+
+  const { showAlert } = useAlertStore();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -54,10 +55,20 @@ export default function TabTwo({ selectedMonthClosing, setSelectedMonthClosing, 
       const response = await axios.post(`${apiURL()}/month_closing/create/`, updatedMonthClosing)
       setSelectedMonthClosing(response.data);
 
-      setAlertMessage("Dados salvos com sucesso!");
+      showAlert({
+        message: "Dados salvos com sucesso!",
+        variant: "success",
+        autoCloseAfter: 2000,
+      });
+
     } catch (error) {
       console.error('Erro ao salvar os dados.', error)
-      setAlertMessage("Erro ao salvar os dados.");
+
+      showAlert({
+        message: "Erro ao salvar os dados.",
+        variant: "error",
+        autoCloseAfter: 2000,
+      });
     } finally {
       setLoading(false);
     }
@@ -69,10 +80,19 @@ export default function TabTwo({ selectedMonthClosing, setSelectedMonthClosing, 
       const response = await axios.put(`${apiURL()}/month_closing/${selectedMonthClosing.id}/`, updatedMonthClosing);
       setSelectedMonthClosing(response.data);
 
-      setAlertMessage("Dados salvos com sucesso!");
+      showAlert({
+        message: "Dados salvos com sucesso!",
+        variant: "success",
+        autoCloseAfter: 2000,
+      });
     } catch (error) {
       console.error('Erro ao salvar os dados.', error)
-      setAlertMessage("Erro ao salvar os dados.");
+
+      showAlert({
+        message: "Erro ao salvar os dados.",
+        variant: "error",
+        autoCloseAfter: 2000,
+      });
     } finally {
       setLoading(false);
     }
@@ -102,16 +122,6 @@ export default function TabTwo({ selectedMonthClosing, setSelectedMonthClosing, 
       setTotalMonthlyRevenue(sumNetValue);
     }
   }, [orderedRevenue])
-
-  useEffect(() => {
-    if (alertMessage) {
-      const timer = setTimeout(() => {
-        setAlertMessage("")
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [alertMessage]);
 
   useEffect(() => {
     isAuthenticated();
@@ -188,7 +198,6 @@ export default function TabTwo({ selectedMonthClosing, setSelectedMonthClosing, 
           </div>
         </div>
       </div>
-      <Alert message={alertMessage} />
     </div>
   )
 }

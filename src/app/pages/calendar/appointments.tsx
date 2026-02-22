@@ -6,10 +6,10 @@ import AppointmentForm from "./form";
 import Loading from "@/app/common/loading";
 import { formatDate } from "@/utils/date";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { AgendaProps, AppointmentsProps } from "@/types/agenda";
-import { apiURL, fetchAgenda, isAuthenticated, configureAxios } from '@/utils/api';
-import Alert from '@/app/common/alert'
+import { apiURL, fetchAgenda, isAuthenticated, configureAxios } from "@/utils/api";
+import { useAlertStore } from "@/stores/alert.store";
 import axios from "axios";
 
 export default function Appointments({ time, patients, setAgenda }: AppointmentsProps) {
@@ -18,7 +18,6 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
   const [deleteModalTitle, setDeleteModalTitle] = useState<string>("");
   const [modalTitle, setModalTitle] = useState<string>("");
   const [mode, setMode] = useState<string>("view");
-  const [alertMessage, setAlertMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedPatient, setSelectedPatient] = useState({
     id: 0,
@@ -27,6 +26,8 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
     name: "",
     notes: ""
   });
+
+  const { showAlert } = useAlertStore();
 
   const openModal = (patient: AgendaProps): void => {
     setSelectedPatient(patient);
@@ -57,13 +58,21 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
       if (selectedPatient && selectedPatient.id) {
         await axios.delete(`${apiURL()}/agenda/${selectedPatient.id}/`)
 
-        setAlertMessage("Agendamento excluído com sucesso!");
+        showAlert({
+          message: "Agendamento excluído com sucesso!",
+          variant: "success",
+          autoCloseAfter: 2000,
+        });
+
         const newAppointment = await fetchAgenda();
         setAgenda(newAppointment);
       }
     } catch (error) {
-      console.error('Erro ao excluir agendamento.', error)
-      setAlertMessage("Erro ao excluir agendamento.");
+      showAlert({
+        message: "Erro ao excluir agendamento.",
+        variant: "error",
+        autoCloseAfter: 2000,
+      });
     } finally {
       closeModal();
       setLoading(false);
@@ -83,16 +92,6 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
       return name
     }
   }
-
-  useEffect(() => {
-    if (alertMessage) {
-      const timer = setTimeout(() => {
-        setAlertMessage("")
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [alertMessage]);
 
   useEffect(() => {
     isAuthenticated();
@@ -147,7 +146,6 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
               selectedPatient={selectedPatient}
               setAgenda={setAgenda}
               closeModal={closeModal}
-              setAlertMessage={setAlertMessage}
             />
           }
         </Modal>
@@ -167,7 +165,6 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
           </div>
         </Modal>
       }
-      <Alert message={alertMessage} />
     </>
   );
 }

@@ -3,21 +3,21 @@ import React, { useState, useEffect } from 'react';
 import styles from './Login.module.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTooth } from '@fortawesome/free-solid-svg-icons';
-import Alert from '@/app/common/alert';
 import Loading from "@/app/common/loading";
 import { apiBase, fetchRevenue, fetchExpenses,
   isAuthenticated,   configureAxios } from '@/utils/api'
 import { useRouter } from 'next/navigation';
+import { useAlertStore } from '@/stores/alert.store';
 import axios from 'axios';
 
 export default function Login() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [alertMessage, setAlertMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
   const isFormValid = username !== '' && password !== '';
+  const { showAlert } = useAlertStore();
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -36,7 +36,12 @@ export default function Login() {
       if (accessToken && refreshToken) {
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
-        setAlertMessage("Login realizado com sucesso!");
+
+        showAlert({
+          message: "Login realizado com sucesso!",
+          variant: "success",
+          autoCloseAfter: 2000,
+        });
 
         setTimeout(() => {
           router.push('/');
@@ -45,21 +50,15 @@ export default function Login() {
         await fetchExpenses();
       }      
     } catch (error) {
-      setAlertMessage("Erro ao realizar o login.");
+      showAlert({
+          message: "Erro ao realizar o login.",
+          variant: "error",
+          autoCloseAfter: 2000,
+        });
     } finally {
       setLoading(false);
     }
   }
-
-  useEffect(() => {
-    if (alertMessage) {
-      const timer = setTimeout(() => {
-        setAlertMessage("")
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [alertMessage]);
 
   useEffect(() => {
     isAuthenticated();
@@ -97,7 +96,6 @@ export default function Login() {
           </div>
         </form>
       </div>
-      <Alert message={alertMessage} />
     </div>
   )
 }

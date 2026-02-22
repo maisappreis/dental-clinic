@@ -5,6 +5,7 @@ import { AgendaProps } from "@/types/agenda";
 import { scheduleOptions } from "@/assets/data";
 import { capitalize } from '@/utils/utils';
 import { apiURL, fetchAgenda, isAuthenticated, configureAxios } from '@/utils/api';
+import { useAlertStore } from '@/stores/alert.store';
 import Loading from "@/app/common/loading";
 import axios from "axios";
 
@@ -12,10 +13,9 @@ interface AppointmentFormProps {
   selectedPatient?: AgendaProps;
   closeModal: () => void;
   setAgenda: (newAgenda: AgendaProps[]) => void;
-  setAlertMessage: (newAlert: string) => void;
 }
 
-export default function AppointmentForm({ selectedPatient, closeModal, setAgenda, setAlertMessage }: AppointmentFormProps) {
+export default function AppointmentForm({ selectedPatient, closeModal, setAgenda }: AppointmentFormProps) {
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
@@ -25,6 +25,8 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
     name: "",
     notes: ""
   });
+
+  const { showAlert } = useAlertStore();
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -54,12 +56,23 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
     setLoading(true);
     try {
       await axios.post(`${apiURL()}/agenda/create/`, formData);
-      setAlertMessage("Agendamento criado com sucesso!");
+
+      showAlert({
+        message: "Agendamento criado com sucesso!",
+        variant: "success",
+        autoCloseAfter: 2000,
+      });
+
       const newAppointment = await fetchAgenda();
       setAgenda(newAppointment);
     } catch (error) {
       console.error('Erro ao criar agendamento.', error)
-      setAlertMessage("Erro ao criar agendamento.");
+
+      showAlert({
+        message: "Erro ao criar agendamento.",
+        variant: "error",
+        autoCloseAfter: 2000,
+      });
     } finally {
       closeModal();
       setLoading(false);
@@ -69,13 +82,24 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
   const updateAppointment = async (id: number) => {
     setLoading(true);
     try {
-      await axios.patch(`${apiURL()}/agenda/${id}/`, formData)
-      setAlertMessage("Agendamento atualizado com sucesso!");
+      await axios.patch(`${apiURL()}/agenda/${id}/`, formData);
+
+      showAlert({
+        message: "Agendamento atualizado com sucesso!",
+        variant: "success",
+        autoCloseAfter: 2000,
+      });
+
       const newAppointment = await fetchAgenda();
       setAgenda(newAppointment);
     } catch (error) {
-      console.error('Erro ao atualizar agendamento.', error)
-      setAlertMessage("Erro ao atualizar agendamento.");
+      console.error('Erro ao atualizar agendamento.', error);
+
+      showAlert({
+        message: "Erro ao atualizar agendamento.",
+        variant: "error",
+        autoCloseAfter: 2000,
+      });
     } finally {
       closeModal();
       setLoading(false);
