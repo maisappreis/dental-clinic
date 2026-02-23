@@ -6,7 +6,7 @@ import { formatDate, getNextMonth, getMonthAndYear } from "@/utils/date";
 import { apiURL, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api';
 import { ExpenseProps } from "@/types/expense";
 import { formatValueToBRL } from "@/utils/utils";
-import Tooltip from "@/app/common/tooltip"
+import { Tooltip } from "@/components/Tooltip/Tooltip";
 import Modal from "@/app/common/modal";
 import ExpenseForm from "./form";
 import { Loading } from "@/components/Loading/Loading";
@@ -32,7 +32,6 @@ interface TableProps {
 export default function Table({ columns, data, setExpenses }: TableProps) {
   const [statusClasses, setStatusClasses] = useState<string[]>([]);
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
-  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
   const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
@@ -45,10 +44,6 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
   const openNotes = (row: ExpenseProps, e: React.MouseEvent): void => {
     setSelectedRow(row);
     setShowTooltip(!showTooltip);
-    setTooltipPosition({
-      top: e.clientY - 20,
-      left: e.clientX - 150,
-    });
   }
 
   const openConfirmationModal = (row: ExpenseProps): void => {
@@ -236,11 +231,15 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
                   <td>
                     <div>
                       {row['notes'] !== "" &&
-                        <FontAwesomeIcon
-                          icon={faCircleInfo}
-                          className="table-icon"
-                          onClick={(e) => openNotes(row, e)}
-                        />
+                        <Tooltip content={selectedRow ? selectedRow.notes : null} placement="bottom">
+                          <span style={{ cursor: 'pointer' }}>
+                            <FontAwesomeIcon
+                              icon={faCircleInfo}
+                              className="table-icon"
+                              onClick={(e) => openNotes(row, e)}
+                            />
+                          </span>
+                        </Tooltip>
                       }
                       <FontAwesomeIcon
                         icon={faPenToSquare}
@@ -261,11 +260,6 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
           : <div className="no-data">Nenhum resultado encontrado.</div>
         }
       </div >
-      {showTooltip && selectedRow && (
-        <Tooltip top={tooltipPosition.top} left={tooltipPosition.left}>
-          {selectedRow.notes}
-        </Tooltip>
-      )}
       {showUpdateModal && selectedRow &&
         <Modal title={modalTitle}>
           <ExpenseForm

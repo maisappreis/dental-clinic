@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan, faCircleInfo, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { apiURL, fetchRevenue, isAuthenticated, configureAxios } from '@/utils/api';
-import Tooltip from "@/app/common/tooltip";
+import { Tooltip } from "@/components/Tooltip/Tooltip";
 import { Loading } from "@/components/Loading/Loading";
 import Modal from "@/app/common/modal";
 import RevenueForm from "./form";
@@ -142,11 +142,15 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
                   <td>
                     <div>
                       {row['notes'] !== "" &&
-                        <FontAwesomeIcon
-                          icon={faCircleInfo}
-                          className="table-icon"
-                          onClick={(e) => openNotes(row, e)}
-                        />
+                        <Tooltip content={selectedRow ? selectedRow.notes : null} placement="bottom">
+                          <span style={{ cursor: 'pointer' }}>
+                            <FontAwesomeIcon
+                              icon={faCircleInfo}
+                              className="table-icon"
+                              onClick={(e) => openNotes(row, e)}
+                            />
+                          </span>
+                        </Tooltip>
                       }
                       <FontAwesomeIcon
                         icon={faPenToSquare}
@@ -166,12 +170,7 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
           </table>
           : <div className="no-data">Nenhum resultado encontrado.</div>
         }
-      </div >
-      {showTooltip && selectedRow && (
-        <Tooltip top={tooltipPosition.top} left={tooltipPosition.left}>
-          {selectedRow.notes}
-        </Tooltip>
-      )}
+      </div>
       {showUpdateModal && selectedRow &&
         <Modal title={modalTitle}>
           <RevenueForm
