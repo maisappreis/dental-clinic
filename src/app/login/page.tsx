@@ -18,7 +18,7 @@ export default function Login() {
   const isFormValid = username !== '' && password !== '';
 
   const loading = useLoadingStore.getState();
-  const { showAlert } = useAlertStore();
+  const alert = useAlertStore.getState();
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -38,10 +38,9 @@ export default function Login() {
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
 
-        showAlert({
+        alert.show({
           message: "Login realizado com sucesso!",
           variant: "success",
-          autoCloseAfter: 2000,
         });
 
         setTimeout(() => {
@@ -51,11 +50,9 @@ export default function Login() {
         await fetchExpenses();
       }      
     } catch (error) {
-      showAlert({
+      alert.show({
         message: "Erro ao realizar o login.",
-        variant: "error",
-        autoCloseAfter: 2000,
-      });
+        variant: "error",      });
     } finally {
       loading.hide();
     }

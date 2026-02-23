@@ -39,7 +39,7 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
   const [selectedRow, setSelectedRow] = useState<ExpenseProps | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { showAlert } = useAlertStore();
+  const alert = useAlertStore.getState();
 
   const openNotes = (row: ExpenseProps, e: React.MouseEvent): void => {
     setSelectedRow(row);
@@ -88,10 +88,9 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
       const response = await axios.patch(`${apiURL()}/expense/${row.id}/`, {
         is_paid: !row.is_paid
       })
-      showAlert({
+      alert.show({
         message: "Despesa atualizada com sucesso!",
         variant: "success",
-        autoCloseAfter: 2000,
       });
 
       const isPaid = response.data.is_paid;
@@ -105,10 +104,9 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
       }
     } catch (error) {
       console.error('Erro ao atualizar despesa.', error)
-      showAlert({
+      alert.show({
         message: "Erro ao atualizar despesa.",
         variant: "error",
-        autoCloseAfter: 2000,
       });
     } finally {
       closeModal();
@@ -130,10 +128,9 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
 
       await axios.post(`${apiURL()}/expense/create/`, selectedRowClone)
 
-      showAlert({
+      alert.show({
         message: "Despesa do mês seguinte criada com sucesso!",
         variant: "success",
-        autoCloseAfter: 2000,
       });
 
       const newExpense = await fetchExpenses();
@@ -141,10 +138,9 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
     } catch (error) {
       console.error('Erro ao criar despesa do mês seguinte.', error)
 
-      showAlert({
+      alert.show({
         message: "Erro ao criar despesa do mês seguinte.",
         variant: "error",
-        autoCloseAfter: 2000,
       });
     } finally {
       closeModal();
@@ -158,10 +154,9 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
       if (selectedRow && selectedRow.id) {
         await axios.delete(`${apiURL()}/expense/${selectedRow.id}/`)
 
-        showAlert({
+        alert.show({
           message: "Despesa excluída com sucesso!",
           variant: "success",
-          autoCloseAfter: 2000,
         });
         const newExpense = await fetchExpenses();
         setExpenses(newExpense)
@@ -169,10 +164,9 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
     } catch (error) {
       console.error('Erro ao excluir despesa.', error)
 
-      showAlert({
+      alert.show({
         message: "Erro ao excluir despesa.",
         variant: "error",
-        autoCloseAfter: 2000,
       });
     } finally {
       closeModal();

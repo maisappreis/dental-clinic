@@ -27,7 +27,7 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
     notes: ""
   });
 
-  const { showAlert } = useAlertStore();
+  const alert = useAlertStore.getState();
 
   const openModal = (patient: AgendaProps): void => {
     setSelectedPatient(patient);
@@ -58,20 +58,18 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
       if (selectedPatient && selectedPatient.id) {
         await axios.delete(`${apiURL()}/agenda/${selectedPatient.id}/`)
 
-        showAlert({
+        alert.show({
           message: "Agendamento excluído com sucesso!",
           variant: "success",
-          autoCloseAfter: 2000,
         });
 
         const newAppointment = await fetchAgenda();
         setAgenda(newAppointment);
       }
     } catch (error) {
-      showAlert({
+      alert.show({
         message: "Erro ao excluir agendamento.",
         variant: "error",
-        autoCloseAfter: 2000,
       });
     } finally {
       closeModal();

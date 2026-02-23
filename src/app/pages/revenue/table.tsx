@@ -37,7 +37,7 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
   const [selectedRow, setSelectedRow] = useState<RevenueProps | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { showAlert } = useAlertStore();
+  const alert = useAlertStore.getState();
 
   const openNotes = (row: RevenueProps, e: React.MouseEvent): void => {
     setSelectedRow(row);
@@ -66,10 +66,9 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
       if (selectedRow && selectedRow.id) {
         await axios.delete(`${apiURL()}/revenue/${selectedRow.id}/`)
 
-        showAlert({
+        alert.show({
           message: "Receita excluída com sucesso!",
           variant: "success",
-          autoCloseAfter: 2000,
         });
         const newRevenue = await fetchRevenue();
         setRevenue(newRevenue)
@@ -77,10 +76,9 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
     } catch (error) {
       console.error('Erro ao excluir receita.', error)
 
-      showAlert({
+      alert.show({
         message: "Erro ao excluir receita.",
         variant: "error",
-        autoCloseAfter: 2000,
       });
     } finally {
       closeModal();

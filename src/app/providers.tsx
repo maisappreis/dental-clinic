@@ -7,7 +7,7 @@ import { useAlertStore } from "@/stores/alert.store";
 import { useLoadingStore } from '@/stores/loading.store';
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const { message, variant, autoCloseAfter, clearAlert } = useAlertStore();
+  const { message, variant, autoCloseAfter, hide } = useAlertStore();
   const { isLoading, label } = useLoadingStore();
 
   return (
@@ -19,7 +19,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         message={message}
         variant={variant}
         autoCloseAfter={autoCloseAfter}
-        onClose={clearAlert}
+        onClose={hide}
       />
     </>
   );

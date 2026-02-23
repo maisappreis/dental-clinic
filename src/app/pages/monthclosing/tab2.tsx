@@ -16,7 +16,7 @@ export default function TabTwo({ selectedMonthClosing, setSelectedMonthClosing, 
   const [totalMonthlyRevenue, setTotalMonthlyRevenue] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { showAlert } = useAlertStore();
+  const alert = useAlertStore.getState();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -55,19 +55,17 @@ export default function TabTwo({ selectedMonthClosing, setSelectedMonthClosing, 
       const response = await axios.post(`${apiURL()}/month_closing/create/`, updatedMonthClosing)
       setSelectedMonthClosing(response.data);
 
-      showAlert({
+      alert.show({
         message: "Dados salvos com sucesso!",
         variant: "success",
-        autoCloseAfter: 2000,
       });
 
     } catch (error) {
       console.error('Erro ao salvar os dados.', error)
 
-      showAlert({
+      alert.show({
         message: "Erro ao salvar os dados.",
         variant: "error",
-        autoCloseAfter: 2000,
       });
     } finally {
       setIsLoading(false);
@@ -80,18 +78,16 @@ export default function TabTwo({ selectedMonthClosing, setSelectedMonthClosing, 
       const response = await axios.put(`${apiURL()}/month_closing/${selectedMonthClosing.id}/`, updatedMonthClosing);
       setSelectedMonthClosing(response.data);
 
-      showAlert({
+      alert.show({
         message: "Dados salvos com sucesso!",
         variant: "success",
-        autoCloseAfter: 2000,
       });
     } catch (error) {
       console.error('Erro ao salvar os dados.', error)
 
-      showAlert({
+      alert.show({
         message: "Erro ao salvar os dados.",
         variant: "error",
-        autoCloseAfter: 2000,
       });
     } finally {
       setIsLoading(false);

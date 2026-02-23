@@ -36,7 +36,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
     notes: ""
   });
 
-  const { showAlert } = useAlertStore();
+  const alert = useAlertStore.getState();
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -102,20 +102,18 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
 
       await axios.post(`${apiURL()}/revenue/create/`, preparedData)
 
-      showAlert({
+      alert.show({
         message: "Receita criada com sucesso!",
         variant: "success",
-        autoCloseAfter: 2000,
       });
       const newRevenue = await fetchRevenue();
       setRevenue(newRevenue)
     } catch (error) {
       console.error('Erro ao criar receita.', error)
 
-      showAlert({
+      alert.show({
         message: "Erro ao criar receita.",
         variant: "error",
-        autoCloseAfter: 2000,
       });
     } finally {
       closeModal();
@@ -130,20 +128,18 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
 
       await axios.patch(`${apiURL()}/revenue/${id}/`, preparedData)
 
-      showAlert({
+      alert.show({
         message: "Receita atualizada com sucesso!",
         variant: "success",
-        autoCloseAfter: 2000,
       });
       const newRevenue = await fetchRevenue();
       setRevenue(newRevenue)
     } catch (error) {
       console.error('Erro ao atualizar receita.', error)
 
-      showAlert({
+      alert.show({
         message: "Erro ao atualizar receita",
         variant: "error",
-        autoCloseAfter: 2000,
       });
     } finally {
       closeModal();

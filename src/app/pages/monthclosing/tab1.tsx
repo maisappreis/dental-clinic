@@ -28,7 +28,7 @@ export default function TabOne(
     installmentCredit: 3.4
   });
 
-  const { showAlert } = useAlertStore();
+  const alert = useAlertStore.getState();
 
   const columns: { key: string; name: string; }[] = [
     { key: "date", name: "Data Pgto" },
@@ -85,18 +85,16 @@ export default function TabOne(
 
       await axios.put(`${apiURL()}/update-net-values/`, updatedNetValues)
 
-      showAlert({
+      alert.show({
         message: "Receita atualizada com sucesso!",
         variant: "success",
-        autoCloseAfter: 2000,
       });
     } catch (error) {
       console.error('Erro ao atualizar receita.', error);
 
-      showAlert({
+      alert.show({
         message: "Erro ao atualizar receita.",
         variant: "error",
-        autoCloseAfter: 2000,
       });
     } finally {
       setIsLoading(false);

@@ -33,7 +33,7 @@ export default function ExpenseForm(
     notes: ""
   });
 
-  const { showAlert } = useAlertStore();
+  const alert = useAlertStore.getState();
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -104,19 +104,17 @@ export default function ExpenseForm(
 
       await axios.post(`${apiURL()}/expense/create/`, preparedData)
 
-      showAlert({
+      alert.show({
         message: "Despesa criada com sucesso!",
         variant: "success",
-        autoCloseAfter: 2000,
       });
       const newExpense = await fetchExpenses();
       setExpenses(newExpense)
     } catch (error) {
       console.error('Erro ao criar despesa.', error)
-      showAlert({
+      alert.show({
         message: "Erro ao criar despesa.",
         variant: "error",
-        autoCloseAfter: 2000,
       });
     } finally {
       closeModal();
@@ -131,20 +129,18 @@ export default function ExpenseForm(
 
       await axios.patch(`${apiURL()}/expense/${id}/`, preparedData)
 
-      showAlert({
+      alert.show({
         message: "Despesa atualizada com sucesso!",
         variant: "success",
-        autoCloseAfter: 2000,
       });
       const newExpense = await fetchExpenses();
       setExpenses(newExpense)
     } catch (error) {
       console.error('Erro ao atualizar despesa.', error)
 
-      showAlert({
+      alert.show({
         message: "Erro ao atualizar despesa.",
         variant: "error",
-        autoCloseAfter: 2000,
       });
     } finally {
       closeModal();
