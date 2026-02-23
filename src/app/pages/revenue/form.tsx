@@ -8,6 +8,7 @@ import axios from "axios";
 import { RevenueProps } from '@/types/revenue';
 import { useAlertStore } from "@/stores/alert.store";
 import { Loading } from "@/components/Loading/Loading";
+import { Button } from "@/components/Button/Button";
 
 interface RevenueFormProps {
   selectedRow?: RevenueProps;
@@ -298,12 +299,19 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
             onChange={handleInputChange} />
         </div>
         <div className="flex justify-around mt-3">
-          <button className="btn green size" type="submit" disabled={!isFormValid}>
-            Salvar
-          </button>
-          <button onClick={closeModal} className="btn red size">
-            Cancelar
-          </button>
+          <Button
+            type="submit"
+            label="Salvar"
+            variant="primary"
+            size="lg"
+            disabled={!isFormValid}
+          />
+          <Button
+            label="Cancelar"
+            variant="secondary"
+            size="md"
+            onClick={closeModal}
+          />
         </div>
       </form>
     </>

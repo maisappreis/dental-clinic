@@ -7,6 +7,7 @@ import { capitalize } from '@/utils/utils';
 import { apiURL, fetchAgenda, isAuthenticated, configureAxios } from '@/utils/api';
 import { useAlertStore } from '@/stores/alert.store';
 import { Loading } from "@/components/Loading/Loading";
+import { Button } from "@/components/Button/Button";
 import axios from "axios";
 
 interface AppointmentFormProps {
@@ -168,12 +169,19 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
       </div>
 
       <div className="flex justify-around mt-3">
-        <button className="btn green size" type="submit" disabled={!isFormValid}>
-          Salvar
-        </button>
-        <button onClick={closeModal} className="btn red size">
-          Cancelar
-        </button>
+        <Button
+          type="submit"
+          label="Salvar"
+          variant="primary"
+          size="lg"
+          disabled={!isFormValid}
+        />
+        <Button
+          label="Cancelar"
+          variant="secondary"
+          size="md"
+          onClick={closeModal}
+        />
       </div>
     </form>
   )

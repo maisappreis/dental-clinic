@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import Table from "./table";
-import Button from "@/app/common/button";
+import { Button } from "@/components/Button/Button";
 import MonthFilter from "@/app/common/monthFilter";
 import StatusFilter from "@/app/common/statusFilter";
 import Search from "@/app/common/search";
@@ -10,6 +10,7 @@ import ExpenseForm from "./form";
 import { getCurrentYear, getCurrentMonth } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
 import { ExpenseData } from "@/types/expense";
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 export default function Expense({ expenses = [], setExpenses, loading }: ExpenseData) {
   const [filteredData, setFilteredData] = useState<any[]>([]);
@@ -94,11 +95,13 @@ export default function Expense({ expenses = [], setExpenses, loading }: Expense
 
   return (
     <div className="content">
-      <div className="flex flex-column justify-between">
-        <Button onClick={openModal} disabled={false} >
-          Nova Despesa
-        </Button>
-        <div className="flex justify-end" style={{ marginBottom: 15 }}>
+      <div className="flex flex-column justify-between" style={{ marginBottom: 15 }}>
+        <Button
+          label="Nova Despesa"
+          icon={faPlus}
+          onClick={openModal}
+        />
+        <div className="flex justify-end">
           <MonthFilter month={month} year={year} onFilterChange={filterData} />
           <StatusFilter statusPayment={statusPayment} onStatusChange={filterData} />
           <Search search={search} onSearchChange={searchData} />

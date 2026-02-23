@@ -11,6 +11,7 @@ import Modal from "@/app/common/modal";
 import ExpenseForm from "./form";
 import { Loading } from "@/components/Loading/Loading";
 import { useAlertStore } from "@/stores/alert.store";
+import { Button } from "@/components/Button/Button";
 import axios from "axios";
 
 interface Data {
@@ -281,24 +282,36 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
             </strong> referente a despesa de <strong>{selectedRow.name}</strong>?
           </h4>
           <div className="flex justify-around">
-            <button onClick={deleteExpense} className="btn red size">
-              Excluir
-            </button>
-            <button onClick={closeModal} className="btn size blue">
-              Cancelar
-            </button>
+            <Button
+              label="Excluir"
+              variant="danger"
+              size="md"
+              onClick={deleteExpense}
+            />
+            <Button
+              label="Cancelar"
+              variant="secondary"
+              size="md"
+              onClick={closeModal}
+            />
           </div>
         </Modal>
       }
       {showConfirmationModal && selectedRow &&
         <Modal title={modalTitle}>
           <div className="flex justify-around mt-3">
-            <button onClick={changePaymentStatus} className="btn green size">
-              Confirmar
-            </button>
-            <button onClick={closeModal} className="btn red size">
-              Cancelar
-            </button>
+            <Button
+              label="Confirmar"
+              variant="primary"
+              size="lg"
+              onClick={changePaymentStatus}
+            />
+            <Button
+              label="Cancelar"
+              variant="secondary"
+              size="md"
+              onClick={closeModal}
+            />
           </div>
         </Modal>
       }

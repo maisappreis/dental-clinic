@@ -8,6 +8,7 @@ import { apiBase, fetchRevenue, fetchExpenses,
 import { useRouter } from "next/navigation";
 import { useAlertStore } from "@/stores/alert.store";
 import { useLoadingStore } from "@/stores/loading.store";
+import { Button } from "@/components/Button/Button";
 import axios from "axios";
 
 export default function Login() {
@@ -81,8 +82,13 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)} required />
           </div>
           <div className={styles.button}>
-            <button type="submit" className="btn blue size"
-              disabled={!isFormValid}>Entrar</button>
+            <Button
+              type="submit"
+              label="Entrar"
+              variant="primary"
+              size="lg"
+              disabled={!isFormValid}
+            />
           </div>
         </form>
       </div>

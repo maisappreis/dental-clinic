@@ -6,6 +6,7 @@ import { MonthClosingData, MonthClosingProps } from "@/types/monthClosing";
 import { formatValueToBRL } from "@/utils/utils";
 import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
 import { useAlertStore } from "@/stores/alert.store";
+import { Button } from "@/components/Button/Button";
 import axios from "axios";
 
 export default function TabTwo({ selectedMonthClosing, setSelectedMonthClosing, orderedRevenue }: MonthClosingData) {
@@ -164,9 +165,12 @@ export default function TabTwo({ selectedMonthClosing, setSelectedMonthClosing, 
           Esses valores devem ser subtraídos, pois entrarão apenas no mês seguinte.
         </div>
         <div className="flex justify-end w-full align-bottom mt-3">
-          <button className="btn green size-fit" onClick={saveValues}>
-            Salvar
-          </button>
+          <Button
+            label="Salvar"
+            variant="primary"
+            size="lg"
+            onClick={saveValues}
+          />
         </div>
       </div>
       <div className={`${styles.summary} w-1/2`}>

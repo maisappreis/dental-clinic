@@ -7,6 +7,7 @@ import { Loading } from "@/components/Loading/Loading";
 import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
 import { formatValueToBRL } from "@/utils/utils";
 import { useAlertStore } from "@/stores/alert.store";
+import { Button } from "@/components/Button/Button";
 import styles from "./MonthClosing.module.css";
 
 export default function TabOne(
@@ -229,9 +230,12 @@ export default function TabOne(
               </tbody>
             </table>
             <div className="flex justify-end w-full align-bottom my-3">
-              <button className="btn green size-fit" onClick={saveRevenue}>
-                Salvar
-              </button>
+              <Button
+                label="Salvar"
+                variant="primary"
+                size="lg"
+                onClick={saveRevenue}
+              />
             </div>
           </>
           : <div className="no-data">Nenhum resultado encontrado.</div>

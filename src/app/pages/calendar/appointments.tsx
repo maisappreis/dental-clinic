@@ -5,11 +5,11 @@ import Modal from "@/app/common/modal";
 import AppointmentForm from "./form";
 import { Loading } from "@/components/Loading/Loading";
 import { formatDate } from "@/utils/date";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { AgendaProps, AppointmentsProps } from "@/types/agenda";
 import { apiURL, fetchAgenda, isAuthenticated, configureAxios } from "@/utils/api";
 import { useAlertStore } from "@/stores/alert.store";
+import { Button } from "@/components/Button/Button";
 import axios from "axios";
 
 export default function Appointments({ time, patients, setAgenda }: AppointmentsProps) {
@@ -128,15 +128,26 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
                 <p className="my-4">{selectedPatient.notes}</p>
               </div>
               <div className="flex justify-center">
-                <button onClick={updateAppointment} className="btn orange size-fit mr-3">
-                  <FontAwesomeIcon icon={faPenToSquare} className="table-icon" />
-                </button>
-                <button onClick={openDeleteModal} className="btn red size-fit mr-3">
-                  <FontAwesomeIcon icon={faTrashCan} className="table-icon" />
-                </button>
-                <button onClick={closeModal} className="btn red size blue">
-                  Fechar
-                </button>
+                <Button
+                  label="Editar"
+                  variant="primary"
+                  size="md"
+                  icon={faPenToSquare}
+                  onClick={updateAppointment}
+                />
+                <Button
+                  label="Excluir"
+                  variant="danger"
+                  size="md"
+                  icon={faTrashCan}
+                  onClick={openDeleteModal}
+                />
+                <Button
+                  label="Cancelar"
+                  variant="secondary"
+                  size="md"
+                  onClick={closeModal}
+                />
               </div>
             </div>
             :
@@ -154,12 +165,18 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
             Tem certeza que deseja excluir o agendamento do paciente <strong>{selectedPatient.name}</strong>?
           </div>
           <div className="flex justify-around">
-            <button onClick={deleteAppointment} className="btn red size">
-              Excluir
-            </button>
-            <button onClick={closeModal} className="btn size blue">
-              Cancelar
-            </button>
+            <Button
+              label="Excluir"
+              variant="danger"
+              size="md"
+              onClick={deleteAppointment}
+            />
+            <Button
+              label="Cancelar"
+              variant="secondary"
+              size="md"
+              onClick={closeModal}
+            />
           </div>
         </Modal>
       }

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import Table from "./table";
-import Button from "@/app/common/button";
+import { Button } from "@/components/Button/Button";
 import MonthFilter from "@/app/common/monthFilter";
 import Search from "@/app/common/search";
 import Modal from "@/app/common/modal";
@@ -9,6 +9,7 @@ import RevenueForm from "./form";
 import { getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
 import { RevenueData } from '@/types/revenue';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 export default function Revenue({ revenue = [], setRevenue, loading }: RevenueData) {
   const [filteredData, setFilteredData] = useState<any[]>([]);
@@ -81,11 +82,13 @@ export default function Revenue({ revenue = [], setRevenue, loading }: RevenueDa
 
   return (
     <div className="content">
-      <div className="flex flex-column justify-between">
-        <Button onClick={openModal} disabled={false}>
-          Nova Receita
-        </Button>
-        <div className="flex justify-end" style={{ marginBottom: 15 }}>
+      <div className="flex flex-column justify-between" style={{ marginBottom: 15 }}>
+        <Button
+          label="Nova Receita"
+          icon={faPlus}
+          onClick={openModal}
+        />
+        <div className="flex justify-end">
           <MonthFilter month={month} year={year} onFilterChange={filterData} />
           <Search search={search} onSearchChange={searchData} />
         </div>

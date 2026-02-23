@@ -12,6 +12,7 @@ import { MonthClosingProps } from '@/types/monthClosing';
 import { months, years } from "@/assets/data"
 import { getCurrentYear, getCurrentMonth, getNextMonthName } from "@/utils/date"
 import { fetchMonthClosing } from '@/utils/api';
+import { Button } from "@/components/Button/Button";
 
 interface DataMonthClosing {
   revenue: RevenueProps[];
@@ -321,9 +322,12 @@ export default function MonthClosing(
         </div>
       }
       <div className="flex justify-end w-full align-bottom mt-3">
-        <button className="btn blue size-fit" onClick={handleButtonClick}>
-          {buttonText}
-        </button>
+        <Button
+          label={buttonText}
+          variant="primary"
+          size="lg"
+          onClick={handleButtonClick}
+        />
       </div>
       {showModal &&
         <Modal title={modalTitle}>
@@ -367,12 +371,19 @@ export default function MonthClosing(
             </label>
           </div>
           <div className="flex justify-around mt-4">
-            <button className="btn green size" disabled={!isConfirmed} onClick={onConfirmationClick}>
-              Confirmo
-            </button>
-            <button onClick={closeModal} className="btn red size">
-              Cancelar
-            </button>
+            <Button
+              label="Confirmar"
+              variant="primary"
+              size="lg"
+              disabled={!isConfirmed}
+              onClick={onConfirmationClick}
+            />
+            <Button
+              label="Cancelar"
+              variant="secondary"
+              size="md"
+              onClick={closeModal}
+            />
           </div>
         </Modal>
       }

@@ -1,0 +1,65 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+/* Variants */
+.primary {
+  background: green;
+  color: white;
+}
+
+.secondary {
+  background: #e5e7eb;
+  color: #4f78d0;
+}
+
+.danger {
+  background: red;
+  color: white;
+}
+
+/* Sizes */
+.sm {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+}
+
+.md {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+}
+
+.lg {
+  padding: 0.8rem 1.3rem;
+  font-size: 1rem;
+}
+
+/* States */
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.content {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon {
+  font-size: 1.1em;
+  margin-right: 10px;
+}
+
+.label {
+  white-space: nowrap;
+}

@@ -6,6 +6,7 @@ import { getMonthAndYear } from "@/utils/date";
 import { ExpenseProps } from '@/types/expense';
 import { useAlertStore } from '@/stores/alert.store';
 import { Loading } from "@/components/Loading/Loading";
+import { Button } from "@/components/Button/Button";
 import axios from "axios";
 
 interface ExpenseFormProps {
@@ -242,12 +243,19 @@ export default function ExpenseForm(
             onChange={handleInputChange} />
         </div>
         <div className="flex justify-around mt-3">
-          <button className="btn green size" type="submit" disabled={!isFormValid}>
-            Salvar
-          </button>
-          <button onClick={closeModal} className="btn red size">
-            Cancelar
-          </button>
+          <Button
+            type="submit"
+            label="Salvar"
+            variant="primary"
+            size="lg"
+            disabled={!isFormValid}
+          />
+          <Button
+            label="Cancelar"
+            variant="secondary"
+            size="md"
+            onClick={closeModal}
+          />
         </div>
       </form>
     </>

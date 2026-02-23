@@ -11,6 +11,7 @@ import { formatDate } from "@/utils/date";
 import { formatValueToBRL } from "@/utils/utils";
 import { RevenueProps } from "@/types/revenue";
 import { useAlertStore } from "@/stores/alert.store";
+import { Button } from "@/components/Button/Button";
 import axios from "axios";
 
 interface Data {
@@ -187,12 +188,18 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
             <strong> {selectedRow.name}</strong>?
           </h4>
           <div className="flex justify-around">
-            <button onClick={deleteRevenue} className="btn red size">
-              Excluir
-            </button>
-            <button onClick={closeModal} className="btn red size blue">
-              Cancelar
-            </button>
+            <Button
+              label="Excluir"
+              variant="danger"
+              size="md"
+              onClick={deleteRevenue}
+            />
+            <Button
+              label="Cancelar"
+              variant="secondary"
+              size="md"
+              onClick={closeModal}
+            />
           </div>
         </Modal>
       }
