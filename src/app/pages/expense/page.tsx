@@ -4,6 +4,7 @@ import Table from "./table";
 import { Button } from "@/components/button/button";
 import MonthFilter from "@/app/common/monthFilter";
 import StatusFilter from "@/app/common/statusFilter";
+// import { StatusFilter } from "@/components/filter/statusFilter";
 import { Search } from "@/components/search/search";
 import Modal from "@/app/common/modal";
 import ExpenseForm from "./form";
@@ -103,6 +104,15 @@ export default function Expense({ expenses = [], setExpenses, loading }: Expense
         />
         <div className="flex justify-end">
           <MonthFilter month={month} year={year} onFilterChange={filterData} />
+          {/* <StatusFilter
+            value={statusPayment}
+            onValueChange={filterData}
+            options={[
+              { label: "À pagar", value: "À pagar" },
+              { label: "Pago", value: "Pago" },
+              { label: "Todos", value: "Todos" },
+            ]}
+          /> */}
           <StatusFilter statusPayment={statusPayment} onStatusChange={filterData} />
           <Search value={search} onValueChange={searchData} />
         </div>
