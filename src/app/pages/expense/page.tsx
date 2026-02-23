@@ -4,7 +4,7 @@ import Table from "./table";
 import { Button } from "@/components/Button/Button";
 import MonthFilter from "@/app/common/monthFilter";
 import StatusFilter from "@/app/common/statusFilter";
-import Search from "@/app/common/search";
+import { Search } from "@/components/search/search";
 import Modal from "@/app/common/modal";
 import ExpenseForm from "./form";
 import { getCurrentYear, getCurrentMonth } from "@/utils/date";
@@ -104,7 +104,7 @@ export default function Expense({ expenses = [], setExpenses, loading }: Expense
         <div className="flex justify-end">
           <MonthFilter month={month} year={year} onFilterChange={filterData} />
           <StatusFilter statusPayment={statusPayment} onStatusChange={filterData} />
-          <Search search={search} onSearchChange={searchData} />
+          <Search value={search} onValueChange={searchData} />
         </div>
       </div>
       <Table columns={columns} data={filteredData} setExpenses={setExpenses} />

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import Table from "./table";
 import { Button } from "@/components/Button/Button";
 import MonthFilter from "@/app/common/monthFilter";
-import Search from "@/app/common/search";
+import { Search } from "@/components/search/search";
 import Modal from "@/app/common/modal";
 import RevenueForm from "./form";
 import { getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
@@ -90,7 +90,7 @@ export default function Revenue({ revenue = [], setRevenue, loading }: RevenueDa
         />
         <div className="flex justify-end">
           <MonthFilter month={month} year={year} onFilterChange={filterData} />
-          <Search search={search} onSearchChange={searchData} />
+          <Search value={search} onValueChange={searchData} />
         </div>
       </div>
       <Table columns={columns} data={filteredData} setRevenue={setRevenue} />
