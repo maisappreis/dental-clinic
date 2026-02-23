@@ -6,13 +6,13 @@ import TabOne from './tab1';
 import TabTwo from './tab2';
 import TabThree from './tab3';
 import Modal from "@/app/common/modal";
-import { Loading } from "@/components/Loading/Loading";
+import { Loading } from "@/components/loading/loading";
 import { RevenueProps } from '@/types/revenue';
 import { MonthClosingProps } from '@/types/monthClosing';
 import { months, years } from "@/assets/data"
 import { getCurrentYear, getCurrentMonth, getNextMonthName } from "@/utils/date"
 import { fetchMonthClosing } from '@/utils/api';
-import { Button } from "@/components/Button/Button";
+import { Button } from "@/components/button/button";
 
 interface DataMonthClosing {
   revenue: RevenueProps[];

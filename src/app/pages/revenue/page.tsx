@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import Table from "./table";
-import { Button } from "@/components/Button/Button";
+import { Button } from "@/components/button/button";
 import MonthFilter from "@/app/common/monthFilter";
 import { Search } from "@/components/search/search";
 import Modal from "@/app/common/modal";

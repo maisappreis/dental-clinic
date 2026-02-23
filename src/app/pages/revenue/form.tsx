@@ -7,8 +7,8 @@ import { capitalize } from '@/utils/utils';
 import axios from "axios";
 import { RevenueProps } from '@/types/revenue';
 import { useAlertStore } from "@/stores/alert.store";
-import { Loading } from "@/components/Loading/Loading";
-import { Button } from "@/components/Button/Button";
+import { Loading } from "@/components/loading/loading";
+import { Button } from "@/components/button/button";
 
 interface RevenueFormProps {
   selectedRow?: RevenueProps;

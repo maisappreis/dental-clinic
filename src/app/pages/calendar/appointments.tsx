@@ -3,13 +3,13 @@ import { useState, useEffect } from "react";
 import styles from "./Calendar.module.css";
 import Modal from "@/app/common/modal";
 import AppointmentForm from "./form";
-import { Loading } from "@/components/Loading/Loading";
+import { Loading } from "@/components/loading/loading";
 import { formatDate } from "@/utils/date";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { AgendaProps, AppointmentsProps } from "@/types/agenda";
 import { apiURL, fetchAgenda, isAuthenticated, configureAxios } from "@/utils/api";
 import { useAlertStore } from "@/stores/alert.store";
-import { Button } from "@/components/Button/Button";
+import { Button } from "@/components/button/button";
 import axios from "axios";
 
 export default function Appointments({ time, patients, setAgenda }: AppointmentsProps) {

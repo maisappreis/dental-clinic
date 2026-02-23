@@ -1,12 +1,12 @@
 'use client'
 import { useEffect, useState } from 'react';
 import styles from "./MonthClosing.module.css";
-import { Loading } from "@/components/Loading/Loading";
+import { Loading } from "@/components/loading/loading";
 import { MonthClosingData, MonthClosingProps } from "@/types/monthClosing";
 import { formatValueToBRL } from "@/utils/utils";
 import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
 import { useAlertStore } from "@/stores/alert.store";
-import { Button } from "@/components/Button/Button";
+import { Button } from "@/components/button/button";
 import axios from "axios";
 
 export default function TabTwo({ selectedMonthClosing, setSelectedMonthClosing, orderedRevenue }: MonthClosingData) {

@@ -5,7 +5,7 @@ import Dashboard from "@/app/pages/dashboard/page";
 import Revenue from "@/app/pages/revenue/page";
 import Expense from "@/app/pages/expense/page";
 import MonthClosing from "@/app/pages/monthclosing/page";
-import { Loading } from "@/components/Loading/Loading";
+import { Loading } from "@/components/loading/loading";
 import styles from "./styles/Content.module.css";
 import { RevenueProps } from '@/types/revenue';
 import { ExpenseProps } from '@/types/expense';

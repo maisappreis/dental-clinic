@@ -1,7 +1,7 @@
 "use client";
 
-import { Alert } from "@/components/Alert/Alert";
-import { Loading } from '@/components/Loading/Loading';
+import { Alert } from "@/components/alert/alert";
+import { Loading } from '@/components/loading/loading';
 
 import { useAlertStore } from "@/stores/alert.store";
 import { useLoadingStore } from '@/stores/loading.store';

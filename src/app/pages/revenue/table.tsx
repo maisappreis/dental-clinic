@@ -3,15 +3,15 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan, faCircleInfo, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { apiURL, fetchRevenue, isAuthenticated, configureAxios } from '@/utils/api';
-import { Tooltip } from "@/components/Tooltip/Tooltip";
-import { Loading } from "@/components/Loading/Loading";
+import { Tooltip } from "@/components/tooltip/tooltip";
+import { Loading } from "@/components/loading/loading";
 import Modal from "@/app/common/modal";
 import RevenueForm from "./form";
 import { formatDate } from "@/utils/date";
 import { formatValueToBRL } from "@/utils/utils";
 import { RevenueProps } from "@/types/revenue";
 import { useAlertStore } from "@/stores/alert.store";
-import { Button } from "@/components/Button/Button";
+import { Button } from "@/components/button/button";
 import axios from "axios";
 
 interface Data {

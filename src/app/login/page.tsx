@@ -8,7 +8,7 @@ import { apiBase, fetchRevenue, fetchExpenses,
 import { useRouter } from "next/navigation";
 import { useAlertStore } from "@/stores/alert.store";
 import { useLoadingStore } from "@/stores/loading.store";
-import { Button } from "@/components/Button/Button";
+import { Button } from "@/components/button/button";
 import axios from "axios";
 
 export default function Login() {

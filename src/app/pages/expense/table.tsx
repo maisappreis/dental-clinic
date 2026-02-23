@@ -6,12 +6,12 @@ import { formatDate, getNextMonth, getMonthAndYear } from "@/utils/date";
 import { apiURL, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api';
 import { ExpenseProps } from "@/types/expense";
 import { formatValueToBRL } from "@/utils/utils";
-import { Tooltip } from "@/components/Tooltip/Tooltip";
+import { Tooltip } from "@/components/tooltip/tooltip";
 import Modal from "@/app/common/modal";
 import ExpenseForm from "./form";
-import { Loading } from "@/components/Loading/Loading";
+import { Loading } from "@/components/loading/loading";
 import { useAlertStore } from "@/stores/alert.store";
-import { Button } from "@/components/Button/Button";
+import { Button } from "@/components/button/button";
 import axios from "axios";
 
 interface Data {

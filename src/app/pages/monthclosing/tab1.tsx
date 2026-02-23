@@ -3,11 +3,11 @@ import React, { useState, useEffect, useCallback } from "react";
 import { formatDate } from "@/utils/date";
 import { RevenueProps } from '@/types/revenue';
 import axios from "axios";
-import { Loading } from "@/components/Loading/Loading";
+import { Loading } from "@/components/loading/loading";
 import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
 import { formatValueToBRL } from "@/utils/utils";
 import { useAlertStore } from "@/stores/alert.store";
-import { Button } from "@/components/Button/Button";
+import { Button } from "@/components/button/button";
 import styles from "./MonthClosing.module.css";
 
 export default function TabOne(

@@ -6,8 +6,8 @@ import { scheduleOptions } from "@/assets/data";
 import { capitalize } from '@/utils/utils';
 import { apiURL, fetchAgenda, isAuthenticated, configureAxios } from '@/utils/api';
 import { useAlertStore } from '@/stores/alert.store';
-import { Loading } from "@/components/Loading/Loading";
-import { Button } from "@/components/Button/Button";
+import { Loading } from "@/components/loading/loading";
+import { Button } from "@/components/button/button";
 import axios from "axios";
 
 interface AppointmentFormProps {
