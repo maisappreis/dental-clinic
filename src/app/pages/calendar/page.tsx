@@ -2,7 +2,7 @@
 import { useState, useMemo } from "react";
 import styles from "./Calendar.module.css";
 import Appointments from "./appointments";
-import Modal from "@/app/common/modal";
+import { Modal } from "@/components/modal/modal";
 import AppointmentForm from "./form";
 import { scheduleOptions, initialAppointmentFormat } from "@/assets/data";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -93,14 +93,23 @@ export default function Calendar({ agenda = [], setAgenda }: AgendaData) {
           />
         ))}
       </div>
-      {showModal &&
-        <Modal title={modalTitle}>
+
+      <Modal open={showModal} onClose={closeModal}>
+        <Modal.Header>
+          {modalTitle}
+        </Modal.Header>
+
+        <Modal.Body>
           <AppointmentForm
             setAgenda={setAgenda}
             closeModal={closeModal}
           />
-        </Modal>
-      }
+        </Modal.Body>
+
+        {/* <Modal.Footer>
+          //TODO: Botões aqui
+        </Modal.Footer> */}
+      </Modal>
     </div>
   )
 }

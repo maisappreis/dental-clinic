@@ -8,7 +8,7 @@ import { Search } from "@/components/search/search";
 // import { StatusFilter } from "@/components/filter/statusFilter";
 import MonthFilter from "@/app/common/monthFilter";
 import RevenueForm from "./form";
-import Modal from "@/app/common/modal";
+import { Modal } from "@/components/modal/modal";
 
 import { formatValueToBRL } from "@/utils/utils";
 import { getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
@@ -158,43 +158,70 @@ export default function RevenuePage({ revenue = [], setRevenue, loading }: Reven
           onOpenDelete: openDeleteModal,
         }}
       />
-      {showModal &&
-        <Modal title={modalTitle}>
+      <Modal open={showModal} onClose={closeModal}>
+        <Modal.Header>
+          {modalTitle}
+        </Modal.Header>
+
+        <Modal.Body>
           <RevenueForm
             closeModal={closeModal}
             setRevenue={setRevenue}
           />
+        </Modal.Body>
+
+        {/* <Modal.Footer>
+          // TODO
+        </Modal.Footer> */}
+      </Modal>
+
+      {selectedRow &&
+        <Modal open={showUpdateModal} onClose={closeModal}>
+          <Modal.Header>
+            {modalTitle}
+          </Modal.Header>
+
+          <Modal.Body>
+            <RevenueForm
+              selectedRow={selectedRow}
+              closeModal={closeModal}
+              setRevenue={setRevenue}
+            />
+          </Modal.Body>
+
+          {/* <Modal.Footer>
+            // TODO
+          </Modal.Footer> */}
         </Modal>
       }
-      {showUpdateModal && selectedRow &&
-        <Modal title={modalTitle}>
-          <RevenueForm
-            selectedRow={selectedRow}
-            closeModal={closeModal}
-            setRevenue={setRevenue}
-          />
-        </Modal>
-      }
-      {showDeleteModal && selectedRow &&
-        <Modal title={modalTitle}>
-          <h4 className="my-5 text-center">Tem certeza que deseja excluir o valor de
+      {selectedRow &&
+        <Modal open={showDeleteModal} onClose={closeModal}>
+          <Modal.Header>
+            {modalTitle}
+          </Modal.Header>
+
+          <Modal.Body>
+            Tem certeza que deseja excluir o valor de
             <strong> {formatValueToBRL(selectedRow.value)} </strong> do paciente
             <strong> {selectedRow.name}</strong>?
-          </h4>
-          <div className="flex justify-around">
-            <Button
-              label="Excluir"
-              variant="danger"
-              size="md"
-              onClick={deleteRevenue}
-            />
-            <Button
-              label="Cancelar"
-              variant="secondary"
-              size="md"
-              onClick={closeModal}
-            />
-          </div>
+          </Modal.Body>
+
+          <Modal.Footer>
+            <div className="flex justify-around">
+              <Button
+                label="Excluir"
+                variant="danger"
+                size="md"
+                onClick={deleteRevenue}
+              />
+              <Button
+                label="Cancelar"
+                variant="secondary"
+                size="md"
+                onClick={closeModal}
+              />
+            </div>
+          </Modal.Footer>
         </Modal>
       }
     </div>

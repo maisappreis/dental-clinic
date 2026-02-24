@@ -8,7 +8,7 @@ import { Search } from "@/components/search/search";
 // import { StatusFilter } from "@/components/filter/statusFilter";
 import MonthFilter from "@/app/common/monthFilter";
 import ExpenseForm from "./form";
-import Modal from "@/app/common/modal";
+import { Modal } from "@/components/modal/modal";
 
 import { formatValueToBRL } from "@/utils/utils";
 import { getCurrentYear, getCurrentMonth } from "@/utils/date";
@@ -272,61 +272,98 @@ export default function ExpensePage({ expenses = [], setExpenses, loading }: Exp
         }}
       />
 
-      {showModal &&
-        <Modal title={modalTitle}>
+      <Modal open={showModal} onClose={closeModal}>
+        <Modal.Header>
+          {modalTitle}
+        </Modal.Header>
+
+        <Modal.Body>
           <ExpenseForm
             closeModal={closeModal}
             setExpenses={setExpenses}
           />
+        </Modal.Body>
+
+        {/* <Modal.Footer>
+          
+        </Modal.Footer> */}
+      </Modal>
+
+      {selectedRow &&
+        <Modal open={showUpdateModal} onClose={closeModal}>
+          <Modal.Header>
+            {modalTitle}
+          </Modal.Header>
+
+          <Modal.Body>
+            <ExpenseForm
+              selectedRow={selectedRow}
+              closeModal={closeModal}
+              setExpenses={setExpenses}
+            />
+          </Modal.Body>
+
+          {/* <Modal.Footer>
+            // TODO
+          </Modal.Footer> */}
         </Modal>
       }
-      {showUpdateModal && selectedRow &&
-        <Modal title={modalTitle}>
-          <ExpenseForm
-            selectedRow={selectedRow}
-            closeModal={closeModal}
-            setExpenses={setExpenses}
-          />
-        </Modal>
-      }
-      {showDeleteModal && selectedRow &&
-        <Modal title={modalTitle}>
-          <h4 className="my-5 text-center">Tem certeza que deseja excluir o valor de
+      {selectedRow &&
+        <Modal open={showDeleteModal} onClose={closeModal}>
+          <Modal.Header>
+            {modalTitle}
+          </Modal.Header>
+
+          <Modal.Body>
+            Tem certeza que deseja excluir o valor de
             <strong>{formatValueToBRL(selectedRow.value)}
             </strong> referente a despesa de <strong>{selectedRow.name}</strong>?
-          </h4>
-          <div className="flex justify-around">
-            <Button
-              label="Excluir"
-              variant="danger"
-              size="md"
-              onClick={deleteExpense}
-            />
-            <Button
-              label="Cancelar"
-              variant="secondary"
-              size="md"
-              onClick={closeModal}
-            />
-          </div>
+          </Modal.Body>
+
+          <Modal.Footer>
+            <div className="flex justify-around">
+              <Button
+                label="Excluir"
+                variant="danger"
+                size="md"
+                onClick={deleteExpense}
+              />
+              <Button
+                label="Cancelar"
+                variant="secondary"
+                size="md"
+                onClick={closeModal}
+              />
+            </div>
+          </Modal.Footer>
         </Modal>
       }
-      {showConfirmationModal && selectedRow &&
-        <Modal title={modalTitle}>
-          <div className="flex justify-around mt-3">
-            <Button
-              label="Confirmar"
-              variant="primary"
-              size="lg"
-              onClick={changePaymentStatus}
-            />
-            <Button
-              label="Cancelar"
-              variant="secondary"
-              size="md"
-              onClick={closeModal}
-            />
-          </div>
+      {selectedRow &&
+        <Modal open={showConfirmationModal} onClose={closeModal}>
+          <Modal.Header>
+            {modalTitle}
+          </Modal.Header>
+
+          {/* <Modal.Body>
+            // TODO
+          </Modal.Body> */}
+
+          <Modal.Footer>
+            <div className="flex justify-around mt-3">
+              <Button
+                label="Confirmar"
+                variant="primary"
+                size="lg"
+                onClick={changePaymentStatus}
+              />
+              <Button
+                label="Cancelar"
+                variant="secondary"
+                size="md"
+                onClick={closeModal}
+              />
+            </div>
+          </Modal.Footer>
         </Modal>
       }
     </div>

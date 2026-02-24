@@ -5,7 +5,7 @@ import Reports from './reports';
 import TabOne from './tab1';
 import TabTwo from './tab2';
 import TabThree from './tab3';
-import Modal from "@/app/common/modal";
+import { Modal } from "@/components/modal/modal";
 import { Loading } from "@/components/loading/loading";
 import { Revenue } from '@/types/revenue';
 import { MonthClosingProps } from '@/types/monthClosing';
@@ -329,64 +329,74 @@ export default function MonthClosing(
           onClick={handleButtonClick}
         />
       </div>
-      {showModal &&
-        <Modal title={modalTitle}>
-          <div className="flex form-item">
-            <select id="month" name="month" className="form-select mr-4"
-              value={selectedMonth} onChange={handleInputChange} required>
-              <option value="" disabled>Selecione:</option>
-              {months.slice(0, 12).map((option, i) => (
-                <option key={i} value={option}>{option}</option>
-              ))}
-            </select>
-            <select id="year" name="year" className="form-select"
-              value={selectedYear} onChange={handleInputChange} required>
-              <option value="" disabled>Selecione:</option>
-              {years.slice(0, 12).map((option, i) => (
-                <option key={i} value={option}>{option}</option>
-              ))}
-            </select>
-          </div>
 
-          <div className="flex form-item">
-            <input id="revenue" name="revenue" type="checkbox" className="form-radio"
-              checked={revenueDone} onChange={(e) => {
-                const checked = (e.target as HTMLInputElement).checked;
-                setRevenueDone(checked);
-              }}
-            />
-            <label htmlFor="has-installments" className="form-label">
-              Confirmo que todas as <strong>receitas de {selectedMonth}</strong> foram cadastras.
-            </label>
-          </div>
-          <div className="flex form-item">
-            <input id="expense" name="expense" type="checkbox" className="form-radio"
-              checked={expensesDone} onChange={(e) => {
-                const checked = (e.target as HTMLInputElement).checked;
-                setExpensesDone(checked);
-              }}
-            />
-            <label htmlFor="has-installments" className="form-label">
-              Confirmo que todas as <strong>despesas de {getNextMonthName(selectedMonth)}</strong> foram cadastras.
-            </label>
-          </div>
-          <div className="flex justify-around mt-4">
-            <Button
-              label="Confirmar"
-              variant="primary"
-              size="lg"
-              disabled={!isConfirmed}
-              onClick={onConfirmationClick}
-            />
-            <Button
-              label="Cancelar"
-              variant="secondary"
-              size="md"
-              onClick={closeModal}
-            />
-          </div>
+      {selectedMonth &&
+        <Modal open={showModal} onClose={closeModal}>
+          <Modal.Header>
+            {modalTitle}
+          </Modal.Header>
+
+          <Modal.Body>
+            <div className="flex form-item">
+              <select id="month" name="month" className="form-select mr-4"
+                value={selectedMonth} onChange={handleInputChange} required>
+                <option value="" disabled>Selecione:</option>
+                {months.slice(0, 12).map((option, i) => (
+                  <option key={i} value={option}>{option}</option>
+                ))}
+              </select>
+              <select id="year" name="year" className="form-select"
+                value={selectedYear} onChange={handleInputChange} required>
+                <option value="" disabled>Selecione:</option>
+                {years.slice(0, 12).map((option, i) => (
+                  <option key={i} value={option}>{option}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex form-item">
+              <input id="revenue" name="revenue" type="checkbox" className="form-radio"
+                checked={revenueDone} onChange={(e) => {
+                  const checked = (e.target as HTMLInputElement).checked;
+                  setRevenueDone(checked);
+                }}
+              />
+              <label htmlFor="has-installments" className="form-label">
+                Confirmo que todas as <strong>receitas de {selectedMonth}</strong> foram cadastras.
+              </label>
+            </div>
+            <div className="flex form-item">
+              <input id="expense" name="expense" type="checkbox" className="form-radio"
+                checked={expensesDone} onChange={(e) => {
+                  const checked = (e.target as HTMLInputElement).checked;
+                  setExpensesDone(checked);
+                }}
+              />
+              <label htmlFor="has-installments" className="form-label">
+                Confirmo que todas as <strong>despesas de {getNextMonthName(selectedMonth)}</strong> foram cadastras.
+              </label>
+            </div>
+          </Modal.Body>
+
+          <Modal.Footer>
+            <div className="flex justify-around mt-4">
+              <Button
+                label="Confirmar"
+                variant="primary"
+                size="lg"
+                disabled={!isConfirmed}
+                onClick={onConfirmationClick}
+              />
+              <Button
+                label="Cancelar"
+                variant="secondary"
+                size="md"
+                onClick={closeModal}
+              />
+            </div>
+          </Modal.Footer>
         </Modal>
       }
     </div>
   )
-}
+};

@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import styles from "./Calendar.module.css";
-import Modal from "@/app/common/modal";
+import { Modal } from "@/components/modal/modal";
 import AppointmentForm from "./form";
 import { Loading } from "@/components/loading/loading";
 import { formatDate } from "@/utils/date";
@@ -13,10 +13,8 @@ import { Button } from "@/components/button/button";
 import axios from "axios";
 
 export default function Appointments({ time, patients, setAgenda }: AppointmentsProps) {
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-  const [deleteModalTitle, setDeleteModalTitle] = useState<string>("");
-  const [modalTitle, setModalTitle] = useState<string>("");
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
   const [mode, setMode] = useState<string>("view");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedPatient, setSelectedPatient] = useState({
@@ -31,13 +29,12 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
 
   const openModal = (patient: Appointment): void => {
     setSelectedPatient(patient);
-    setShowModal(true);
-    setModalTitle("Agendamento");
+    setIsOpen(true);
   };
 
   const closeModal = () => {
-    setShowModal(false);
-    setShowDeleteModal(false);
+    setIsOpen(false);
+    setDeleteModalIsOpen(false);
     setMode("view");
     setSelectedPatient({
       id: 0,
@@ -78,9 +75,8 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
   };
 
   const openDeleteModal = (): void => {
-    setShowModal(false);
-    setShowDeleteModal(true);
-    setDeleteModalTitle("Excluir Agendamento")
+    setIsOpen(false);
+    setDeleteModalIsOpen(true);
   }
 
   const shortName = (name: string): string => {
@@ -117,8 +113,12 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
         </button>
       ))}
 
-      {showModal &&
-        <Modal title={modalTitle}>
+      <Modal open={isOpen} onClose={closeModal}>
+        <Modal.Header>
+          Agendamento
+        </Modal.Header>
+
+        <Modal.Body>
           {mode === "view" && selectedPatient.name ?
             <div>
               <div className="my-5 text-left">
@@ -157,29 +157,39 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
               closeModal={closeModal}
             />
           }
-        </Modal>
-      }
-      {showDeleteModal &&
-        <Modal title={deleteModalTitle}>
-          <div className="my-5 text-center">
+        </Modal.Body>
+
+        {/* <Modal.Footer>
+          // TODO: botões aqui. não no formulário
+        </Modal.Footer> */}
+      </Modal>
+
+      <Modal open={deleteModalIsOpen} onClose={closeModal}>
+          <Modal.Header>
+            Excluir Agendamento
+          </Modal.Header>
+
+          <Modal.Body>
             Tem certeza que deseja excluir o agendamento do paciente <strong>{selectedPatient.name}</strong>?
-          </div>
-          <div className="flex justify-around">
-            <Button
-              label="Excluir"
-              variant="danger"
-              size="md"
-              onClick={deleteAppointment}
-            />
-            <Button
-              label="Cancelar"
-              variant="secondary"
-              size="md"
-              onClick={closeModal}
-            />
-          </div>
+          </Modal.Body>
+
+          <Modal.Footer>
+            <div className="flex justify-around">
+              <Button
+                label="Excluir"
+                variant="danger"
+                size="md"
+                onClick={deleteAppointment}
+              />
+              <Button
+                label="Cancelar"
+                variant="secondary"
+                size="md"
+                onClick={closeModal}
+              />
+            </div>
+          </Modal.Footer>
         </Modal>
-      }
     </>
   );
 }
