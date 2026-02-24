@@ -1,0 +1,21 @@
+.filter {
+  display: flex;
+  height: 50px;
+}
+
+.select {
+  width: 100%;
+  padding: 5px;
+  border-radius: 5px;
+  border: 2px solid #b4b4b4;
+  font-size: 16px;
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+@media only screen and (max-width: 1000px) {
+  .filter {
+    font-size: 14px;
+    height: 40px;
+  }
+}

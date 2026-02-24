@@ -1,15 +1,24 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import Table from "./table";
+
+import { RevenueTable } from "@/app/pages/revenue/table";
 import { Button } from "@/components/button/button";
-import MonthFilter from "@/app/common/monthFilter";
+import { Loading } from "@/components/loading/loading";
 import { Search } from "@/components/search/search";
-import Modal from "@/app/common/modal";
+// import { StatusFilter } from "@/components/filter/statusFilter";
+import MonthFilter from "@/app/common/monthFilter";
 import RevenueForm from "./form";
+import Modal from "@/app/common/modal";
+
+import { formatValueToBRL } from "@/utils/utils";
 import { getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
-import { RevenueData } from '@/types/revenue';
+import { apiURL, fetchRevenue, isAuthenticated, configureAxios } from '@/utils/api';
+
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useAlertStore } from "@/stores/alert.store";
+import { Revenue, RevenueData } from '@/types/revenue';
+import axios from "axios";
 
 export default function RevenuePage({ revenue = [], setRevenue, loading }: RevenueData) {
   const [filteredData, setFilteredData] = useState<any[]>([]);
@@ -17,18 +26,13 @@ export default function RevenuePage({ revenue = [], setRevenue, loading }: Reven
   const [year, setYear] = useState(getCurrentYear());
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState('');
+  const [modalTitle, setModalTitle] = useState("");
+  const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [selectedRow, setSelectedRow] = useState<Revenue | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const columns: { key: string; name: string; }[] = [
-    { key: "date", name: "Data" },
-    { key: "name", name: "Paciente" },
-    { key: "cpf", name: "CPF" },
-    { key: "nf", name: "NF" },
-    { key: "procedure", name: "Proced." },
-    { key: "payment", name: "Pagamento" },
-    { key: "installments", name: "Parcelas" },
-    { key: "value", name: "Valor" }
-  ];
+  const alert = useAlertStore.getState();
 
   const filterData = useCallback(({ selectedMonth = month, selectedYear = year, }) => {
     setMonth(selectedMonth)
@@ -66,7 +70,52 @@ export default function RevenuePage({ revenue = [], setRevenue, loading }: Reven
 
   const closeModal = () => {
     setShowModal(false);
+    setShowUpdateModal(false);
+    setShowDeleteModal(false);
   };
+
+  const openUpdateModal = (row: Revenue): void => {
+    setShowUpdateModal(true);
+    setModalTitle("Atualizar Receita");
+    setSelectedRow(row);
+  };
+
+  const openDeleteModal = (row: Revenue): void => {
+    setShowDeleteModal(true);
+    setModalTitle("Excluir Receita");
+    setSelectedRow(row);
+  };
+
+  const deleteRevenue = async () => {
+    setIsLoading(true);
+    try {
+      if (selectedRow && selectedRow.id) {
+        await axios.delete(`${apiURL()}/revenue/${selectedRow.id}/`)
+
+        alert.show({
+          message: "Receita excluída com sucesso!",
+          variant: "success",
+        });
+        const newRevenue = await fetchRevenue();
+        setRevenue(newRevenue)
+      }
+    } catch (error) {
+      console.error('Erro ao excluir receita.', error)
+
+      alert.show({
+        message: "Erro ao excluir receita.",
+        variant: "error",
+      });
+    } finally {
+      closeModal();
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    isAuthenticated();
+    configureAxios();
+  }, []);
 
   useEffect(() => {
     if (!loading && revenue && revenue.length > 0) {
@@ -79,6 +128,14 @@ export default function RevenuePage({ revenue = [], setRevenue, loading }: Reven
       filterData({ selectedMonth: month, selectedYear: year });
     }
   }, [revenue, loading, filterData, month, year]);
+
+  if (isLoading) {
+    return (
+      <Loading
+        label="Salvando..."
+      />
+    );
+  }
 
   return (
     <div className="content">
@@ -93,7 +150,14 @@ export default function RevenuePage({ revenue = [], setRevenue, loading }: Reven
           <Search value={search} onValueChange={searchData} />
         </div>
       </div>
-      <Table columns={columns} data={filteredData} setRevenue={setRevenue} />
+
+      <RevenueTable
+        data={filteredData}
+        actions={{
+          onOpenUpdate: openUpdateModal,
+          onOpenDelete: openDeleteModal,
+        }}
+      />
       {showModal &&
         <Modal title={modalTitle}>
           <RevenueForm
@@ -102,6 +166,37 @@ export default function RevenuePage({ revenue = [], setRevenue, loading }: Reven
           />
         </Modal>
       }
+      {showUpdateModal && selectedRow &&
+        <Modal title={modalTitle}>
+          <RevenueForm
+            selectedRow={selectedRow}
+            closeModal={closeModal}
+            setRevenue={setRevenue}
+          />
+        </Modal>
+      }
+      {showDeleteModal && selectedRow &&
+        <Modal title={modalTitle}>
+          <h4 className="my-5 text-center">Tem certeza que deseja excluir o valor de
+            <strong> {formatValueToBRL(selectedRow.value)} </strong> do paciente
+            <strong> {selectedRow.name}</strong>?
+          </h4>
+          <div className="flex justify-around">
+            <Button
+              label="Excluir"
+              variant="danger"
+              size="md"
+              onClick={deleteRevenue}
+            />
+            <Button
+              label="Cancelar"
+              variant="secondary"
+              size="md"
+              onClick={closeModal}
+            />
+          </div>
+        </Modal>
+      }
     </div>
   )
-}
+};

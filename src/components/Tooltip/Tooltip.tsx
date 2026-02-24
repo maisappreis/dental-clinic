@@ -9,6 +9,8 @@ type TooltipPlacement = "top" | "bottom" | "left" | "right";
 interface TooltipProps {
   content: ReactNode;
   children: ReactNode;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   placement?: TooltipPlacement;
   offset?: number;
 }
@@ -16,6 +18,8 @@ interface TooltipProps {
 export function Tooltip({
   content,
   children,
+  open,
+  onOpenChange,
   placement = "top",
   offset = 8,
 }: TooltipProps) {
@@ -23,7 +27,7 @@ export function Tooltip({
   const [coords, setCoords] = useState<{ top: number; left: number } | null>(null);
 
   useEffect(() => {
-    if (!triggerRef.current) return;
+    if (!open || !triggerRef.current) return;
 
     const rect = triggerRef.current.getBoundingClientRect();
 
@@ -47,19 +51,22 @@ export function Tooltip({
     };
 
     setCoords(positions[placement]);
-  }, [placement, offset]);
+  }, [open, placement, offset]);
 
   return (
     <>
       <span
         ref={triggerRef}
         className={styles.trigger}
-        onMouseEnter={() => setCoords((c) => c)}
+        onMouseEnter={() => onOpenChange(true)}
+        onMouseLeave={() => onOpenChange(false)}
+        onClick={() => onOpenChange(!open)}
+        style={{ display: "inline-flex", cursor: "pointer" }}
       >
         {children}
       </span>
 
-      {coords &&
+      {open && coords &&
         createPortal(
           <div
             role="tooltip"
@@ -75,4 +82,4 @@ export function Tooltip({
         )}
     </>
   );
-}
+};

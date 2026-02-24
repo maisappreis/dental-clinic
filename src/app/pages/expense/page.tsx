@@ -1,19 +1,27 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import Table from "./table";
+
+import { ExpenseTable } from "@/app/pages/expense/table";
 import { Button } from "@/components/button/button";
-import MonthFilter from "@/app/common/monthFilter";
-import StatusFilter from "@/app/common/statusFilter";
-// import { StatusFilter } from "@/components/filter/statusFilter";
+import { Loading } from "@/components/loading/loading";
 import { Search } from "@/components/search/search";
-import Modal from "@/app/common/modal";
+// import { StatusFilter } from "@/components/filter/statusFilter";
+import MonthFilter from "@/app/common/monthFilter";
 import ExpenseForm from "./form";
+import Modal from "@/app/common/modal";
+
+import { formatValueToBRL } from "@/utils/utils";
 import { getCurrentYear, getCurrentMonth } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
-import { ExpenseData } from "@/types/expense";
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { getNextMonth, getMonthAndYear } from "@/utils/date";
+import { apiURL, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api';
 
-export default function Expense({ expenses = [], setExpenses, loading }: ExpenseData) {
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useAlertStore } from "@/stores/alert.store";
+import { Expense, ExpenseData } from "@/types/expense";
+import axios from "axios";
+
+export default function ExpensePage({ expenses = [], setExpenses, loading }: ExpenseData) {
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());
@@ -21,16 +29,13 @@ export default function Expense({ expenses = [], setExpenses, loading }: Expense
   const [search, setSearch] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
-
-  const columns: { key: string; name: string; }[] = [
-    { key: "year", name: "Ano" },
-    { key: "month", name: "Mês" },
-    { key: "name", name: "Conta" },
-    { key: "installments", name: "Parcelas" },
-    { key: "date", name: "Data de Venc." },
-    { key: "value", name: "Valor" },
-    { key: "is_paid", name: "Status" },
-  ];
+  const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
+  const [selectedRow, setSelectedRow] = useState<Expense | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  
+  const alert = useAlertStore.getState();
 
   const filterData = useCallback(({
     selectedMonth = month,
@@ -80,7 +85,141 @@ export default function Expense({ expenses = [], setExpenses, loading }: Expense
 
   const closeModal = () => {
     setShowModal(false);
+
+    setShowUpdateModal(false);
+    setShowDeleteModal(false);
+    setShowConfirmationModal(false);
   };
+
+  const changePaymentStatus = async () => {
+    if (selectedRow) await updateExpense(selectedRow)
+    setShowConfirmationModal(false);
+  };
+
+  const openConfirmationModal = (row: Expense): void => {
+    setSelectedRow(row);
+
+    let title = "";
+
+    if (row.is_paid) {
+      title = "Marcar como à pagar?";
+    } else {
+      title = "Marcar como pago?";
+    }
+
+    setModalTitle(title);
+    setShowConfirmationModal(true);
+  };
+
+  const openUpdateModal = (row: Expense): void => {
+    console.log('open..')
+    setShowUpdateModal(true);
+    setModalTitle("Atualizar Despesa");
+    setSelectedRow(row);
+  };
+
+  const openDeleteModal = (row: Expense): void => {
+    setShowDeleteModal(true);
+    setModalTitle("Excluir Despesa");
+    setSelectedRow(row);
+  };
+
+  const updateExpense = async (row: Expense) => {
+    setIsLoading(true);
+    try {
+      const response = await axios.patch(`${apiURL()}/expense/${row.id}/`, {
+        is_paid: !row.is_paid
+      })
+      alert.show({
+        message: "Despesa atualizada com sucesso!",
+        variant: "success",
+      });
+
+      const isPaid = response.data.is_paid;
+      const hasInstallments = response.data.installments !== "";
+
+      if (isPaid && !hasInstallments) {
+        await createNextMonthExpense(row);
+      } else {
+        const newExpense = await fetchExpenses();
+        setExpenses(newExpense)
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar despesa.', error)
+      alert.show({
+        message: "Erro ao atualizar despesa.",
+        variant: "error",
+      });
+    } finally {
+      closeModal();
+      setIsLoading(false);
+    }
+  };
+
+  const createNextMonthExpense = async (row: Expense) => {
+    setIsLoading(true);
+    try {
+      const selectedRowClone = {...row}
+      const nextMonthDate = getNextMonth(selectedRowClone.date);
+      const [month, year] = getMonthAndYear(nextMonthDate);
+
+      selectedRowClone.date = nextMonthDate;
+      selectedRowClone.is_paid = false;
+      selectedRowClone.month = month;
+      selectedRowClone.year = parseInt(year);
+
+      await axios.post(`${apiURL()}/expense/create/`, selectedRowClone)
+
+      alert.show({
+        message: "Despesa do mês seguinte criada com sucesso!",
+        variant: "success",
+      });
+
+      const newExpense = await fetchExpenses();
+      setExpenses(newExpense);
+    } catch (error) {
+      console.error('Erro ao criar despesa do mês seguinte.', error)
+
+      alert.show({
+        message: "Erro ao criar despesa do mês seguinte.",
+        variant: "error",
+      });
+    } finally {
+      closeModal();
+      setIsLoading(false);
+    }
+  };
+
+  const deleteExpense = async () => {
+    setIsLoading(true);
+    try {
+      if (selectedRow && selectedRow.id) {
+        await axios.delete(`${apiURL()}/expense/${selectedRow.id}/`)
+
+        alert.show({
+          message: "Despesa excluída com sucesso!",
+          variant: "success",
+        });
+        const newExpense = await fetchExpenses();
+        setExpenses(newExpense)
+      }
+    } catch (error) {
+      console.error('Erro ao excluir despesa.', error)
+
+      alert.show({
+        message: "Erro ao excluir despesa.",
+        variant: "error",
+      });
+    } finally {
+      closeModal();
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    isAuthenticated();
+    configureAxios();
+  }, []);
 
   useEffect(() => {
     if (!loading && expenses && expenses.length > 0) {
@@ -93,6 +232,14 @@ export default function Expense({ expenses = [], setExpenses, loading }: Expense
       filterData({ selectedMonth: month, selectedYear: year, selectedStatus: statusPayment });
     }
   }, [expenses, loading, filterData, month, year, statusPayment]);
+
+  if (isLoading) {
+    return (
+      <Loading
+        label="Salvando..."
+      />
+    );
+  }
 
   return (
     <div className="content">
@@ -113,11 +260,18 @@ export default function Expense({ expenses = [], setExpenses, loading }: Expense
               { label: "Todos", value: "Todos" },
             ]}
           /> */}
-          <StatusFilter statusPayment={statusPayment} onStatusChange={filterData} />
           <Search value={search} onValueChange={searchData} />
         </div>
       </div>
-      <Table columns={columns} data={filteredData} setExpenses={setExpenses} />
+      <ExpenseTable
+        data={filteredData}
+        actions={{
+          onConfirmStatus: openConfirmationModal,
+          onOpenUpdate: openUpdateModal,
+          onOpenDelete: openDeleteModal,
+        }}
+      />
+
       {showModal &&
         <Modal title={modalTitle}>
           <ExpenseForm
@@ -126,6 +280,55 @@ export default function Expense({ expenses = [], setExpenses, loading }: Expense
           />
         </Modal>
       }
+      {showUpdateModal && selectedRow &&
+        <Modal title={modalTitle}>
+          <ExpenseForm
+            selectedRow={selectedRow}
+            closeModal={closeModal}
+            setExpenses={setExpenses}
+          />
+        </Modal>
+      }
+      {showDeleteModal && selectedRow &&
+        <Modal title={modalTitle}>
+          <h4 className="my-5 text-center">Tem certeza que deseja excluir o valor de
+            <strong>{formatValueToBRL(selectedRow.value)}
+            </strong> referente a despesa de <strong>{selectedRow.name}</strong>?
+          </h4>
+          <div className="flex justify-around">
+            <Button
+              label="Excluir"
+              variant="danger"
+              size="md"
+              onClick={deleteExpense}
+            />
+            <Button
+              label="Cancelar"
+              variant="secondary"
+              size="md"
+              onClick={closeModal}
+            />
+          </div>
+        </Modal>
+      }
+      {showConfirmationModal && selectedRow &&
+        <Modal title={modalTitle}>
+          <div className="flex justify-around mt-3">
+            <Button
+              label="Confirmar"
+              variant="primary"
+              size="lg"
+              onClick={changePaymentStatus}
+            />
+            <Button
+              label="Cancelar"
+              variant="secondary"
+              size="md"
+              onClick={closeModal}
+            />
+          </div>
+        </Modal>
+      }
     </div>
   )
-}
+};

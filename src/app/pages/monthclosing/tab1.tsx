@@ -1,14 +1,15 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
+
+import { Loading } from "@/components/loading/loading";
+import { Button } from "@/components/button/button";
+import { TabOneTable } from "@/app/pages/monthclosing/table";
+
 import { formatDate } from "@/utils/date";
+import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
+import { useAlertStore } from "@/stores/alert.store";
 import { Revenue } from '@/types/revenue';
 import axios from "axios";
-import { Loading } from "@/components/loading/loading";
-import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
-import { formatValueToBRL } from "@/utils/utils";
-import { useAlertStore } from "@/stores/alert.store";
-import { Button } from "@/components/button/button";
-import styles from "./MonthClosing.module.css";
 
 export default function TabOne(
   {
@@ -174,72 +175,21 @@ export default function TabOne(
             value={formRate.installmentCredit} onChange={handleRateInputChange} min="0.001" step="0.001" required />
         </div>
       </div>
-      <div className={styles.overflow}>
-        {updatedRevenue && updatedRevenue.length > 0 ?
-          <>
-            <table>
-              <thead>
-                <tr>
-                  {columns.map((column) => (
-                    <th key={column.key}>{column.name}</th>
-                  ))}
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {updatedRevenue.map((row: any, rowIndex: number) => (
-                  <tr key={rowIndex}>
-                    {columns.map((column, colIndex) => {
-                      const isHighlighted = ["Débito", "Crédito à vista", "Crédito à prazo"].includes(row.payment);
 
-                      return (
-                        <td key={colIndex}>
-                          {column.key === 'value' ? (
-                            <span style={isHighlighted ? { color: 'red', fontWeight: 'bold' } : undefined}>
-                              {formatValueToBRL(row[column.key])}
-                            </span>
-                          ) : column.key === 'payment' ? (
-                            <span style={isHighlighted ? { color: 'red', fontWeight: 'bold' } : undefined}>
-                              {row[column.key]}
-                            </span>
-                          ) : column.key === 'date' ? (
-                            formatDate(row[column.key])
-                          ) : column.key === 'release_date' ? (
-                            getReleaseDate(row[column.key])
-                          ) : column.key === 'net_value' ? (
-                            <input
-                              id="net-value"
-                              name="net-value"
-                              type="number"
-                              className={styles.input}
-                              onChange={(e) => handleInputChange(e, rowIndex)}
-                              value={row.net_value}
-                              min="0.001"
-                              step="0.001"
-                              required
-                            />
-                          ) : (
-                            row[column.key]
-                          )}
-                        </td>
-                      );
-                    })}
-                    <td></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div className="flex justify-end w-full align-bottom my-3">
-              <Button
-                label="Salvar"
-                variant="primary"
-                size="lg"
-                onClick={saveRevenue}
-              />
-            </div>
-          </>
-          : <div className="no-data">Nenhum resultado encontrado.</div>
-        }
+      <TabOneTable
+        data={updatedRevenue}
+        actions={{
+          onInputChange: handleInputChange
+        }}
+      />
+
+      <div className="flex justify-end w-full align-bottom my-3">
+        <Button
+          label="Salvar"
+          variant="primary"
+          size="lg"
+          onClick={saveRevenue}
+        />
       </div>
     </div>
   )
