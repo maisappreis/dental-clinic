@@ -2,10 +2,10 @@ import {
   capitalize,
   formatValueToBRL
 } from "@/utils/utils";
-import { type RevenueProps} from '@/types/revenue';
-import { type ExpenseProps } from '@/types/expense';
+import { type Revenue} from '@/types/revenue';
+import { type Expense } from '@/types/expense';
 
-const mockRevenueData: RevenueProps[] = [
+const mockRevenueData: Revenue[] = [
   {
     id: 1, date: "2024-09-01", release_date: "2024-09-01", name: "Paciente X",
     cpf: "000.000.000-11", nf: "no", procedure: "Restauração", payment: "Dinheiro",
@@ -23,7 +23,7 @@ const mockRevenueData: RevenueProps[] = [
   }
 ];
 
-const mockExpenseData: ExpenseProps[] = [
+const mockExpenseData: Expense[] = [
   {
     id: 1, year: 2024, month: "Setembro", name: "Aluguel", installments: "",
     date: "2024-09-05", value: 100, is_paid: false, notes: ""

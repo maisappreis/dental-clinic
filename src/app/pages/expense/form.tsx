@@ -3,14 +3,14 @@ import React, { useState, useEffect } from "react";
 import { apiURL, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api';
 import { capitalize } from '@/utils/utils';
 import { getMonthAndYear } from "@/utils/date";
-import { ExpenseProps } from '@/types/expense';
+import { Expense } from '@/types/expense';
 import { useAlertStore } from '@/stores/alert.store';
 import { Loading } from "@/components/loading/loading";
 import { Button } from "@/components/button/button";
 import axios from "axios";
 
 interface ExpenseFormProps {
-  selectedRow?: ExpenseProps;
+  selectedRow?: Expense;
   closeModal: () => void;
   setExpenses: (newExpenses: any[]) => void;
 }
@@ -71,7 +71,7 @@ export default function ExpenseForm(
     return Number.isInteger(integerNumber);
   };
 
-  const prepareDataForSubmission = (data: ExpenseProps) => {
+  const prepareDataForSubmission = (data: Expense) => {
     if (data.date) {
       const [month, year] = getMonthAndYear(data.date);
       return {

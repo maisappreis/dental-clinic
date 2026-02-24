@@ -11,7 +11,7 @@ import { applySearch } from "@/utils/filter";
 import { RevenueData } from '@/types/revenue';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-export default function Revenue({ revenue = [], setRevenue, loading }: RevenueData) {
+export default function RevenuePage({ revenue = [], setRevenue, loading }: RevenueData) {
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());

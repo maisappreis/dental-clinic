@@ -1,4 +1,4 @@
-export interface RevenueProps {
+export interface Revenue {
   id: number;
   date: string;
   release_date: string;
@@ -14,7 +14,7 @@ export interface RevenueProps {
 }
 
 export interface RevenueData {
-  revenue: RevenueProps[];
-  setRevenue: (newRevenue: RevenueProps[]) => void;
+  revenue: Revenue[];
+  setRevenue: (newRevenue: Revenue[]) => void;
   loading: boolean;
 }

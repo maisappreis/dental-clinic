@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { formatDate, getNextMonth, getMonthAndYear } from "@/utils/date";
 import { apiURL, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api';
-import { ExpenseProps } from "@/types/expense";
+import { Expense } from "@/types/expense";
 import { formatValueToBRL } from "@/utils/utils";
 import { Tooltip } from "@/components/tooltip/tooltip";
 import Modal from "@/app/common/modal";
@@ -36,17 +36,17 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
-  const [selectedRow, setSelectedRow] = useState<ExpenseProps | null>(null);
+  const [selectedRow, setSelectedRow] = useState<Expense | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const alert = useAlertStore.getState();
 
-  const openNotes = (row: ExpenseProps, e: React.MouseEvent): void => {
+  const openNotes = (row: Expense, e: React.MouseEvent): void => {
     setSelectedRow(row);
     setShowTooltip(!showTooltip);
   }
 
-  const openConfirmationModal = (row: ExpenseProps): void => {
+  const openConfirmationModal = (row: Expense): void => {
     setSelectedRow(row);
 
     let title = "";
@@ -66,19 +66,19 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
     setShowConfirmationModal(false);
   }
 
-  const openUpdateModal = (row: ExpenseProps): void => {
+  const openUpdateModal = (row: Expense): void => {
     setShowUpdateModal(true);
     setModalTitle("Atualizar Despesa");
     setSelectedRow(row);
   };
 
-  const openDeleteModal = (row: ExpenseProps): void => {
+  const openDeleteModal = (row: Expense): void => {
     setShowDeleteModal(true);
     setModalTitle("Excluir Despesa");
     setSelectedRow(row);
   };
 
-  const updateExpense = async (row: ExpenseProps) => {
+  const updateExpense = async (row: Expense) => {
     setIsLoading(true);
     try {
       const response = await axios.patch(`${apiURL()}/expense/${row.id}/`, {
@@ -110,7 +110,7 @@ export default function Table({ columns, data, setExpenses }: TableProps) {
     }
   }
 
-  const createNextMonthExpense = async (row: ExpenseProps) => {
+  const createNextMonthExpense = async (row: Expense) => {
     setIsLoading(true);
     try {
       const selectedRowClone = {...row}

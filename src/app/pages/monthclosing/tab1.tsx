@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import { formatDate } from "@/utils/date";
-import { RevenueProps } from '@/types/revenue';
+import { Revenue } from '@/types/revenue';
 import axios from "axios";
 import { Loading } from "@/components/loading/loading";
 import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
@@ -16,12 +16,12 @@ export default function TabOne(
     setRevenue,
     setOrderedRevenue
   }: {
-    orderedRevenue: RevenueProps[],
-    setOrderedRevenue: (newRevenue: RevenueProps[]) => void,
-    setRevenue: (newRevenue: RevenueProps[]) => void
+    orderedRevenue: Revenue[],
+    setOrderedRevenue: (newRevenue: Revenue[]) => void,
+    setRevenue: (newRevenue: Revenue[]) => void
   }
 ) {
-  const [updatedRevenue, setUpdatedRevenue] = useState<RevenueProps[]>([]);
+  const [updatedRevenue, setUpdatedRevenue] = useState<Revenue[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formRate, setFormRate] = useState({
     debit: 1.09,
@@ -102,7 +102,7 @@ export default function TabOne(
     }
   }
 
-  const calculatedRevenue = useCallback((sortedRevenue: RevenueProps[]) => {
+  const calculatedRevenue = useCallback((sortedRevenue: Revenue[]) => {
     return sortedRevenue.map((item) => {
       let netValue = item.value;
 

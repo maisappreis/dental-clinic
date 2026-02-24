@@ -1,4 +1,4 @@
-export interface ExpenseProps {
+export interface Expense {
   id: number;
   year: number;
   month: string;
@@ -11,7 +11,7 @@ export interface ExpenseProps {
 }
 
 export interface ExpenseData {
-  expenses: ExpenseProps[];
-  setExpenses: (newExpenses: ExpenseProps[]) => void;
+  expenses: Expense[];
+  setExpenses: (newExpenses: Expense[]) => void;
   loading: boolean;
 }

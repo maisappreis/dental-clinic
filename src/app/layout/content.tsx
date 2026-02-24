@@ -2,14 +2,14 @@
 import { useState, useEffect } from 'react';
 import Calendar from "@/app/pages/calendar/page";
 import Dashboard from "@/app/pages/dashboard/page";
-import Revenue from "@/app/pages/revenue/page";
-import Expense from "@/app/pages/expense/page";
+import RevenuePage from "@/app/pages/revenue/page";
+import ExpensePage from "@/app/pages/expense/page";
 import MonthClosing from "@/app/pages/monthclosing/page";
 import { Loading } from "@/components/loading/loading";
 import styles from "./styles/Content.module.css";
-import { RevenueProps } from '@/types/revenue';
-import { ExpenseProps } from '@/types/expense';
-import { AgendaProps } from "@/types/agenda";
+import { Revenue } from '@/types/revenue';
+import { Expense } from '@/types/expense';
+import { Appointment } from "@/types/agenda";
 import { MonthClosingProps } from "@/types/monthClosing";
 import { fetchAgenda, fetchRevenue,
   fetchExpenses, fetchMonthClosing, fetchProfitList,
@@ -20,9 +20,9 @@ import { ProfitData } from '@/types/chart';
 
 export default function Content({ selectedOption }: { selectedOption: string }) {
   let contentComponent: React.ReactNode;
-  const [revenue, setRevenue] = useState<RevenueProps[]>([]);
-  const [expenses, setExpenses] = useState<ExpenseProps[]>([]);
-  const [agenda, setAgenda] = useState<AgendaProps[]>([]);
+  const [revenue, setRevenue] = useState<Revenue[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [agenda, setAgenda] = useState<Appointment[]>([]);
   const [monthClosing, setMonthClosing] = useState<MonthClosingProps[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [profit, setProfit] = useState<ProfitData>({profit: [], labels: []});
@@ -87,10 +87,10 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
       contentComponent = <Dashboard revenue={revenue} expenses={expenses} profit={profit} />;
       break;
     case "revenue":
-      contentComponent = <Revenue revenue={revenue} setRevenue={setRevenue} loading={isLoading} />;
+      contentComponent = <RevenuePage revenue={revenue} setRevenue={setRevenue} loading={isLoading} />;
       break;
     case "expense":
-      contentComponent = <Expense expenses={expenses} setExpenses={setExpenses} loading={isLoading} />;
+      contentComponent = <ExpensePage expenses={expenses} setExpenses={setExpenses} loading={isLoading} />;
       break;
     case "monthClosing":
       contentComponent = <MonthClosing revenue={revenue} setRevenue={setRevenue} monthClosing={monthClosing} setMonthClosing={setMonthClosing} />;

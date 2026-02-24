@@ -1,12 +1,12 @@
 "use client";
 import { createContext, useState, useEffect, useContext, ReactNode } from "react";
 import { fetchRevenue, fetchExpenses } from "@/utils/api";
-import { RevenueProps } from '@/types/revenue';
-import { ExpenseProps } from '@/types/expense';
+import { Revenue } from '@/types/revenue';
+import { Expense } from '@/types/expense';
 
 interface DataContextType {
-  revenue: RevenueProps[];
-  expenses: ExpenseProps[];
+  revenue: Revenue[];
+  expenses: Expense[];
   setRevenue: (newRevenue: any[]) => void;
   setExpenses: (newExpenses: any[]) => void;
   loading: boolean;

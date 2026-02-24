@@ -1,4 +1,4 @@
-import { RevenueProps} from "./revenue"
+import { Revenue} from "./revenue"
 
 export interface MonthClosingProps {
   id: number;
@@ -20,5 +20,5 @@ export interface MonthClosingProps {
 export interface MonthClosingData {
   selectedMonthClosing: MonthClosingProps;
   setSelectedMonthClosing: (newSelectedMonthClosing: MonthClosingProps) => void;
-  orderedRevenue: RevenueProps[]
+  orderedRevenue: Revenue[]
 }

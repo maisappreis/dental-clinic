@@ -3,12 +3,12 @@ import ProfitChart from "@/app/charts/profit";
 import NumberOfProceduresChart from "@/app/charts/proceduresNumber";
 import MostPerformedProceduresChart from "@/app/charts/proceduresFrequency";
 import styles from "@/app/pages/dashboard/Charts.module.css";
-import { RevenueProps } from '@/types/revenue';
-import { ExpenseProps } from '@/types/expense';
+import { Revenue } from '@/types/revenue';
+import { Expense } from '@/types/expense';
 import { ProfitData } from '@/types/chart';
 
 export default function Dashboard(
-  { revenue, expenses, profit }: { revenue: RevenueProps[], expenses: ExpenseProps[], profit: ProfitData }
+  { revenue, expenses, profit }: { revenue: Revenue[], expenses: Expense[], profit: ProfitData }
 ) {
   return (
     <div className="content align-middle">

@@ -1,7 +1,7 @@
 
 "use client";
 import React, { useState, useEffect } from "react";
-import { AgendaProps } from "@/types/agenda";
+import { Appointment } from "@/types/agenda";
 import { scheduleOptions } from "@/assets/data";
 import { capitalize } from '@/utils/utils';
 import { apiURL, fetchAgenda, isAuthenticated, configureAxios } from '@/utils/api';
@@ -11,9 +11,9 @@ import { Button } from "@/components/button/button";
 import axios from "axios";
 
 interface AppointmentFormProps {
-  selectedPatient?: AgendaProps;
+  selectedPatient?: Appointment;
   closeModal: () => void;
-  setAgenda: (newAgenda: AgendaProps[]) => void;
+  setAgenda: (newAgenda: Appointment[]) => void;
 }
 
 export default function AppointmentForm({ selectedPatient, closeModal, setAgenda }: AppointmentFormProps) {

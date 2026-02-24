@@ -1,4 +1,4 @@
-export interface AgendaProps {
+export interface Appointment {
   id: number;
   date: string;
   time: string;
@@ -8,12 +8,12 @@ export interface AgendaProps {
 
 export interface AppointmentsProps {
   time: string;
-  patients: AgendaProps[];
-  setAgenda: (newAgenda: AgendaProps[]) => void;
+  patients: Appointment[];
+  setAgenda: (newAgenda: Appointment[]) => void;
 }
 
 export interface AgendaData {
-  agenda: AgendaProps[];
-  setAgenda: (newAgenda: AgendaProps[]) => void;
+  agenda: Appointment[];
+  setAgenda: (newAgenda: Appointment[]) => void;
 }
 

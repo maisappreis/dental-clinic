@@ -1,15 +1,15 @@
 'use client'
 import { useState, useEffect, useMemo } from 'react';
 import { Line } from "react-chartjs-2";
-import { RevenueProps } from '@/types/revenue';
-import { ExpenseProps } from '@/types/expense';
+import { Revenue } from '@/types/revenue';
+import { Expense } from '@/types/expense';
 import { ChartData, MonthNames, TooltipItem } from '@/types/chart';
 import { monthNames } from "@/assets/data";
 import { formatValueToBRL } from "@/utils/utils";
 import "@/utils/chart";
 
 export default function RevenueExpensesChart(
-  { revenue, expenses }: { revenue: RevenueProps[], expenses: ExpenseProps[] }
+  { revenue, expenses }: { revenue: Revenue[], expenses: Expense[] }
 ) {
   const [options, setOptions] = useState({});
   const [data, setData] = useState<ChartData>({
@@ -53,8 +53,8 @@ export default function RevenueExpensesChart(
 
   const drawChart = useMemo(() => {
     if (revenue && expenses && revenue.length > 0 && expenses.length > 0) {
-      const groupByMonth = (items: (RevenueProps | ExpenseProps)[]) => {
-        return items.reduce((acc: Record<string, number>, curr: RevenueProps | ExpenseProps) => {
+      const groupByMonth = (items: (Revenue | Expense)[]) => {
+        return items.reduce((acc: Record<string, number>, curr: Revenue | Expense) => {
           const month = curr.date.slice(5, 7);
           const year = curr.date.slice(0, 4);
           const key = `${year}-${month}`;

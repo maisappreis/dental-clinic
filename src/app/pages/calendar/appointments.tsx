@@ -6,7 +6,7 @@ import AppointmentForm from "./form";
 import { Loading } from "@/components/loading/loading";
 import { formatDate } from "@/utils/date";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { AgendaProps, AppointmentsProps } from "@/types/agenda";
+import { Appointment, AppointmentsProps } from "@/types/agenda";
 import { apiURL, fetchAgenda, isAuthenticated, configureAxios } from "@/utils/api";
 import { useAlertStore } from "@/stores/alert.store";
 import { Button } from "@/components/button/button";
@@ -29,7 +29,7 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
 
   const alert = useAlertStore.getState();
 
-  const openModal = (patient: AgendaProps): void => {
+  const openModal = (patient: Appointment): void => {
     setSelectedPatient(patient);
     setShowModal(true);
     setModalTitle("Agendamento");

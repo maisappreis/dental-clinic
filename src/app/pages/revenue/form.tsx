@@ -5,13 +5,13 @@ import { apiURL, fetchRevenue, isAuthenticated, configureAxios } from '@/utils/a
 import { getCurrentDate } from "@/utils/date";
 import { capitalize } from '@/utils/utils';
 import axios from "axios";
-import { RevenueProps } from '@/types/revenue';
+import { Revenue } from '@/types/revenue';
 import { useAlertStore } from "@/stores/alert.store";
 import { Loading } from "@/components/loading/loading";
 import { Button } from "@/components/button/button";
 
 interface RevenueFormProps {
-  selectedRow?: RevenueProps;
+  selectedRow?: Revenue;
   closeModal: () => void;
   setRevenue: (newRevenue: any[]) => void;
 }
@@ -22,7 +22,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [validCPF, setValidCPF] = useState<string>("");
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
-  const [formData, setFormData] = useState<RevenueProps>({
+  const [formData, setFormData] = useState<Revenue>({
     id: 0,
     date: getCurrentDate(),
     release_date: getCurrentDate(),
@@ -78,7 +78,7 @@ export default function RevenueForm({ selectedRow, closeModal, setRevenue }: Rev
     return numbers.length === 11;
   };
 
-  const prepareDataForSubmission = (data: RevenueProps) => {
+  const prepareDataForSubmission = (data: Revenue) => {
     return {
       ...data,
       nf: data.nf === "yes" ? true : false,

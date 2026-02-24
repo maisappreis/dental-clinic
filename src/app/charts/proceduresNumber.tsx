@@ -2,11 +2,11 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Line } from "react-chartjs-2";
 import "@/utils/chart"
-import { RevenueProps } from '@/types/revenue';
+import { Revenue } from '@/types/revenue';
 import { ChartData, MonthNames, TooltipItem } from '@/types/chart';
 import { monthNames } from "@/assets/data";
 
-export default function NumberOfProceduresChart({ revenue }: { revenue: RevenueProps[] }) {
+export default function NumberOfProceduresChart({ revenue }: { revenue: Revenue[] }) {
   const [options, setOptions] = useState({});
   const [data, setData] = useState<ChartData>({
     labels: [],
@@ -49,7 +49,7 @@ export default function NumberOfProceduresChart({ revenue }: { revenue: RevenueP
 
   const drawChart = useMemo(() => {
     if (revenue && revenue.length > 0) {
-      const groupedByMonth = revenue.reduce((acc: Record<string, number>, curr: RevenueProps) => {
+      const groupedByMonth = revenue.reduce((acc: Record<string, number>, curr: Revenue) => {
         const month: string = curr.date.slice(5, 7);
         const year: string = curr.date.slice(0, 4);
         const key = `${year}-${month}`;

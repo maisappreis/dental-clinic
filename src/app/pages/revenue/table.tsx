@@ -9,7 +9,7 @@ import Modal from "@/app/common/modal";
 import RevenueForm from "./form";
 import { formatDate } from "@/utils/date";
 import { formatValueToBRL } from "@/utils/utils";
-import { RevenueProps } from "@/types/revenue";
+import { Revenue } from "@/types/revenue";
 import { useAlertStore } from "@/stores/alert.store";
 import { Button } from "@/components/button/button";
 import axios from "axios";
@@ -35,12 +35,12 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
   const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
-  const [selectedRow, setSelectedRow] = useState<RevenueProps | null>(null);
+  const [selectedRow, setSelectedRow] = useState<Revenue | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const alert = useAlertStore.getState();
 
-  const openNotes = (row: RevenueProps, e: React.MouseEvent): void => {
+  const openNotes = (row: Revenue, e: React.MouseEvent): void => {
     setSelectedRow(row);
     setShowTooltip(!showTooltip);
     setTooltipPosition({
@@ -49,13 +49,13 @@ export default function Table({ columns, data, setRevenue }: TableProps) {
     });
   }
 
-  const openUpdateModal = (row: RevenueProps): void => {
+  const openUpdateModal = (row: Revenue): void => {
     setShowUpdateModal(true);
     setModalTitle("Atualizar Receita");
     setSelectedRow(row);
   };
 
-  const openDeleteModal = (row: RevenueProps): void => {
+  const openDeleteModal = (row: Revenue): void => {
     setShowDeleteModal(true);
     setModalTitle("Excluir Receita");
     setSelectedRow(row);

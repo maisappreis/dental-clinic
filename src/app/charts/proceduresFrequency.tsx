@@ -2,11 +2,11 @@
 'use client'
 import { useState, useEffect, useMemo } from 'react';
 import { Bar } from "react-chartjs-2";
-import { RevenueProps } from '@/types/revenue';
+import { Revenue } from '@/types/revenue';
 import { ChartData, TooltipItem } from '@/types/chart';
 import "@/utils/chart";
 
-export default function MostPerformedProceduresChart({ revenue }: { revenue: RevenueProps[] }) {
+export default function MostPerformedProceduresChart({ revenue }: { revenue: Revenue[] }) {
   const [options, setOptions] = useState({});
   const [data, setData] = useState<ChartData>({
     labels: [],
@@ -49,7 +49,7 @@ export default function MostPerformedProceduresChart({ revenue }: { revenue: Rev
 
   const drawChart = useMemo(() => {
     if (revenue && revenue.length > 0) {
-      const procedureCount = revenue.reduce((acc: Record<string, number>, curr: RevenueProps) => {
+      const procedureCount = revenue.reduce((acc: Record<string, number>, curr: Revenue) => {
         if (!acc[curr.procedure]) {
           acc[curr.procedure] = 0;
         }
