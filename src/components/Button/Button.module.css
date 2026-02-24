@@ -11,7 +11,12 @@
   transition: background 0.15s ease, opacity 0.15s ease;
 }
 
-/* Variants */
+/*
+======================
+  Variants
+======================
+*/
+
 .primary {
   background: green;
   color: white;
@@ -27,7 +32,12 @@
   color: white;
 }
 
-/* Sizes */
+/*
+======================
+  Sizes
+======================
+*/
+
 .sm {
   padding: 0.4rem 0.75rem;
   font-size: 0.85rem;
@@ -43,7 +53,12 @@
   font-size: 1rem;
 }
 
-/* States */
+/*
+======================
+  States
+======================
+*/
+
 .disabled {
   opacity: 0.6;
   cursor: not-allowed;
