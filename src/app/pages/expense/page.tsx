@@ -7,10 +7,11 @@ import { Loading } from "@/components/loading/loading";
 import { Search } from "@/components/search/search";
 // import { StatusFilter } from "@/components/filter/statusFilter";
 import MonthFilter from "@/app/common/monthFilter";
-import { Modal } from "@/components/modal/modal";
 import { CreateUpdateModal } from "./modal/createUpdate";
+import { DeleteModal } from "./modal/delete";
+import { PaymentStatusModal } from "./modal/paymentStatus";
 
-import { formatValueToBRL, capitalize } from "@/utils/utils";
+import { capitalize } from "@/utils/utils";
 import { getCurrentYear, getCurrentMonth } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
 import { getNextMonth, getMonthAndYear } from "@/utils/date";
@@ -28,12 +29,11 @@ export default function ExpensePage({ expenses = [], setExpenses, loading }: Exp
   const [year, setYear] = useState(getCurrentYear());
   const [statusPayment, setStatusPayment] = useState<string>("Todos");
   const [search, setSearch] = useState<string>("");
-  const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
-  const [modalTitle, setModalTitle] = useState<string>("");
   const [selectedExpense, setSelectedExpense] = useState<Expense | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [paymentStatusModalIsOpen, setPaymentStatusModalIsOpen] = useState<boolean>(false);
+  const [createUpdateModalIsOpen, setCreateUpdateModalIsOpen] = useState(false);
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
   const alert = useAlertStore.getState();
 
@@ -79,46 +79,35 @@ export default function ExpensePage({ expenses = [], setExpenses, loading }: Exp
   }
 
   const closeModal = () => {
-    setShowDeleteModal(false);
-    setShowConfirmationModal(false);
-
-    setIsModalOpen(false);
+    setPaymentStatusModalIsOpen(false);
+    setCreateUpdateModalIsOpen(false);
+    setDeleteModalIsOpen(false);
     setSelectedExpense(undefined);
   };
 
   const changePaymentStatus = async () => {
     if (selectedExpense) await updateExpenseStatus(selectedExpense)
-    setShowConfirmationModal(false);
+    setPaymentStatusModalIsOpen(false);
   };
 
-  const openConfirmationModal = (row: Expense): void => {
-    setSelectedExpense(row);
-
-    let title = "";
-
-    if (row.is_paid) {
-      title = "Marcar como à pagar?";
-    } else {
-      title = "Marcar como pago?";
-    }
-
-    setModalTitle(title);
-    setShowConfirmationModal(true);
+  const openConfirmationModal = (expense: Expense): void => {
+    setSelectedExpense(expense);
+    setPaymentStatusModalIsOpen(true);
   };
 
    const openCreateModal = (): void =>  {
     setSelectedExpense(undefined);
-    setIsModalOpen(true);
+    setCreateUpdateModalIsOpen(true);
   };
 
   const openUpdateModal = (expense: Expense): void => {
     setSelectedExpense(expense);
-    setIsModalOpen(true);
+    setCreateUpdateModalIsOpen(true);
   };
 
   const openDeleteModal = (expense: Expense): void => {
     setSelectedExpense(expense);
-    setShowDeleteModal(true);
+    setDeleteModalIsOpen(true);
   };
 
   const prepareDataForSubmission = (data: ExpenseFormData) => {
@@ -338,71 +327,26 @@ export default function ExpensePage({ expenses = [], setExpenses, loading }: Exp
       />
 
       <CreateUpdateModal
-        open={isModalOpen}
+        open={createUpdateModalIsOpen}
         expense={selectedExpense}
         onClose={closeModal}
         onCreate={createExpense}
         onUpdate={updateExpense}
       />
 
-      {selectedExpense &&
-        <Modal open={showDeleteModal} onClose={closeModal}>
-          <Modal.Header>
-            Excluir Despesa
-          </Modal.Header>
+      <DeleteModal
+        open={deleteModalIsOpen}
+        expense={selectedExpense}
+        onClose={closeModal}
+        onDelete={deleteExpense}
+      />
 
-          <Modal.Body>
-            Tem certeza que deseja excluir o valor de
-            <strong>{formatValueToBRL(selectedExpense.value)}
-            </strong> referente a despesa de <strong>{selectedExpense.name}</strong>?
-          </Modal.Body>
-
-          <Modal.Footer>
-            <div className="flex justify-around">
-              <Button
-                label="Excluir"
-                variant="danger"
-                size="md"
-                onClick={deleteExpense}
-              />
-              <Button
-                label="Cancelar"
-                variant="secondary"
-                size="md"
-                onClick={closeModal}
-              />
-            </div>
-          </Modal.Footer>
-        </Modal>
-      }
-      {selectedExpense &&
-        <Modal open={showConfirmationModal} onClose={closeModal}>
-          <Modal.Header>
-            {modalTitle}
-          </Modal.Header>
-
-          {/* <Modal.Body>
-            // TODO
-          </Modal.Body> */}
-
-          <Modal.Footer>
-            <div className="flex justify-around mt-3">
-              <Button
-                label="Confirmar"
-                variant="primary"
-                size="lg"
-                onClick={changePaymentStatus}
-              />
-              <Button
-                label="Cancelar"
-                variant="secondary"
-                size="md"
-                onClick={closeModal}
-              />
-            </div>
-          </Modal.Footer>
-        </Modal>
-      }
+      <PaymentStatusModal
+        open={paymentStatusModalIsOpen}
+        expense={selectedExpense}
+        onClose={closeModal}
+        onChange={changePaymentStatus}
+      />
     </div>
   )
 };

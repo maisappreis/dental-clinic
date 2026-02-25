@@ -7,8 +7,8 @@ import { Loading } from "@/components/loading/loading";
 import { Search } from "@/components/search/search";
 // import { StatusFilter } from "@/components/filter/statusFilter";
 import MonthFilter from "@/app/common/monthFilter";
-import { Modal } from "@/components/modal/modal";
 import { CreateUpdateModal } from "./modal/createUpdate";
+import { DeleteModal } from "./modal/delete";
 
 import { formatValueToBRL } from "@/utils/utils";
 import { getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
@@ -26,10 +26,10 @@ export default function RevenuePage({ revenue = [], setRevenue, loading }: Reven
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());
   const [search, setSearch] = useState("");
-  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedRevenue, setSelectedRevenue] = useState<Revenue | undefined>(undefined);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [createUpdateModalIsOpen, setCreateUpdateModalIsOpen] = useState(false);
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
   const alert = useAlertStore.getState();
 
@@ -63,25 +63,24 @@ export default function RevenuePage({ revenue = [], setRevenue, loading }: Reven
   };
 
   const closeModal = () => {
-    setShowDeleteModal(false);
-
-    setIsModalOpen(false);
+    setCreateUpdateModalIsOpen(false);
+    setDeleteModalIsOpen(false);
     setSelectedRevenue(undefined);
   };
 
   const openCreateModal = (): void =>  {
     setSelectedRevenue(undefined);
-    setIsModalOpen(true);
+    setCreateUpdateModalIsOpen(true);
   };
 
   const openUpdateModal = (revenue: Revenue): void => {
     setSelectedRevenue(revenue);
-    setIsModalOpen(true);
+    setCreateUpdateModalIsOpen(true);
   };
 
   const openDeleteModal = (revenue: Revenue): void => {
     setSelectedRevenue(revenue);
-    setShowDeleteModal(true);
+    setDeleteModalIsOpen(true);
   };
 
   const prepareDataForSubmission = (data: RevenueFormData) => {
@@ -217,43 +216,19 @@ export default function RevenuePage({ revenue = [], setRevenue, loading }: Reven
       />
 
       <CreateUpdateModal
-        open={isModalOpen}
+        open={createUpdateModalIsOpen}
         revenue={selectedRevenue}
         onClose={closeModal}
         onCreate={createRevenue}
         onUpdate={updateRevenue}
       />
 
-      {selectedRevenue &&
-        <Modal open={showDeleteModal} onClose={closeModal}>
-          <Modal.Header>
-            Excluir Receita
-          </Modal.Header>
-
-          <Modal.Body>
-            Tem certeza que deseja excluir o valor de
-            <strong> {formatValueToBRL(selectedRevenue.value)} </strong> do paciente
-            <strong> {selectedRevenue.name}</strong>?
-          </Modal.Body>
-
-          <Modal.Footer>
-            <div className="flex justify-around">
-              <Button
-                label="Excluir"
-                variant="danger"
-                size="md"
-                onClick={deleteRevenue}
-              />
-              <Button
-                label="Cancelar"
-                variant="secondary"
-                size="md"
-                onClick={closeModal}
-              />
-            </div>
-          </Modal.Footer>
-        </Modal>
-      }
+      <DeleteModal
+        open={deleteModalIsOpen}
+        revenue={selectedRevenue}
+        onClose={closeModal}
+        onDelete={deleteRevenue}
+      />
     </div>
   )
 };
