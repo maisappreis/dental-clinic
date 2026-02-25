@@ -5,8 +5,7 @@ import { ExpenseTable } from "@/app/pages/expense/table";
 import { Button } from "@/components/button/button";
 import { Loading } from "@/components/loading/loading";
 import { Search } from "@/components/search/search";
-// import { StatusFilter } from "@/components/filter/statusFilter";
-import MonthFilter from "@/app/common/monthFilter";
+import { Filter } from "@/components/filter/filter";
 import { CreateUpdateModal } from "./modal/createUpdate";
 import { DeleteModal } from "./modal/delete";
 import { PaymentStatusModal } from "./modal/paymentStatus";
@@ -16,6 +15,7 @@ import { getCurrentYear, getCurrentMonth } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
 import { getNextMonth, getMonthAndYear } from "@/utils/date";
 import { apiURL, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api';
+import { months, years } from "@/assets/data";
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useAlertStore } from "@/stores/alert.store";
@@ -304,16 +304,40 @@ export default function ExpensePage({ expenses = [], setExpenses, loading }: Exp
           onClick={openCreateModal}
         />
         <div className="flex justify-end">
-          <MonthFilter month={month} year={year} onFilterChange={filterData} />
-          {/* <StatusFilter
+          <Filter
+            value={month}
+            options={months.map((item) => ({
+              label: item,
+              value: item,
+            }))}
+            onChange={(value) => {
+              setMonth(value);
+              filterData({ selectedMonth: value });
+            }}
+          />
+          <Filter
+            value={year}
+            options={years.map((item) => ({
+              label: String(item),
+              value: item,
+            }))}
+            onChange={(value) => {
+              setYear(value);
+              filterData({ selectedYear: value });
+            }}
+          />
+          <Filter
             value={statusPayment}
-            onValueChange={filterData}
             options={[
               { label: "À pagar", value: "À pagar" },
               { label: "Pago", value: "Pago" },
               { label: "Todos", value: "Todos" },
             ]}
-          /> */}
+            onChange={(value) => {
+              setStatusPayment(value);
+              filterData({ selectedStatus: value });
+            }}
+          />
           <Search value={search} onValueChange={searchData} />
         </div>
       </div>

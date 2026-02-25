@@ -5,16 +5,15 @@ import { RevenueTable } from "@/app/pages/revenue/table";
 import { Button } from "@/components/button/button";
 import { Loading } from "@/components/loading/loading";
 import { Search } from "@/components/search/search";
-// import { StatusFilter } from "@/components/filter/statusFilter";
-import MonthFilter from "@/app/common/monthFilter";
+import { Filter } from "@/components/filter/filter";
 import { CreateUpdateModal } from "./modal/createUpdate";
 import { DeleteModal } from "./modal/delete";
 
-import { formatValueToBRL } from "@/utils/utils";
 import { getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
 import { capitalize } from '@/utils/utils';
 import { applySearch } from "@/utils/filter";
 import { apiURL, fetchRevenue, isAuthenticated, configureAxios } from '@/utils/api';
+import { months, years } from "@/assets/data";
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useAlertStore } from "@/stores/alert.store";
@@ -202,7 +201,28 @@ export default function RevenuePage({ revenue = [], setRevenue, loading }: Reven
           onClick={openCreateModal}
         />
         <div className="flex justify-end">
-          <MonthFilter month={month} year={year} onFilterChange={filterData} />
+          <Filter
+            value={month}
+            options={months.map((item) => ({
+              label: item,
+              value: item,
+            }))}
+            onChange={(value) => {
+              setMonth(value);
+              filterData({ selectedMonth: value });
+            }}
+          />
+          <Filter
+            value={year}
+            options={years.map((item) => ({
+              label: String(item),
+              value: item,
+            }))}
+            onChange={(value) => {
+              setYear(value);
+              filterData({ selectedYear: value });
+            }}
+          />
           <Search value={search} onValueChange={searchData} />
         </div>
       </div>
