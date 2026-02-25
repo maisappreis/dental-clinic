@@ -25,7 +25,6 @@ export const procedureOptions: string[] = [
   'Pino fibra de vidro para restauração',
   'Pino metálico Reforpost para restauração',
   'Faceta',
-  'Provisório',
   'Coroa metalo-cerâmica',
   'Coroa cerâmica pura',
   'Coroa de acrílico provisório',

@@ -1,263 +1,159 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { apiURL, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api';
-import { capitalize } from '@/utils/utils';
-import { getMonthAndYear } from "@/utils/date";
-import { Expense } from '@/types/expense';
-import { useAlertStore } from '@/stores/alert.store';
-import { Loading } from "@/components/loading/loading";
-import { Button } from "@/components/button/button";
-import axios from "axios";
+
+import React, { useEffect, forwardRef, useImperativeHandle } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Input } from "@/components/form/input";
+import { Checkbox } from "@/components/form/checkbox";
+import { Textarea } from "@/components/form/textarea";
+import { Expense, ExpenseFormData, ExpenseFormRef } from "@/types/expense";
 
 interface ExpenseFormProps {
-  selectedRow?: Expense;
-  closeModal: () => void;
-  setExpenses: (newExpenses: any[]) => void;
+  defaultValues?: Expense;
+  onSubmit: (data: ExpenseFormData) => void;
 }
 
-export default function ExpenseForm(
-    {selectedRow, closeModal, setExpenses }: ExpenseFormProps
-  ) {
-  const [hasInstallments, setHasInstallments] = useState<boolean>(false);
-  const [validInstallments, setValidInstallments] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isFormValid, setIsFormValid] = useState<boolean>(false);
-  const [formData, setFormData] = useState({
-    id: 0,
-    year: 0,
-    month: "",
-    name: "",
-    installments: "",
-    date: "",
-    value: 0,
-    is_paid: false,
-    notes: ""
+export const ExpenseForm = forwardRef<
+  ExpenseFormRef,
+  ExpenseFormProps
+>(function ExpenseForm({ defaultValues, onSubmit }, ref) {
+  const {
+    control,
+    watch,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<ExpenseFormData>({
+    defaultValues: {
+      hasInstallments: false
+    },
   });
 
-  const alert = useAlertStore.getState();
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-
-    let newValue = value;
-
-    if (name === "installments") {
-      if (hasInstallments) {
-        if (!isValidInstallments(value)) {
-          console.error("Parcelas inválidas");
-          setValidInstallments("Parcelas inválidas");
-        } else {
-          newValue = value;
-          setValidInstallments("");
-        }
-      } else {
-        newValue = "";
-        setValidInstallments("");
-      }
-    }
-
-    if (!hasInstallments) setValidInstallments("")
-
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: newValue,
-    }));
-  };
+  const hasInstallments = watch("hasInstallments");
 
   const isValidInstallments = (installment: string): boolean => {
     const integerNumber = parseInt(installment);
     return Number.isInteger(integerNumber);
   };
 
-  const prepareDataForSubmission = (data: Expense) => {
-    if (data.date) {
-      const [month, year] = getMonthAndYear(data.date);
-      return {
-        ...data,
-        month,
-        year: parseInt(year),
-        name: capitalize(data.name),
-      };
-    } else {
-      return {
-        ...data,
-        name: capitalize(data.name),
-      };
-    }
-  }
-
-  const saveExpense = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (selectedRow && selectedRow.id && selectedRow.id > 0) {
-      await updateExpense(selectedRow.id);
-    } else {
-      await createExpense();
-    }
-  }
-
-  const createExpense = async () => {
-    setIsLoading(true);
-    try {
-      const preparedData = prepareDataForSubmission(formData);
-
-      await axios.post(`${apiURL()}/expense/create/`, preparedData)
-
-      alert.show({
-        message: "Despesa criada com sucesso!",
-        variant: "success",
-      });
-      const newExpense = await fetchExpenses();
-      setExpenses(newExpense)
-    } catch (error) {
-      console.error('Erro ao criar despesa.', error)
-      alert.show({
-        message: "Erro ao criar despesa.",
-        variant: "error",
-      });
-    } finally {
-      closeModal();
-      setIsLoading(false);
-    }
-  }
-
-  const updateExpense = async (id: number) => {
-    setIsLoading(true);
-    try {
-      const preparedData = prepareDataForSubmission(formData);
-
-      await axios.patch(`${apiURL()}/expense/${id}/`, preparedData)
-
-      alert.show({
-        message: "Despesa atualizada com sucesso!",
-        variant: "success",
-      });
-      const newExpense = await fetchExpenses();
-      setExpenses(newExpense)
-    } catch (error) {
-      console.error('Erro ao atualizar despesa.', error)
-
-      alert.show({
-        message: "Erro ao atualizar despesa.",
-        variant: "error",
-      });
-    } finally {
-      closeModal();
-      setIsLoading(false);
-    }
-  }
-
   useEffect(() => {
-    setFormData({
-      id: selectedRow?.id || 0,
-      year: selectedRow?.year || 0,
-      month: selectedRow?.month || "",
-      name: selectedRow?.name || "",
-      installments: selectedRow?.installments || "",
-      date: selectedRow?.date || "",
-      value: selectedRow?.value || 0,
-      is_paid: selectedRow?.is_paid || false,
-      notes: selectedRow?.notes || ""
+    if (!defaultValues) return;
+
+    reset({
+      ...defaultValues,
+      hasInstallments: Boolean(
+        defaultValues.installments &&
+        defaultValues.installments !== ""
+      ),
     });
-  }, [selectedRow]);
+  }, [defaultValues, reset]);
 
-  useEffect(() => {
-    if (
-      formData.date !== "" &&
-      formData.name !== "" &&
-      formData.value !== 0
-    ) {
-      setIsFormValid(true);
-      if (hasInstallments) {
-        if (formData.installments !== "") {
-          setIsFormValid(true);
-        } else {
-          setIsFormValid(false);
-        }
-      }
-    } else {
-      setIsFormValid(false);
-    }
-  }, [formData, hasInstallments])
+  useImperativeHandle(ref, () => ({
+    submit: handleSubmit(onSubmit),
+  }));
 
-  useEffect(() => {
-    isAuthenticated();
-    configureAxios();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <Loading
-        label="Salvando..."
-      />
-    );
-  }
-  
   return (
-    <>
-      <form className="form-area" onSubmit={saveExpense}>
-        <div className="form-item">
-          <label htmlFor="name" className="form-label">Nome:</label>
-          <input id="name" name="name" type="text" className="form-input" value={formData.name}
-            onChange={handleInputChange} required />
-        </div>
+    <form>
+      <Controller
+        name="name"
+        control={control}
+        rules={{ required: "Nome é obrigatório" }}
+        render={({ field, fieldState }) => (
+          <Input
+            label="Nome"
+            {...field}
+            error={fieldState.error?.message}
+          />
+        )}
+      />
 
-        <div className="form-item">
-          <label htmlFor="date" className="form-label">Data de Vencimento:</label>
-          <input id="date" name="date" type="date" className="form-input" value={formData.date}
-            onChange={handleInputChange} required />
-        </div>
+      <Controller
+        name="date"
+        control={control}
+        rules={{ required: "Data é obrigatória" }}
+        render={({ field, fieldState }) => (
+          <Input
+            label="Data de vencimento"
+            type="date"
+            {...field}
+            error={fieldState.error?.message}
+          />
+        )}
+      />
 
-        <div className="flex mt-3">
-          <label htmlFor="has-installments" className="form-label">Possui parcelas?</label>
-          <input id="has-installments" name="has-installments" type="checkbox" className="form-radio"
-            checked={hasInstallments} onChange={(e) => {
-              const checked = (e.target as HTMLInputElement).checked;
-              setHasInstallments(checked);
+      <Controller
+        name="hasInstallments"
+        control={control}
+        render={({ field }) => (
+          <Checkbox
+            label="Possui parcelas?"
+            checked={field.value}
+            onChange={(checked) => {
+              field.onChange(checked);
+
+              if (!checked) {
+                setValue("installments", "");
+              }
             }}
           />
-        </div>
+        )}
+      />
 
-        {hasInstallments &&
-          <div className="form-item">
-            <label htmlFor="installment" className="form-label">Número de parcelas:</label>
-            <input id="installments" name="installments" type="text" className="form-input"
-              value={formData.installments} onChange={handleInputChange} />
-          </div>
-        }
-        {hasInstallments && validInstallments &&
-          <p className="error">{validInstallments}</p>
-        }
+      {hasInstallments && (
+        <Controller
+          name="installments"
+          control={control}
+          rules={{
+            validate: (value) =>
+              !hasInstallments ||
+              isValidInstallments(value || "")
+                ? true
+                : "Parcelas inválidas",
+          }}
+          render={({ field, fieldState }) => (
+            <Input
+              label="Número de parcelas"
+              value={field.value}
+              onChange={field.onChange}
+              error={fieldState.error?.message}
+            />
+          )}
+        />
+      )}
 
-        <div className="form-item">
-          <label htmlFor="value" className="form-label">Valor:</label>
-          <input id="value" name="value" type="number" className="form-input"
-            value={formData.value} onChange={handleInputChange} min="0.001" step="0.001" required />
-        </div>
-
-        <div className="form-item">
-          <label htmlFor="notes" className="form-label">Notas:</label>
-          <textarea id="notes" name="notes" className="form-textarea" value={formData.notes}
-            onChange={handleInputChange} />
-        </div>
-        <div className="flex justify-around mt-3">
-          <Button
-            type="submit"
-            label="Salvar"
-            variant="primary"
-            size="lg"
-            disabled={!isFormValid}
+      <Controller
+        name="value"
+        control={control}
+        rules={{ required: "Valor obrigatório" }}
+        render={({ field, fieldState }) => (
+          <Input
+            label="Valor"
+            type="number"
+            value={field.value ?? ""}
+            onChange={(value) =>
+              field.onChange(
+                value === "" ? null : Number(value)
+              )
+            }
+            error={fieldState.error?.message}
           />
-          <Button
-            label="Cancelar"
-            variant="secondary"
-            size="md"
-            onClick={closeModal}
+        )}
+      />
+
+      <Controller
+        name="notes"
+        control={control}
+        rules={{ maxLength: { value: 500, message: "Máx. 500 caracteres" } }}
+        render={({ field, fieldState }) => (
+          <Textarea
+            label="Observações"
+            placeholder="Digite aqui..."
+            value={field.value}
+            onChange={field.onChange}
+            error={fieldState.error?.message}
           />
-        </div>
-      </form>
-    </>
-  )
-}
+        )}
+      />
+    </form>
+  );
+});

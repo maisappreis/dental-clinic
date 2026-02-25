@@ -7,17 +7,18 @@ import { Loading } from "@/components/loading/loading";
 import { Search } from "@/components/search/search";
 // import { StatusFilter } from "@/components/filter/statusFilter";
 import MonthFilter from "@/app/common/monthFilter";
-import RevenueForm from "./form";
 import { Modal } from "@/components/modal/modal";
+import { CreateUpdateModal } from "./modal/createUpdate";
 
 import { formatValueToBRL } from "@/utils/utils";
 import { getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
+import { capitalize } from '@/utils/utils';
 import { applySearch } from "@/utils/filter";
 import { apiURL, fetchRevenue, isAuthenticated, configureAxios } from '@/utils/api';
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useAlertStore } from "@/stores/alert.store";
-import { Revenue, RevenueData } from '@/types/revenue';
+import { Revenue, RevenueData, CreateRevenueDTO, UpdateRevenueDTO, RevenueFormData } from '@/types/revenue';
 import axios from "axios";
 
 export default function RevenuePage({ revenue = [], setRevenue, loading }: RevenueData) {
@@ -25,12 +26,10 @@ export default function RevenuePage({ revenue = [], setRevenue, loading }: Reven
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());
   const [search, setSearch] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState("");
-  const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-  const [selectedRow, setSelectedRow] = useState<Revenue | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [selectedRevenue, setSelectedRevenue] = useState<Revenue | undefined>(undefined);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const alert = useAlertStore.getState();
 
@@ -61,36 +60,94 @@ export default function RevenuePage({ revenue = [], setRevenue, loading }: Reven
 
     const filteredData = applySearch(revenue, search)
     setFilteredData(filteredData);
-  }
-
-  const openModal: () => void = () => {
-    setShowModal(true);
-    setModalTitle("Adicionar Receita");
   };
 
   const closeModal = () => {
-    setShowModal(false);
-    setShowUpdateModal(false);
     setShowDeleteModal(false);
+
+    setIsModalOpen(false);
+    setSelectedRevenue(undefined);
   };
 
-  const openUpdateModal = (row: Revenue): void => {
-    setShowUpdateModal(true);
-    setModalTitle("Atualizar Receita");
-    setSelectedRow(row);
+  const openCreateModal = (): void =>  {
+    setSelectedRevenue(undefined);
+    setIsModalOpen(true);
   };
 
-  const openDeleteModal = (row: Revenue): void => {
+  const openUpdateModal = (revenue: Revenue): void => {
+    setSelectedRevenue(revenue);
+    setIsModalOpen(true);
+  };
+
+  const openDeleteModal = (revenue: Revenue): void => {
+    setSelectedRevenue(revenue);
     setShowDeleteModal(true);
-    setModalTitle("Excluir Receita");
-    setSelectedRow(row);
+  };
+
+  const prepareDataForSubmission = (data: RevenueFormData) => {
+    return {
+      ...data,
+      name: capitalize(data.name),
+    };
+  };
+
+  const createRevenue = async (revenue: CreateRevenueDTO) => {
+    setIsLoading(true);
+    try {
+      const preparedData = prepareDataForSubmission(revenue);
+
+      await axios.post(`${apiURL()}/revenue/create/`, preparedData)
+
+      alert.show({
+        message: "Receita criada com sucesso!",
+        variant: "success",
+      });
+      const newRevenue = await fetchRevenue();
+      setRevenue(newRevenue)
+    } catch (error) {
+      console.error('Erro ao criar receita.', error)
+
+      alert.show({
+        message: "Erro ao criar receita.",
+        variant: "error",
+      });
+    } finally {
+      closeModal();
+      setIsLoading(false);
+    }
+  };
+
+  const updateRevenue = async (revenue: UpdateRevenueDTO) => {
+    setIsLoading(true);
+    try {
+      const preparedData = prepareDataForSubmission(revenue);
+
+      await axios.patch(`${apiURL()}/revenue/${preparedData.id}/`, preparedData)
+
+      alert.show({
+        message: "Receita atualizada com sucesso!",
+        variant: "success",
+      });
+      const newRevenue = await fetchRevenue();
+      setRevenue(newRevenue)
+    } catch (error) {
+      console.error('Erro ao atualizar receita.', error)
+
+      alert.show({
+        message: "Erro ao atualizar receita",
+        variant: "error",
+      });
+    } finally {
+      closeModal();
+      setIsLoading(false);
+    }
   };
 
   const deleteRevenue = async () => {
     setIsLoading(true);
     try {
-      if (selectedRow && selectedRow.id) {
-        await axios.delete(`${apiURL()}/revenue/${selectedRow.id}/`)
+      if (selectedRevenue && selectedRevenue.id) {
+        await axios.delete(`${apiURL()}/revenue/${selectedRevenue.id}/`)
 
         alert.show({
           message: "Receita excluída com sucesso!",
@@ -143,7 +200,7 @@ export default function RevenuePage({ revenue = [], setRevenue, loading }: Reven
         <Button
           label="Nova Receita"
           icon={faPlus}
-          onClick={openModal}
+          onClick={openCreateModal}
         />
         <div className="flex justify-end">
           <MonthFilter month={month} year={year} onFilterChange={filterData} />
@@ -158,52 +215,25 @@ export default function RevenuePage({ revenue = [], setRevenue, loading }: Reven
           onOpenDelete: openDeleteModal,
         }}
       />
-      <Modal open={showModal} onClose={closeModal}>
-        <Modal.Header>
-          {modalTitle}
-        </Modal.Header>
 
-        <Modal.Body>
-          <RevenueForm
-            closeModal={closeModal}
-            setRevenue={setRevenue}
-          />
-        </Modal.Body>
+      <CreateUpdateModal
+        open={isModalOpen}
+        revenue={selectedRevenue}
+        onClose={closeModal}
+        onCreate={createRevenue}
+        onUpdate={updateRevenue}
+      />
 
-        {/* <Modal.Footer>
-          // TODO
-        </Modal.Footer> */}
-      </Modal>
-
-      {selectedRow &&
-        <Modal open={showUpdateModal} onClose={closeModal}>
-          <Modal.Header>
-            {modalTitle}
-          </Modal.Header>
-
-          <Modal.Body>
-            <RevenueForm
-              selectedRow={selectedRow}
-              closeModal={closeModal}
-              setRevenue={setRevenue}
-            />
-          </Modal.Body>
-
-          {/* <Modal.Footer>
-            // TODO
-          </Modal.Footer> */}
-        </Modal>
-      }
-      {selectedRow &&
+      {selectedRevenue &&
         <Modal open={showDeleteModal} onClose={closeModal}>
           <Modal.Header>
-            {modalTitle}
+            Excluir Receita
           </Modal.Header>
 
           <Modal.Body>
             Tem certeza que deseja excluir o valor de
-            <strong> {formatValueToBRL(selectedRow.value)} </strong> do paciente
-            <strong> {selectedRow.name}</strong>?
+            <strong> {formatValueToBRL(selectedRevenue.value)} </strong> do paciente
+            <strong> {selectedRevenue.name}</strong>?
           </Modal.Body>
 
           <Modal.Footer>
