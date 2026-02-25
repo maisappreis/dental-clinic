@@ -39,7 +39,7 @@ export const Modal: ModalComponent = ({ open, onClose, children }) => {
   if (!open) return null;
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div className={styles.overlay}>
       <div
         className={styles.modal}
         role="dialog"

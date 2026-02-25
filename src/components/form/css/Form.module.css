@@ -87,6 +87,23 @@
 
 /*
 ======================
+  Select
+======================
+*/
+
+.form-select {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.form-select.error {
+  border-color: #e5484d;
+}
+
+/*
+======================
   Error
 ======================
 */
