@@ -10,12 +10,6 @@ export interface Expense {
   notes: string;
 }
 
-export interface ExpenseData {
-  expenses: Expense[];
-  setExpenses: (newExpenses: Expense[]) => void;
-  loading: boolean;
-}
-
 export type CreateExpenseDTO =
   Omit<Expense, "id" | "year" | "month" | "is_paid"> & {
     hasInstallments: boolean;

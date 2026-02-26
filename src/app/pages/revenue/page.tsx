@@ -3,7 +3,6 @@ import React, { useState, useEffect, useCallback } from "react";
 
 import { RevenueTable } from "@/app/pages/revenue/table";
 import { Button } from "@/components/button/button";
-import { Loading } from "@/components/loading/loading";
 import { Search } from "@/components/search/search";
 import { Filter } from "@/components/filter/filter";
 import { CreateUpdateModal } from "./modal/createUpdate";
@@ -12,25 +11,23 @@ import { DeleteModal } from "./modal/delete";
 import { getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
 import { capitalize } from '@/utils/utils';
 import { applySearch } from "@/utils/filter";
-import { apiURL, fetchRevenue, isAuthenticated, configureAxios } from '@/utils/api';
 import { months, years } from "@/assets/data";
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { useAlertStore } from "@/stores/alert.store";
-import { Revenue, RevenueData, CreateRevenueDTO, UpdateRevenueDTO, RevenueFormData } from '@/types/revenue';
-import axios from "axios";
+import { useRevenue } from "@/hooks/useRevenue";
+import { Revenue, CreateRevenueDTO, UpdateRevenueDTO } from '@/types/revenue';
 
-export default function RevenuePage({ revenue = [], setRevenue, loading }: RevenueData) {
+
+export default function RevenuePage() {
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());
   const [search, setSearch] = useState("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedRevenue, setSelectedRevenue] = useState<Revenue | undefined>(undefined);
   const [createUpdateModalIsOpen, setCreateUpdateModalIsOpen] = useState(false);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
-  const alert = useAlertStore.getState();
+  const { revenue, create, update, remove, fetch } = useRevenue([]);
 
   const filterData = useCallback(({ selectedMonth = month, selectedYear = year, }) => {
     setMonth(selectedMonth)
@@ -61,12 +58,6 @@ export default function RevenuePage({ revenue = [], setRevenue, loading }: Reven
     setFilteredData(filteredData);
   };
 
-  const closeModal = () => {
-    setCreateUpdateModalIsOpen(false);
-    setDeleteModalIsOpen(false);
-    setSelectedRevenue(undefined);
-  };
-
   const openCreateModal = (): void =>  {
     setSelectedRevenue(undefined);
     setCreateUpdateModalIsOpen(true);
@@ -82,98 +73,40 @@ export default function RevenuePage({ revenue = [], setRevenue, loading }: Reven
     setDeleteModalIsOpen(true);
   };
 
-  const prepareDataForSubmission = (data: RevenueFormData) => {
-    return {
+  const closeModal = () => {
+    setCreateUpdateModalIsOpen(false);
+    setDeleteModalIsOpen(false);
+    setSelectedRevenue(undefined);
+  };
+
+  const createRevenue = async (data: CreateRevenueDTO) => {
+    await create({
       ...data,
       name: capitalize(data.name),
-    };
+    });
+    closeModal();
   };
 
-  const createRevenue = async (revenue: CreateRevenueDTO) => {
-    setIsLoading(true);
-    try {
-      const preparedData = prepareDataForSubmission(revenue);
-
-      await axios.post(`${apiURL()}/revenue/create/`, preparedData)
-
-      alert.show({
-        message: "Receita criada com sucesso!",
-        variant: "success",
-      });
-      const newRevenue = await fetchRevenue();
-      setRevenue(newRevenue)
-    } catch (error) {
-      console.error('Erro ao criar receita.', error)
-
-      alert.show({
-        message: "Erro ao criar receita.",
-        variant: "error",
-      });
-    } finally {
-      closeModal();
-      setIsLoading(false);
-    }
-  };
-
-  const updateRevenue = async (revenue: UpdateRevenueDTO) => {
-    setIsLoading(true);
-    try {
-      const preparedData = prepareDataForSubmission(revenue);
-
-      await axios.patch(`${apiURL()}/revenue/${preparedData.id}/`, preparedData)
-
-      alert.show({
-        message: "Receita atualizada com sucesso!",
-        variant: "success",
-      });
-      const newRevenue = await fetchRevenue();
-      setRevenue(newRevenue)
-    } catch (error) {
-      console.error('Erro ao atualizar receita.', error)
-
-      alert.show({
-        message: "Erro ao atualizar receita",
-        variant: "error",
-      });
-    } finally {
-      closeModal();
-      setIsLoading(false);
-    }
+  const updateRevenue = async (data: UpdateRevenueDTO) => {
+    await update({
+      ...data,
+      name: capitalize(data.name),
+    });
+    closeModal();
   };
 
   const deleteRevenue = async () => {
-    setIsLoading(true);
-    try {
-      if (selectedRevenue && selectedRevenue.id) {
-        await axios.delete(`${apiURL()}/revenue/${selectedRevenue.id}/`)
-
-        alert.show({
-          message: "Receita excluída com sucesso!",
-          variant: "success",
-        });
-        const newRevenue = await fetchRevenue();
-        setRevenue(newRevenue)
-      }
-    } catch (error) {
-      console.error('Erro ao excluir receita.', error)
-
-      alert.show({
-        message: "Erro ao excluir receita.",
-        variant: "error",
-      });
-    } finally {
-      closeModal();
-      setIsLoading(false);
-    }
+    if (!selectedRevenue) return
+    await remove(selectedRevenue.id);
+    closeModal();
   };
 
   useEffect(() => {
-    isAuthenticated();
-    configureAxios();
-  }, []);
+    fetch();
+  }, [fetch]);
 
   useEffect(() => {
-    if (!loading && revenue && revenue.length > 0) {
+    if (revenue && revenue.length > 0) {
       revenue.sort((a, b) => {
         const dateA: Date = new Date(a.date);
         const dateB: Date = new Date(b.date);
@@ -182,15 +115,7 @@ export default function RevenuePage({ revenue = [], setRevenue, loading }: Reven
 
       filterData({ selectedMonth: month, selectedYear: year });
     }
-  }, [revenue, loading, filterData, month, year]);
-
-  if (isLoading) {
-    return (
-      <Loading
-        label="Salvando..."
-      />
-    );
-  }
+  }, [revenue, filterData, month, year]);
 
   return (
     <div className="content">

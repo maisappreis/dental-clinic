@@ -87,10 +87,10 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
       contentComponent = <Dashboard revenue={revenue} expenses={expenses} profit={profit} />;
       break;
     case "revenue":
-      contentComponent = <RevenuePage revenue={revenue} setRevenue={setRevenue} loading={isLoading} />;
+      contentComponent = <RevenuePage />;
       break;
     case "expense":
-      contentComponent = <ExpensePage expenses={expenses} setExpenses={setExpenses} loading={isLoading} />;
+      contentComponent = <ExpensePage />;
       break;
     case "monthClosing":
       contentComponent = <MonthClosing revenue={revenue} setRevenue={setRevenue} monthClosing={monthClosing} setMonthClosing={setMonthClosing} />;

@@ -1,68 +1,31 @@
 "use client"
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styles from "./Login.module.css";
+import { Button } from "@/components/button/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTooth } from "@fortawesome/free-solid-svg-icons";
-import { apiBase, fetchRevenue, fetchExpenses,
-  isAuthenticated,   configureAxios } from "@/utils/api"
 import { useRouter } from "next/navigation";
-import { useAlertStore } from "@/stores/alert.store";
-import { useLoadingStore } from "@/stores/loading.store";
-import { Button } from "@/components/button/button";
-import axios from "axios";
+import { useLogin } from "@/hooks/useLogin";
 
 export default function Login() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
   const router = useRouter();
+  const { login } = useLogin();
 
-  const isFormValid = username !== '' && password !== '';
-
-  const loading = useLoadingStore.getState();
-  const alert = useAlertStore.getState();
+  const isFormValid = username !== "" && password !== "";
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    loading.show('Fazendo login...');
 
-    try {
-      const loginData = {
-        username,
-        password,
-      };
+    await login({
+      username,
+      password,
+    });
 
-      const response = await axios.post(`${apiBase}/accounts/token/`, loginData)
-      const accessToken = response.data.access
-      const refreshToken = response.data.refresh
-
-      if (accessToken && refreshToken) {
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
-
-        alert.show({
-          message: "Login realizado com sucesso!",
-          variant: "success",
-        });
-
-        setTimeout(() => {
-          router.push('/');
-        }, 800)
-        await fetchRevenue();
-        await fetchExpenses();
-      }      
-    } catch (error) {
-      alert.show({
-        message: "Erro ao realizar o login.",
-        variant: "error",      });
-    } finally {
-      loading.hide();
-    }
+    router.push("/");
   };
-
-  useEffect(() => {
-    isAuthenticated();
-    configureAxios();
-  }, []);
 
   return (
     <div className={styles.area}>

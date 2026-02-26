@@ -11,13 +11,7 @@ export interface Revenue {
   value: number;
   net_value: number;
   notes: string;
-}
-
-export interface RevenueData {
-  revenue: Revenue[];
-  setRevenue: (newRevenue: Revenue[]) => void;
-  loading: boolean;
-}
+};
 
 export type CreateRevenueDTO =
   Omit<Revenue, "id" | "release_date" | "net_value">;
@@ -35,8 +29,8 @@ export interface RevenueFormData {
   installments: number;
   value: number;
   notes: string;
-}
+};
 
 export interface RevenueFormRef {
   submit: () => void;
-}
+};

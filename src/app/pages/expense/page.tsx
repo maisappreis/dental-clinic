@@ -3,7 +3,6 @@ import React, { useState, useEffect, useCallback } from "react";
 
 import { ExpenseTable } from "@/app/pages/expense/table";
 import { Button } from "@/components/button/button";
-import { Loading } from "@/components/loading/loading";
 import { Search } from "@/components/search/search";
 import { Filter } from "@/components/filter/filter";
 import { CreateUpdateModal } from "./modal/createUpdate";
@@ -14,28 +13,26 @@ import { capitalize } from "@/utils/utils";
 import { getCurrentYear, getCurrentMonth } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
 import { getNextMonth, getMonthAndYear } from "@/utils/date";
-import { apiURL, fetchExpenses, isAuthenticated, configureAxios } from '@/utils/api';
 import { months, years } from "@/assets/data";
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { useAlertStore } from "@/stores/alert.store";
-import { Expense, ExpenseData } from "@/types/expense";
+import { useExpense } from "@/hooks/useExpense";
+import { Expense } from "@/types/expense";
 import { CreateExpenseDTO, UpdateExpenseDTO, ExpenseFormData } from "@/types/expense";
-import axios from "axios";
 
-export default function ExpensePage({ expenses = [], setExpenses, loading }: ExpenseData) {
+
+export default function ExpensePage() {
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());
   const [statusPayment, setStatusPayment] = useState<string>("Todos");
   const [search, setSearch] = useState<string>("");
   const [selectedExpense, setSelectedExpense] = useState<Expense | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [paymentStatusModalIsOpen, setPaymentStatusModalIsOpen] = useState<boolean>(false);
   const [createUpdateModalIsOpen, setCreateUpdateModalIsOpen] = useState(false);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
-  const alert = useAlertStore.getState();
+  const { expenses, create, update, remove, fetch } = useExpense([]);
 
   const filterData = useCallback(({
     selectedMonth = month,
@@ -78,13 +75,6 @@ export default function ExpensePage({ expenses = [], setExpenses, loading }: Exp
     setFilteredData(filteredData);
   }
 
-  const closeModal = () => {
-    setPaymentStatusModalIsOpen(false);
-    setCreateUpdateModalIsOpen(false);
-    setDeleteModalIsOpen(false);
-    setSelectedExpense(undefined);
-  };
-
   const changePaymentStatus = async () => {
     if (selectedExpense) await updateExpenseStatus(selectedExpense)
     setPaymentStatusModalIsOpen(false);
@@ -110,6 +100,13 @@ export default function ExpensePage({ expenses = [], setExpenses, loading }: Exp
     setDeleteModalIsOpen(true);
   };
 
+  const closeModal = () => {
+    setPaymentStatusModalIsOpen(false);
+    setCreateUpdateModalIsOpen(false);
+    setDeleteModalIsOpen(false);
+    setSelectedExpense(undefined);
+  };
+
   const prepareDataForSubmission = (data: ExpenseFormData) => {
     if (data.date) {
       const [month, year] = getMonthAndYear(data.date);
@@ -127,156 +124,61 @@ export default function ExpensePage({ expenses = [], setExpenses, loading }: Exp
     }
   };
 
-  const createExpense = async (expense: CreateExpenseDTO) => {
-    setIsLoading(true);
-    try {
-      const preparedData = prepareDataForSubmission(expense);
-
-      await axios.post(`${apiURL()}/expense/create/`, preparedData)
-
-      alert.show({
-        message: "Despesa criada com sucesso!",
-        variant: "success",
-      });
-      const newExpense = await fetchExpenses();
-      setExpenses(newExpense)
-    } catch (error) {
-      console.error('Erro ao criar despesa.', error)
-      alert.show({
-        message: "Erro ao criar despesa.",
-        variant: "error",
-      });
-    } finally {
-      closeModal();
-      setIsLoading(false);
-    }
+  const createExpense = async (data: CreateExpenseDTO) => {
+    const preparedData = prepareDataForSubmission(data);
+    await create(preparedData);
+    closeModal();
   };
 
-  const updateExpense = async (expense: UpdateExpenseDTO) => {
-    setIsLoading(true);
-    try {
-      const preparedData = prepareDataForSubmission(expense);
+  const updateExpense = async (data: UpdateExpenseDTO) => {
+    console.log('updateExpense', data)
 
-      await axios.patch(`${apiURL()}/expense/${preparedData.id}/`, preparedData)
-
-      alert.show({
-        message: "Despesa atualizada com sucesso!",
-        variant: "success",
-      });
-      const newExpense = await fetchExpenses();
-      setExpenses(newExpense)
-    } catch (error) {
-      console.error('Erro ao atualizar despesa.', error)
-
-      alert.show({
-        message: "Erro ao atualizar despesa.",
-        variant: "error",
-      });
-    } finally {
-      closeModal();
-      setIsLoading(false);
-    }
+    const preparedData = prepareDataForSubmission(data);
+    await update(preparedData);
+    closeModal();
   };
 
-  const updateExpenseStatus = async (row: Expense) => {
-    setIsLoading(true);
-    try {
-      const response = await axios.patch(`${apiURL()}/expense/${row.id}/`, {
-        is_paid: !row.is_paid
-      })
-      alert.show({
-        message: "Despesa atualizada com sucesso!",
-        variant: "success",
-      });
+  const updateExpenseStatus = async (data: Expense) => {
+    const response = await update({
+      ...data,
+      is_paid: !data.is_paid,
+    });
 
-      const isPaid = response.data.is_paid;
-      const hasInstallments = response.data.installments !== "";
+    const isPaid = response.is_paid;
+    const hasInstallments = response.installments !== "";
 
-      if (isPaid && !hasInstallments) {
-        await createNextMonthExpense(row);
-      } else {
-        const newExpense = await fetchExpenses();
-        setExpenses(newExpense)
-      }
-    } catch (error) {
-      console.error('Erro ao atualizar despesa.', error)
-      alert.show({
-        message: "Erro ao atualizar despesa.",
-        variant: "error",
-      });
-    } finally {
-      closeModal();
-      setIsLoading(false);
-    }
+    if (isPaid && !hasInstallments) {
+      await createNextMonthExpense(response);
+    } 
+    closeModal();
   };
 
-  const createNextMonthExpense = async (row: Expense) => {
-    setIsLoading(true);
-    try {
-      const selectedExpenseClone = {...row}
-      const nextMonthDate = getNextMonth(selectedExpenseClone.date);
-      const [month, year] = getMonthAndYear(nextMonthDate);
+  const createNextMonthExpense  = async (data: UpdateExpenseDTO) => {
+    const selectedExpenseClone = {...data}
+    const nextMonthDate = getNextMonth(selectedExpenseClone.date);
+    const [month, year] = getMonthAndYear(nextMonthDate);
 
-      selectedExpenseClone.date = nextMonthDate;
-      selectedExpenseClone.is_paid = false;
-      selectedExpenseClone.month = month;
-      selectedExpenseClone.year = parseInt(year);
+    selectedExpenseClone.date = nextMonthDate;
+    selectedExpenseClone.is_paid = false;
+    selectedExpenseClone.month = month;
+    selectedExpenseClone.year = parseInt(year);
 
-      await axios.post(`${apiURL()}/expense/create/`, selectedExpenseClone)
-
-      alert.show({
-        message: "Despesa do mês seguinte criada com sucesso!",
-        variant: "success",
-      });
-
-      const newExpense = await fetchExpenses();
-      setExpenses(newExpense);
-    } catch (error) {
-      console.error('Erro ao criar despesa do mês seguinte.', error)
-
-      alert.show({
-        message: "Erro ao criar despesa do mês seguinte.",
-        variant: "error",
-      });
-    } finally {
-      closeModal();
-      setIsLoading(false);
-    }
+    await create(selectedExpenseClone);
+    closeModal();
   };
 
   const deleteExpense = async () => {
-    setIsLoading(true);
-    try {
-      if (selectedExpense && selectedExpense.id) {
-        await axios.delete(`${apiURL()}/expense/${selectedExpense.id}/`)
-
-        alert.show({
-          message: "Despesa excluída com sucesso!",
-          variant: "success",
-        });
-        const newExpense = await fetchExpenses();
-        setExpenses(newExpense)
-      }
-    } catch (error) {
-      console.error('Erro ao excluir despesa.', error)
-
-      alert.show({
-        message: "Erro ao excluir despesa.",
-        variant: "error",
-      });
-    } finally {
-      closeModal();
-      setIsLoading(false);
-    }
+    if (!selectedExpense) return
+    await remove(selectedExpense.id);
+    closeModal();
   };
 
   useEffect(() => {
-    isAuthenticated();
-    configureAxios();
-  }, []);
+    fetch();
+  }, [fetch]);
 
   useEffect(() => {
-    if (!loading && expenses && expenses.length > 0) {
+    if (expenses && expenses.length > 0) {
       expenses.sort((a, b) => {
         const dateA: Date = new Date(a.date);
         const dateB: Date = new Date(b.date);
@@ -285,15 +187,7 @@ export default function ExpensePage({ expenses = [], setExpenses, loading }: Exp
 
       filterData({ selectedMonth: month, selectedYear: year, selectedStatus: statusPayment });
     }
-  }, [expenses, loading, filterData, month, year, statusPayment]);
-
-  if (isLoading) {
-    return (
-      <Loading
-        label="Salvando..."
-      />
-    );
-  }
+  }, [expenses, filterData, month, year, statusPayment]);
 
   return (
     <div className="content">
