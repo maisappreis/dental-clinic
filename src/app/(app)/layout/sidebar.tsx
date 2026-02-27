@@ -1,46 +1,58 @@
 "use client";
-import { useState } from "react";
-import Logotype from "./logotype";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Logotype } from "./logotype";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChartLine, faCalendar, faHandHoldingDollar,
-  faMoneyBillTransfer, faBook } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChartLine,
+  faCalendar,
+  faHandHoldingDollar,
+  faMoneyBillTransfer,
+  faBook,
+} from "@fortawesome/free-solid-svg-icons";
 import styles from "./styles/Sidebar.module.css";
 
 
-export default function Sidebar({ onOptionClick }: {onOptionClick: (option: string) => void}) {
-  const [selectedOption, setSelectedOption] = useState<string>("revenue");
+const options = [
+  { path: "/calendar", icon: faCalendar, label: "Agenda" },
+  { path: "/dashboard", icon: faChartLine, label: "Métricas" },
+  { path: "/revenue", icon: faHandHoldingDollar, label: "Receitas" },
+  { path: "/expense", icon: faMoneyBillTransfer, label: "Despesas" },
+  { path: "/monthclosing", icon: faBook, label: "Caixa Mensal" },
+];
 
-  const handleOptionClick = (option: string) => {
-    onOptionClick(option);
-    setSelectedOption(option);
-  };
-
-  const options = [
-    { id: "calendar", icon: faCalendar, label: "Agenda" },
-    { id: "dashboard", icon: faChartLine, label: "Métricas" },
-    { id: "revenue", icon: faHandHoldingDollar, label: "Receitas" },
-    { id: "expense", icon: faMoneyBillTransfer, label: "Despesas" },
-    { id: "monthClosing", icon: faBook, label: "Caixa Mensal" }
-  ];
+export function Sidebar() {
+  const pathname = usePathname();
 
   return (
     <aside className={styles.sidebar}>
       <Logotype />
+
       <ul>
-        {options.map(option => (
-          <li
-            key={option.id} 
-            className={`${styles.option} ${selectedOption === option.id ? styles.selected : ""}`} 
-            onClick={() => handleOptionClick(option.id)}
-          >
-            <FontAwesomeIcon 
-              icon={option.icon} 
-              className={`${styles.icon} ${selectedOption === option.id ? styles.selectedIcon : ""}`} 
-            />
-            <span className={styles.text}>{option.label}</span>
-          </li>
-        ))}
+        {options.map(option => {
+          const isActive = pathname.startsWith(option.path);
+
+          return (
+            <li key={option.path}>
+              <Link
+                href={option.path}
+                className={`${styles.option} ${
+                  isActive ? styles.selected : ""
+                }`}
+              >
+                <FontAwesomeIcon
+                  icon={option.icon}
+                  className={`${styles.icon} ${
+                    isActive ? styles.selectedIcon : ""
+                  }`}
+                />
+                <span className={styles.text}>{option.label}</span>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </aside>
   );
-}
+};

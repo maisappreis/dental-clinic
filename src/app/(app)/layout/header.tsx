@@ -9,14 +9,12 @@ import {
 import styles from "./styles/Header.module.css";
 import { HEADER_CONFIG } from "@/constants/header";
 
-export default function Header() {
+export function Header() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showDropdownLogout, setShowDropdownLogout] = useState(false);
 
   const pathname = usePathname();
   const router = useRouter();
-
-  console.log('pathname', pathname)
 
   const headerConfig = HEADER_CONFIG[pathname];
 

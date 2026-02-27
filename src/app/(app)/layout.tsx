@@ -1,6 +1,5 @@
-import Header from "@/app/(app)/layout/header";
-import Sidebar from "@/app/(app)/layout/sidebar";
-import Footer from "@/app/(app)/layout/footer";
+import { Header } from "@/app/(app)/layout/header";
+import { Sidebar } from "@/app/(app)/layout/sidebar";
 
 export default function AppLayout({
   children,
@@ -12,7 +11,6 @@ export default function AppLayout({
       <Header />
       <Sidebar />
       <div className="content">{children}</div>
-      <Footer />
     </main>
   );
 }
