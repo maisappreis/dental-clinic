@@ -21,13 +21,15 @@ export function useLogin() {
         variant: "success",
       });
 
-      return response;
+      return true;
     } catch (error) {
       console.error(error);
       alert.show({
         message: "Erro ao realizar o login..",
         variant: "error",
       });
+
+      return false;
     } finally {
       hideLoading();
     }

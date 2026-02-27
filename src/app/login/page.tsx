@@ -1,56 +1,75 @@
 "use client"
-import React, { useState } from "react";
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
 import styles from "./Login.module.css";
+import { Input } from "@/components/form/input";
 import { Button } from "@/components/button/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTooth } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 import { useLogin } from "@/hooks/useLogin";
+import { LoginPayload } from "@/types/login";
 
 export default function Login() {
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-
   const router = useRouter();
   const { login } = useLogin();
 
-  const isFormValid = username !== "" && password !== "";
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid },
+  } = useForm<LoginPayload>({
+    mode: "onChange",
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
 
-  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    await login({
-      username,
-      password,
-    });
-
-    router.push("/");
+  const onSubmit = async (data: LoginPayload) => {
+    const success = await login(data);
+    if (success) router.push("/");
   };
 
   return (
     <div className={styles.area}>
       <div className={styles.form}>
         <FontAwesomeIcon icon={faTooth} className={styles.icon} style={{ color: "#86cafe" }} />
-        <form onSubmit={handleLogin}>
-          <div className={styles.field}>
-            <label htmlFor="name" className={styles.label}>Username:</label>
-            <input type="text" id="username" name="username"
-              className={styles.input} value={username}
-              onChange={(e) => setUsername(e.target.value)} required />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="password" className={styles.label}>Senha:</label>
-            <input type="password" id="password" name="password"
-              className={styles.input} value={password}
-              onChange={(e) => setPassword(e.target.value)} required />
-          </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Controller
+            name="username"
+            control={control}
+            rules={{ required: "Username é obrigatório" }}
+            render={({ field, fieldState }) => (
+              <Input
+                label="Username"
+                {...field}
+                error={fieldState.error?.message}
+              />
+            )}
+          />
+
+          <Controller
+            name="password"
+            control={control}
+            rules={{ required: "Senha é obrigatória" }}
+            render={({ field, fieldState }) => (
+              <Input
+                label="Senha"
+                type="password"
+                {...field}
+                error={fieldState.error?.message}
+              />
+            )}
+          />
+
           <div className={styles.button}>
             <Button
               type="submit"
               label="Entrar"
               variant="primary"
               size="lg"
-              disabled={!isFormValid}
+              disabled={!isValid}
             />
           </div>
         </form>
