@@ -1,4 +1,4 @@
-import { months } from "@/assets/data";
+import { months } from "@/constants/date";
 
 // Returns the current date as string.
 export function getCurrentDate(): string {

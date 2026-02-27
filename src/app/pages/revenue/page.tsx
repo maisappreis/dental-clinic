@@ -11,7 +11,7 @@ import { DeleteModal } from "./modal/delete";
 import { getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
 import { capitalize } from '@/utils/utils';
 import { applySearch } from "@/utils/filter";
-import { months, years } from "@/assets/data";
+import { months, years } from "@/constants/date";
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useRevenue } from "@/hooks/useRevenue";

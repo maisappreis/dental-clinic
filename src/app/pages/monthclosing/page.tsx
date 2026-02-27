@@ -9,7 +9,7 @@ import { Modal } from "@/components/modal/modal";
 import { Button } from "@/components/button/button";
 import { Loading } from "@/components/loading/loading";
 import { Revenue } from '@/types/revenue';
-import { months, years } from "@/assets/data"
+import { months, years } from "@/constants/date"
 import { getCurrentYear, getCurrentMonth, getNextMonthName } from "@/utils/date"
 import { useRevenue } from "@/hooks/useRevenue";
 import { useMonthClosing } from "@/hooks/useMonthClosing";

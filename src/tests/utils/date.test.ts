@@ -8,7 +8,7 @@ import {
   getNextMonth,
   getNextMonthName
 } from "@/utils/date";
-import { months } from "@/assets/data";
+import { months } from "@/constants/date";
 
 describe("Date Utils Functions", () => {
 

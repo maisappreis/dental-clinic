@@ -4,7 +4,7 @@ import styles from "./Calendar.module.css";
 import Appointments from "./appointments";
 import { Modal } from "@/components/modal/modal";
 import AppointmentForm from "./form";
-import { scheduleOptions, initialAppointmentFormat } from "@/assets/data";
+import { scheduleOptions, initialAppointmentFormat } from "@/constants/appointment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useAgenda } from "@/hooks/useAgenda";

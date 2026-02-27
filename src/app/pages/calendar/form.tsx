@@ -1,7 +1,7 @@
 
 "use client";
 import React, { useState, useEffect } from "react";
-import { scheduleOptions } from "@/assets/data";
+import { scheduleOptions } from "@/constants/appointment";
 import { capitalize } from '@/utils/utils';
 import { Button } from "@/components/button/button";
 import { useAgenda } from "@/hooks/useAgenda";

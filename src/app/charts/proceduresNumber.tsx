@@ -4,7 +4,7 @@ import { Line } from "react-chartjs-2";
 import "@/utils/chart"
 import { Revenue } from '@/types/revenue';
 import { ChartData, MonthNames, TooltipItem } from '@/types/chart';
-import { monthNames } from "@/assets/data";
+import { monthNames } from "@/constants/date";
 
 export default function NumberOfProceduresChart({ revenue }: { revenue: Revenue[] }) {
   const [options, setOptions] = useState({});

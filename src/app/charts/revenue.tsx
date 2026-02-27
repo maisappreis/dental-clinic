@@ -4,7 +4,7 @@ import { Line } from "react-chartjs-2";
 import { Revenue } from '@/types/revenue';
 import { Expense } from '@/types/expense';
 import { ChartData, MonthNames, TooltipItem } from '@/types/chart';
-import { monthNames } from "@/assets/data";
+import { monthNames } from "@/constants/date";
 import { formatValueToBRL } from "@/utils/utils";
 import "@/utils/chart";
 

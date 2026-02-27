@@ -13,7 +13,7 @@ import { capitalize } from "@/utils/utils";
 import { getCurrentYear, getCurrentMonth } from "@/utils/date";
 import { applySearch } from "@/utils/filter";
 import { getNextMonth, getMonthAndYear } from "@/utils/date";
-import { months, years } from "@/assets/data";
+import { months, years } from "@/constants/date";
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useExpense } from "@/hooks/useExpense";
