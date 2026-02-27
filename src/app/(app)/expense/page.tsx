@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
 
-import { ExpenseTable } from "@/app/pages/expense/table";
+import { ExpenseTable } from "@/app/(app)/expense/table";
 import { Button } from "@/components/button/button";
 import { Search } from "@/components/search/search";
 import { Filter } from "@/components/filter/filter";

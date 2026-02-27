@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 
 import { Button } from "@/components/button/button";
-import { TabOneTable } from "@/app/pages/monthclosing/table";
+import { TabOneTable } from "@/app/(app)/monthclosing/table";
 
 import { formatDate } from "@/utils/date";
 import { useMonthClosing } from "@/hooks/useMonthClosing";

@@ -3,53 +3,54 @@
 import React, { useRef } from "react";
 import { Modal } from "@/components/modal/modal";
 import { Button } from "@/components/button/button";
-import { ExpenseForm } from "@/app/pages/expense/form";
+import { RevenueForm } from "@/app/(app)/revenue/form";
 import {
-  Expense,
-  CreateExpenseDTO,
-  UpdateExpenseDTO,
-  ExpenseFormData,
-  ExpenseFormRef
-} from "@/types/expense";
+  Revenue,
+  CreateRevenueDTO,
+  UpdateRevenueDTO,
+  RevenueFormData,
+  RevenueFormRef
+} from "@/types/revenue";
 
 interface CreateUpdateModalProps {
   open: boolean;
-  expense?: Expense;
+  revenue?: Revenue;
   onClose: () => void;
-  onCreate: (data: CreateExpenseDTO) => Promise<void>;
-  onUpdate: (data: UpdateExpenseDTO) => Promise<void>;
+  onCreate: (data: CreateRevenueDTO) => Promise<void>;
+  onUpdate: (data: UpdateRevenueDTO) => Promise<void>;
 }
 
 export function CreateUpdateModal({
   open,
-  expense,
+  revenue,
   onClose,
   onCreate,
   onUpdate
 }: CreateUpdateModalProps) {
 
-  const formRef = useRef<ExpenseFormRef>(null);
+  const formRef = useRef<RevenueFormRef>(null);
 
-  const handleSubmit = async (data: ExpenseFormData) => {
-    if (expense) {
-      const updatePayload: UpdateExpenseDTO = {
+  const handleSubmit = async (data: RevenueFormData) => {
+    if (revenue) {
+      const updatePayload: UpdateRevenueDTO = {
         ...data,
-        id: expense.id!,
-        year: expense.year!,
-        month: expense.month!,
-        is_paid: expense.is_paid!,
-        hasInstallments: data.hasInstallments
+        id: revenue.id!,
+        release_date: revenue.release_date,
+        net_value: revenue.net_value
       };
 
       await onUpdate(updatePayload);
     } else {
-      const createPayload: CreateExpenseDTO = {
+      const createPayload: CreateRevenueDTO = {
         name: data.name,
         date: data.date,
         value: data.value,
         installments: data.installments,
-        hasInstallments: data.hasInstallments,
         notes: data.notes,
+        cpf: data.cpf,
+        nf: data.nf,
+        procedure: data.procedure,
+        payment: data.payment
       };
 
       await onCreate(createPayload);
@@ -61,14 +62,14 @@ export function CreateUpdateModal({
   return (
     <Modal open={open} onClose={onClose}>
       <Modal.Header>
-        <h2>{expense ? "Editar Despesa" : "Adicionar Despesa"}</h2>
+        <h2>{revenue ? "Editar Receita" : "Adicionar Receita"}</h2>
       </Modal.Header>
 
       <Modal.Body>
-        <ExpenseForm
+        <RevenueForm
           ref={formRef}
           defaultValues={
-            expense ? expense : undefined
+            revenue ? revenue : undefined
           }
           onSubmit={handleSubmit}
         />
