@@ -1,90 +1,20 @@
-'use client'
-import { useState, useEffect } from 'react';
+import styles from "./styles/Content.module.css";
 import Calendar from "@/app/pages/calendar/page";
 import Dashboard from "@/app/pages/dashboard/page";
 import RevenuePage from "@/app/pages/revenue/page";
 import ExpensePage from "@/app/pages/expense/page";
-import MonthClosing from "@/app/pages/monthclosing/page";
-import { Loading } from "@/components/loading/loading";
-import styles from "./styles/Content.module.css";
-import { Revenue } from '@/types/revenue';
-import { Expense } from '@/types/expense';
-import { Appointment } from "@/types/agenda";
-import { MonthClosingProps } from "@/types/monthClosing";
-import { fetchAgenda, fetchRevenue,
-  fetchExpenses, fetchMonthClosing, fetchProfitList,
-  isAuthenticated, configureAxios
-} from "@/utils/api";
-import { getCurrentYear } from "@/utils/date";
-import { ProfitData } from '@/types/chart';
+import MonthClosingPage from "@/app/pages/monthclosing/page";
+
 
 export default function Content({ selectedOption }: { selectedOption: string }) {
   let contentComponent: React.ReactNode;
-  const [revenue, setRevenue] = useState<Revenue[]>([]);
-  const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [agenda, setAgenda] = useState<Appointment[]>([]);
-  const [monthClosing, setMonthClosing] = useState<MonthClosingProps[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [profit, setProfit] = useState<ProfitData>({profit: [], labels: []});
- 
-  useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true);
-      try {
-        isAuthenticated();
-        configureAxios();
-
-        const agendaData = await fetchAgenda();
-        const revenueData = await fetchRevenue();
-        const expenseData = await fetchExpenses();
-        const monthClosingData = await fetchMonthClosing(Number(getCurrentYear()));
-        const profitList = await fetchProfitList();
-
-        if (agendaData && agendaData.length > 0) {
-          setAgenda(agendaData);
-        } else {
-          setAgenda([]);
-        }
-
-        if (revenueData && revenueData.length > 0) {
-          setRevenue(revenueData);
-        } else {
-          setRevenue([]);
-        }
-
-        if (expenseData && expenseData.length > 0) {
-          setExpenses(expenseData);
-        } else {
-          setExpenses([]);
-        }
-
-        if (monthClosingData && monthClosingData.length > 0) {
-          setMonthClosing(monthClosingData);
-        } else {
-          setMonthClosing([]);
-        }
-
-        if (profitList && Object.keys(profitList).length > 0) {
-          setProfit(profitList);
-        } else {
-          setProfit({profit: [], labels: []});
-        }
-      } catch (error) {
-        console.error('Erro ao carregar dados:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadData();
-  }, []);
 
   switch (selectedOption) {
     case "calendar":
-      contentComponent = <Calendar agenda={agenda} setAgenda={setAgenda} />;
+      contentComponent = <Calendar />;
       break;
     case "dashboard":
-      contentComponent = <Dashboard revenue={revenue} expenses={expenses} profit={profit} />;
+      contentComponent = <Dashboard />;
       break;
     case "revenue":
       contentComponent = <RevenuePage />;
@@ -93,20 +23,12 @@ export default function Content({ selectedOption }: { selectedOption: string }) 
       contentComponent = <ExpensePage />;
       break;
     case "monthClosing":
-      contentComponent = <MonthClosing revenue={revenue} setRevenue={setRevenue} monthClosing={monthClosing} setMonthClosing={setMonthClosing} />;
+      contentComponent = <MonthClosingPage />;
       break;
 
     default:
       contentComponent = null;
-  }
-
-  if (isLoading) {
-    return (
-      <Loading
-        label="Carregando..."
-      />
-    );
-  }
+  };
 
   return (
     <div className={styles.content}>

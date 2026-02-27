@@ -1,36 +1,31 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 
-import { Loading } from "@/components/loading/loading";
 import { Button } from "@/components/button/button";
 import { TabOneTable } from "@/app/pages/monthclosing/table";
 
 import { formatDate } from "@/utils/date";
-import { apiURL, isAuthenticated, configureAxios } from '@/utils/api';
-import { useAlertStore } from "@/stores/alert.store";
+import { useMonthClosing } from "@/hooks/useMonthClosing";
 import { Revenue } from '@/types/revenue';
-import axios from "axios";
+
 
 export default function TabOne(
   {
     orderedRevenue,
-    setRevenue,
     setOrderedRevenue
   }: {
     orderedRevenue: Revenue[],
     setOrderedRevenue: (newRevenue: Revenue[]) => void,
-    setRevenue: (newRevenue: Revenue[]) => void
   }
 ) {
   const [updatedRevenue, setUpdatedRevenue] = useState<Revenue[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formRate, setFormRate] = useState({
     debit: 1.09,
     cashCredit: 3,
     installmentCredit: 3.4
   });
 
-  const alert = useAlertStore.getState();
+  const { updateNetValues } = useMonthClosing();
 
   const columns: { key: string; name: string; }[] = [
     { key: "date", name: "Data Pgto" },
@@ -77,31 +72,14 @@ export default function TabOne(
   }
 
   const updateRevenue = async () => {
-    setIsLoading(true);
-    try {
-      const updatedNetValues = updatedRevenue.map(item => ({
-        id: item.id,
-        net_value: item.net_value,
-        date: item.date
-      }));
+    const updatedNetValues = updatedRevenue.map(item => ({
+      id: item.id,
+      net_value: item.net_value,
+      date: item.date
+    }));
 
-      await axios.put(`${apiURL()}/update-net-values/`, updatedNetValues)
-
-      alert.show({
-        message: "Receita atualizada com sucesso!",
-        variant: "success",
-      });
-    } catch (error) {
-      console.error('Erro ao atualizar receita.', error);
-
-      alert.show({
-        message: "Erro ao atualizar receita.",
-        variant: "error",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  }
+    await updateNetValues(updatedNetValues);
+  };
 
   const calculatedRevenue = useCallback((sortedRevenue: Revenue[]) => {
     return sortedRevenue.map((item) => {
@@ -144,19 +122,6 @@ export default function TabOne(
       }
     }
   }, [updatedRevenue, calculatedRevenue, orderedRevenue, setOrderedRevenue])
-
-  useEffect(() => {
-    isAuthenticated();
-    configureAxios();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <Loading
-        label="Salvando..."
-      />
-    );
-  }
 
   return (
     <div>

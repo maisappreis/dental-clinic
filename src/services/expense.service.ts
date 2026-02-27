@@ -12,12 +12,12 @@ export const ExpenseService = {
     return data;
   },
 
-  async create(payload: CreateExpenseDTO): Promise<void> {
+  async create(payload: CreateExpenseDTO): Promise<Expense> {
     const { data } = await http.post(`${apiURL()}/expense/create/`, payload);
     return data;
   },
 
-  async update(payload: UpdateExpenseDTO): Promise<void> {
+  async update(payload: UpdateExpenseDTO): Promise<Expense> {
     const { data } = await http.patch(`${apiURL()}/expense/${payload.id}/`, payload);
     return data;
   },

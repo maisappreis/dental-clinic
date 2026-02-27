@@ -1,5 +1,5 @@
 import styles from "./MonthClosing.module.css";
-import { MonthClosingProps } from '@/types/monthClosing';
+import { MonthClosing } from '@/types/monthClosing';
 import { formatValueToBRL } from "@/utils/utils";
 
 interface ValuesProps {
@@ -8,7 +8,7 @@ interface ValuesProps {
   value: number;
 }
 
-export default function TabThree({ selectedMonthClosing }: { selectedMonthClosing: MonthClosingProps }) {
+export default function TabThree({ selectedMonthClosing }: { selectedMonthClosing: MonthClosing }) {
 
   const summary = [
     { id: 1, label: "Receita Bruta:", value: selectedMonthClosing.gross_revenue },

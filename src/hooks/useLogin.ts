@@ -35,5 +35,5 @@ export function useLogin() {
 
   return {
     login
-  }
+  };
 };

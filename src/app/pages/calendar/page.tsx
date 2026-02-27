@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import styles from "./Calendar.module.css";
 import Appointments from "./appointments";
 import { Modal } from "@/components/modal/modal";
@@ -7,11 +7,14 @@ import AppointmentForm from "./form";
 import { scheduleOptions, initialAppointmentFormat } from "@/assets/data";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { AgendaData } from "@/types/agenda";
+import { useAgenda } from "@/hooks/useAgenda";
 
-export default function Calendar({ agenda = [], setAgenda }: AgendaData) {
+
+export default function Calendar() {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
+
+  const { agenda, fetch } = useAgenda([]);
 
   const daysOfWeek = useMemo(() => {
     const today = new Date();
@@ -71,6 +74,10 @@ export default function Calendar({ agenda = [], setAgenda }: AgendaData) {
     setShowModal(false);
   }
 
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
+
   return (
     <div className="content">
       <div className={styles.grid}>
@@ -89,7 +96,7 @@ export default function Calendar({ agenda = [], setAgenda }: AgendaData) {
             key={appointment.time}
             time={appointment.time}
             patients={appointment.patients}
-            setAgenda={setAgenda}
+            //setAgenda={setAgenda}
           />
         ))}
       </div>
@@ -101,7 +108,7 @@ export default function Calendar({ agenda = [], setAgenda }: AgendaData) {
 
         <Modal.Body>
           <AppointmentForm
-            setAgenda={setAgenda}
+            //setAgenda={setAgenda}
             closeModal={closeModal}
           />
         </Modal.Body>

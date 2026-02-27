@@ -1,27 +1,23 @@
 import { useState, useCallback } from "react";
-import { ExpenseService } from "@/services/expense.service";
+import { AgendaService } from "@/services/agenda.service";
 import { useLoadingStore } from "@/stores/loading.store";
 import { useAlertStore } from "@/stores/alert.store";
-import {
-  Expense,
-  CreateExpenseDTO,
-  UpdateExpenseDTO,
-} from "@/types/expense";
+import { Appointment, CreateAppointmentDTO, UpdateAppointmentDTO } from "@/types/agenda";
 
-export function useExpense(initialExpense: Expense[] = []) {
-  const [expenses, setExpenses] = useState<Expense[]>(initialExpense);
-
+export function useAgenda(initialAppointment: Appointment[] = []) {
+  const [agenda, setAgenda] = useState<Appointment[]>(initialAppointment);
+  
   const alert = useAlertStore.getState();
   const showLoading = useLoadingStore((s) => s.show);
   const hideLoading = useLoadingStore((s) => s.hide);
 
   const refresh = useCallback(async () => {
-    const data = await ExpenseService.list();
-    setExpenses(data);
+    const data = await AgendaService.list();
+    setAgenda(data);
   }, []);
 
-  const fetchExpenses = useCallback(async () => {
-    showLoading("Carregando despesas...");
+  const fetch = useCallback(async () => {
+    showLoading("Carregando agendamentos...");
     try {
       await refresh();
     } finally {
@@ -29,20 +25,20 @@ export function useExpense(initialExpense: Expense[] = []) {
     }
   }, [refresh, showLoading, hideLoading]);
 
-  const create = async (payload: CreateExpenseDTO) => {
-    showLoading("Criando despesa...");
+  const create = async (payload: CreateAppointmentDTO) => {
+    showLoading("Criando agendamento...");
     try {
-      await ExpenseService.create(payload);
+      await AgendaService.create(payload);
       await refresh();
 
       alert.show({
-        message: "Despesa criada com sucesso!",
+        message: "Agendamento criado com sucesso!",
         variant: "success",
       });
     } catch (error) {
       console.error(error);
       alert.show({
-        message: "Erro ao criar despesa.",
+        message: "Erro ao criar agendamento.",
         variant: "error",
       });
     } finally {
@@ -50,22 +46,22 @@ export function useExpense(initialExpense: Expense[] = []) {
     }
   };
 
-  const update = async (payload: UpdateExpenseDTO) => {
-    showLoading("Atualizando despesa...");
+  const update = async (payload: UpdateAppointmentDTO) => {
+    showLoading("Atualizando agendamento...");
     try {
-      const updatedExpense = await ExpenseService.update(payload);
+      const updatedAppointment = await AgendaService.update(payload);
       await refresh();
 
       alert.show({
-        message: "Despesa atualizada com sucesso!",
+        message: "Agendamento atualizado com sucesso!",
         variant: "success",
       });
       
-      return updatedExpense;
+      return updatedAppointment;
     } catch (error) {
       console.error(error);
       alert.show({
-        message: "Erro ao atualizar despesa.",
+        message: "Erro ao atualizar agendamento.",
         variant: "error",
       });
     } finally {
@@ -74,19 +70,19 @@ export function useExpense(initialExpense: Expense[] = []) {
   };
 
   const remove = async (id: number) => {
-    showLoading("Excluindo despesa...");
+    showLoading("Excluindo agendamento...");
     try {
-      await ExpenseService.remove(id);
+      await AgendaService.remove(id);
       await refresh();
 
       alert.show({
-        message: "Despesa excluida com sucesso!",
+        message: "Agendamento excluído com sucesso!",
         variant: "success",
       });
     } catch (error) {
       console.error(error);
       alert.show({
-        message: "Erro ao excluir despesa.",
+        message: "Erro ao excluir agendamento.",
         variant: "error",
       });
     } finally {
@@ -95,8 +91,8 @@ export function useExpense(initialExpense: Expense[] = []) {
   };
 
   return {
-    expenses,
-    fetchExpenses,
+    agenda,
+    fetch,
     refresh,
     create,
     update,

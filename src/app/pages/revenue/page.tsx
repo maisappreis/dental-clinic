@@ -27,7 +27,7 @@ export default function RevenuePage() {
   const [createUpdateModalIsOpen, setCreateUpdateModalIsOpen] = useState(false);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
-  const { revenue, create, update, remove, fetch } = useRevenue([]);
+  const { revenue, create, update, remove, fetchRevenue } = useRevenue([]);
 
   const filterData = useCallback(({ selectedMonth = month, selectedYear = year, }) => {
     setMonth(selectedMonth)
@@ -102,8 +102,8 @@ export default function RevenuePage() {
   };
 
   useEffect(() => {
-    fetch();
-  }, [fetch]);
+    fetchRevenue();
+  }, [fetchRevenue]);
 
   useEffect(() => {
     if (revenue && revenue.length > 0) {

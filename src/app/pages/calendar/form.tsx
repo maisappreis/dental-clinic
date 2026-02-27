@@ -1,24 +1,19 @@
 
 "use client";
 import React, { useState, useEffect } from "react";
-import { Appointment } from "@/types/agenda";
 import { scheduleOptions } from "@/assets/data";
 import { capitalize } from '@/utils/utils';
-import { apiURL, fetchAgenda, isAuthenticated, configureAxios } from '@/utils/api';
-import { useAlertStore } from '@/stores/alert.store';
-import { Loading } from "@/components/loading/loading";
 import { Button } from "@/components/button/button";
-import axios from "axios";
+import { useAgenda } from "@/hooks/useAgenda";
+import { Appointment, CreateAppointmentDTO, UpdateAppointmentDTO } from "@/types/agenda";
 
 interface AppointmentFormProps {
   selectedPatient?: Appointment;
   closeModal: () => void;
-  setAgenda: (newAgenda: Appointment[]) => void;
 }
 
-export default function AppointmentForm({ selectedPatient, closeModal, setAgenda }: AppointmentFormProps) {
+export default function AppointmentForm({ selectedPatient, closeModal }: AppointmentFormProps) {
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     id: 0,
     date: "",
@@ -27,7 +22,7 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
     notes: ""
   });
 
-  const alert = useAlertStore.getState();
+  const { agenda, create, update, remove, fetch } = useAgenda([]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -47,61 +42,21 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
     event.preventDefault();
 
     if (selectedPatient && selectedPatient.id && selectedPatient.id > 0) {
-      await updateAppointment(selectedPatient.id);
+      await updateAppointment(selectedPatient);
     } else {
       await createAppointment();
     }
   }
 
   const createAppointment = async () => {
-    setIsLoading(true);
-    try {
-      await axios.post(`${apiURL()}/agenda/create/`, formData);
+    await create(formData);
+    closeModal();
+  };
 
-      alert.show({
-        message: "Agendamento criado com sucesso!",
-        variant: "success",
-      });
-
-      const newAppointment = await fetchAgenda();
-      setAgenda(newAppointment);
-    } catch (error) {
-      console.error('Erro ao criar agendamento.', error)
-
-      alert.show({
-        message: "Erro ao criar agendamento.",
-        variant: "error",
-      });
-    } finally {
-      closeModal();
-      setIsLoading(false);
-    }
-  }
-
-  const updateAppointment = async (id: number) => {
-    setIsLoading(true);
-    try {
-      await axios.patch(`${apiURL()}/agenda/${id}/`, formData);
-
-      alert.show({
-        message: "Agendamento atualizado com sucesso!",
-        variant: "success",
-      });
-
-      const newAppointment = await fetchAgenda();
-      setAgenda(newAppointment);
-    } catch (error) {
-      console.error('Erro ao atualizar agendamento.', error);
-
-      alert.show({
-        message: "Erro ao atualizar agendamento.",
-        variant: "error",
-      });
-    } finally {
-      closeModal();
-      setIsLoading(false);
-    }
-  }
+  const updateAppointment = async (patient: UpdateAppointmentDTO) => {
+    await update(patient);
+    closeModal();
+  };
 
   useEffect(() => {
     setFormData({
@@ -124,19 +79,6 @@ export default function AppointmentForm({ selectedPatient, closeModal, setAgenda
       setIsFormValid(false);
     }
   }, [formData]);
-
-  useEffect(() => {
-    isAuthenticated();
-    configureAxios();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <Loading
-        label="Salvando..."
-      />
-    );
-  }
 
   return (
     <form className="form-area" onSubmit={saveAppointment}>

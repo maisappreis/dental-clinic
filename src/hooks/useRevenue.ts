@@ -20,7 +20,7 @@ export function useRevenue(initialRevenue: Revenue[] = []) {
     setRevenue(data);
   }, []);
 
-  const fetch = useCallback(async () => {
+  const fetchRevenue = useCallback(async () => {
     showLoading("Carregando receitas...");
     try {
       await refresh();
@@ -94,7 +94,7 @@ export function useRevenue(initialRevenue: Revenue[] = []) {
 
   return {
     revenue,
-    fetch,
+    fetchRevenue,
     refresh,
     create,
     update,

@@ -32,7 +32,7 @@ export default function ExpensePage() {
   const [createUpdateModalIsOpen, setCreateUpdateModalIsOpen] = useState(false);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
-  const { expenses, create, update, remove, fetch } = useExpense([]);
+  const { expenses, create, update, remove, fetchExpenses } = useExpense([]);
 
   const filterData = useCallback(({
     selectedMonth = month,
@@ -174,8 +174,8 @@ export default function ExpensePage() {
   };
 
   useEffect(() => {
-    fetch();
-  }, [fetch]);
+    fetchExpenses();
+  }, [fetchExpenses]);
 
   useEffect(() => {
     if (expenses && expenses.length > 0) {

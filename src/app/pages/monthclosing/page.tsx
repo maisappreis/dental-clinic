@@ -6,24 +6,16 @@ import TabOne from './tab1';
 import TabTwo from './tab2';
 import TabThree from './tab3';
 import { Modal } from "@/components/modal/modal";
+import { Button } from "@/components/button/button";
 import { Loading } from "@/components/loading/loading";
 import { Revenue } from '@/types/revenue';
-import { MonthClosingProps } from '@/types/monthClosing';
 import { months, years } from "@/assets/data"
 import { getCurrentYear, getCurrentMonth, getNextMonthName } from "@/utils/date"
-import { fetchMonthClosing } from '@/utils/api';
-import { Button } from "@/components/button/button";
+import { useRevenue } from "@/hooks/useRevenue";
+import { useMonthClosing } from "@/hooks/useMonthClosing";
 
-interface DataMonthClosing {
-  revenue: Revenue[];
-  setRevenue: (newRevenue: Revenue[]) => void;
-  monthClosing: MonthClosingProps[];
-  setMonthClosing: (newRevenue: MonthClosingProps[]) => void;
-}
 
-export default function MonthClosing(
-  { revenue, setRevenue, monthClosing, setMonthClosing }: DataMonthClosing
-) {
+export default function MonthClosingPage() {
   let tabContent: React.ReactNode;
   const [selectedTab, setSelectedTab] = useState<string>("reports");
   const [buttonText, setButtonText] = useState<string>("");
@@ -60,6 +52,9 @@ export default function MonthClosing(
     balance: 0
   });
 
+  const { revenue, fetchRevenue } = useRevenue([]);
+  const { monthClosing, fetchMonthClosing } = useMonthClosing([]);
+
   const handleTabClick = (tab: string) => {
     setSelectedTab(tab);
   };
@@ -75,8 +70,7 @@ export default function MonthClosing(
       setSelectedTab("tab3");
     } else {
       setIsLoading(true);
-      const monthClosingData = await fetchMonthClosing(year);
-      setMonthClosing(monthClosingData);
+      await fetchMonthClosing(year);
       setSelectedTab("reports");
       setIsLoading(false);
       disableTabsOptions();
@@ -165,7 +159,7 @@ export default function MonthClosing(
           release_date: releaseDate.toISOString().slice(0, 10),
         };
       });
-      setRevenue(updatedRevenue);
+      //setRevenue(updatedRevenue); // TODO: vai dar BO aqui
   
       const filteredRevenue = updatedRevenue.filter(item => {
         const releaseMonth = parseInt(item.release_date.slice(5, 7));
@@ -204,10 +198,14 @@ export default function MonthClosing(
     setYear(selectedYear);
 
     setIsLoading(true);
-    const monthClosingData = await fetchMonthClosing(selectedYear);
-    setMonthClosing(monthClosingData);
+    await fetchMonthClosing(selectedYear);
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    fetchRevenue();
+    fetchMonthClosing(Number(selectedYear));
+  }, [fetchRevenue, fetchMonthClosing, selectedYear]);
 
   useEffect(() => {
     switch (selectedTab) {
@@ -260,7 +258,7 @@ export default function MonthClosing(
         setSelectedTab={setSelectedTab} disableTabForward={disableTabForward} filterRevenue={filterRevenue} />;
       break;
     case "tab1":
-      tabContent = <TabOne orderedRevenue={orderedRevenue} setOrderedRevenue={setOrderedRevenue} setRevenue={setRevenue} />;
+      tabContent = <TabOne orderedRevenue={orderedRevenue} setOrderedRevenue={setOrderedRevenue} />;
       break;
     case "tab2":
       tabContent = <TabTwo selectedMonthClosing={selectedMonthClosing} orderedRevenue={orderedRevenue}

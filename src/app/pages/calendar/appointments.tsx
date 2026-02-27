@@ -1,22 +1,19 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styles from "./Calendar.module.css";
 import { Modal } from "@/components/modal/modal";
+import { Button } from "@/components/button/button";
 import AppointmentForm from "./form";
-import { Loading } from "@/components/loading/loading";
 import { formatDate } from "@/utils/date";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { useAgenda } from "@/hooks/useAgenda";
 import { Appointment, AppointmentsProps } from "@/types/agenda";
-import { apiURL, fetchAgenda, isAuthenticated, configureAxios } from "@/utils/api";
-import { useAlertStore } from "@/stores/alert.store";
-import { Button } from "@/components/button/button";
-import axios from "axios";
 
-export default function Appointments({ time, patients, setAgenda }: AppointmentsProps) {
+
+export default function Appointments({ time, patients }: AppointmentsProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
   const [mode, setMode] = useState<string>("view");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedPatient, setSelectedPatient] = useState({
     id: 0,
     date: "",
@@ -25,7 +22,7 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
     notes: ""
   });
 
-  const alert = useAlertStore.getState();
+  const { agenda, create, update, remove, fetch } = useAgenda([]);
 
   const openModal = (patient: Appointment): void => {
     setSelectedPatient(patient);
@@ -50,34 +47,15 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
   };
 
   const deleteAppointment = async () => {
-    setIsLoading(true);
-    try {
-      if (selectedPatient && selectedPatient.id) {
-        await axios.delete(`${apiURL()}/agenda/${selectedPatient.id}/`)
-
-        alert.show({
-          message: "Agendamento excluído com sucesso!",
-          variant: "success",
-        });
-
-        const newAppointment = await fetchAgenda();
-        setAgenda(newAppointment);
-      }
-    } catch (error) {
-      alert.show({
-        message: "Erro ao excluir agendamento.",
-        variant: "error",
-      });
-    } finally {
-      closeModal();
-      setIsLoading(false);
-    }
+    if (!selectedPatient) return
+    await remove(selectedPatient.id);
+    closeModal();
   };
 
   const openDeleteModal = (): void => {
     setIsOpen(false);
     setDeleteModalIsOpen(true);
-  }
+  };
 
   const shortName = (name: string): string => {
     if (name && name.length > 9) {
@@ -85,20 +63,7 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
     } else {
       return name
     }
-  }
-
-  useEffect(() => {
-    isAuthenticated();
-    configureAxios();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <Loading
-        label="Excluindo agendamento..."
-      />
-    );
-  }
+  };
 
   return (
     <>
@@ -153,7 +118,7 @@ export default function Appointments({ time, patients, setAgenda }: Appointments
             :
             <AppointmentForm
               selectedPatient={selectedPatient}
-              setAgenda={setAgenda}
+              // setAgenda={setAgenda}
               closeModal={closeModal}
             />
           }

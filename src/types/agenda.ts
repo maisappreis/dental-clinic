@@ -4,16 +4,13 @@ export interface Appointment {
   time: string;
   name: string;
   notes: string;
-}
+};
+
+export type CreateAppointmentDTO = Omit<Appointment, "id" >;
+
+export type UpdateAppointmentDTO = Appointment;
 
 export interface AppointmentsProps {
   time: string;
   patients: Appointment[];
-  setAgenda: (newAgenda: Appointment[]) => void;
 }
-
-export interface AgendaData {
-  agenda: Appointment[];
-  setAgenda: (newAgenda: Appointment[]) => void;
-}
-
