@@ -1,99 +1,42 @@
+"use client";
 
-'use client'
-import { useState, useEffect, useMemo } from 'react';
+import { useMemo } from "react";
 import { Bar } from "react-chartjs-2";
-import { Revenue } from '@/types/revenue';
-import { ChartData, TooltipItem } from '@/types/chart';
+import { Revenue } from "@/types/revenue";
+import { ChartData } from "@/types/chart";
 import "@/utils/chart";
 
-export default function MostPerformedProceduresChart({ revenue }: { revenue: Revenue[] }) {
-  const [options, setOptions] = useState({});
-  const [data, setData] = useState<ChartData>({
-    labels: [],
-    datasets: []
-  });
+import { getMostPerformedProcedures } from "@/utils/charts";
+import { barChartOptions } from "@/constants/charts";
 
-  const setLayout = () => {
-    return {
-      plugins: {
-        legend: {
-          labels: {
-            font: {
-              size: 20
-            },
-            color: 'rgba(0, 0, 0, 0.8)',
-          }
-        },
-        tooltip: {
-          titleFont: {
-            size: 18,
-          },
-          bodyFont: {
-            size: 16,
-          },
-          padding: 10,
-          boxPadding: 8,
-          callbacks: {
-            label: function (context: TooltipItem) {
-              let label = ""
-              if (context.parsed.y !== null) {
-                label += `${context.raw} realizados`;
-              }
-              return label;
-            }
-          }
-        }
-      }
-    };
-  };
+type Props = {
+  revenue: Revenue[];
+};
 
-  const drawChart = useMemo(() => {
-    if (revenue && revenue.length > 0) {
-      const procedureCount = revenue.reduce((acc: Record<string, number>, curr: Revenue) => {
-        if (!acc[curr.procedure]) {
-          acc[curr.procedure] = 0;
-        }
-        acc[curr.procedure]++;
-        return acc;
-      }, {});
-
-      const sortedProcedures = Object.entries(procedureCount)
-        .sort(([, a], [, b]) => b - a)
-        .slice(0, 7);
-
-      const labels = sortedProcedures.map(([procedure]) => procedure);
-      const values = sortedProcedures.map(([, count]) => count);
-
-      const options = setLayout();
-      setOptions(options);
-
-      return {
-        labels: labels,
-        datasets: [
-          {
-            label: 'Procedimentos mais realizados',
-            backgroundColor: 'rgba(1, 32, 144, 0.7)',
-            borderColor: 'rgba(75,192,192,1)',
-            data: values,
-          },
-        ],
-      };
+export function MostPerformedProceduresChart({ revenue }: Props) {
+  const chartData = useMemo<ChartData>(() => {
+    if (!revenue.length) {
+      return { labels: [], datasets: [] };
     }
+
+    const procedures = getMostPerformedProcedures(revenue);
+
     return {
-      labels: [],
-      datasets: []
+      labels: procedures.map(([procedure]) => procedure),
+      datasets: [
+        {
+          label: "Procedimentos mais realizados",
+          data: procedures.map(([, count]) => count),
+          backgroundColor: "rgba(1, 32, 144, 0.7)",
+          borderColor: "rgba(75,192,192,1)",
+        },
+      ],
     };
   }, [revenue]);
 
-  useEffect(() => {
-    setData(drawChart);
-  }, [drawChart]);
-  
-  return (
-    data.labels.length > 0 ? (
-      <Bar data={data} options={options} />
-    ) : (
-      <span>Sem dados para exibir</span>
-    )
-  );
-}
+  if (!chartData.labels.length) {
+    return <span>Sem dados para exibir</span>;
+  }
+
+  return <Bar data={chartData} options={barChartOptions} />;
+};

@@ -1,127 +1,71 @@
-'use client'
-import { useState, useEffect, useMemo } from 'react';
+"use client";
+
+import { useMemo } from "react";
 import { Line } from "react-chartjs-2";
-import { Revenue } from '@/types/revenue';
-import { Expense } from '@/types/expense';
-import { ChartData, MonthNames, TooltipItem } from '@/types/chart';
+import { Revenue } from "@/types/revenue";
+import { Expense } from "@/types/expense";
+import { MonthNames } from "@/types/chart";
 import { monthNames } from "@/constants/date";
-import { formatValueToBRL } from "@/utils/utils";
+import { groupValuesByMonth } from "@/utils/charts";
+import { revenueExpensesLineChartOptions } from "@/constants/charts";
 import "@/utils/chart";
 
-export default function RevenueExpensesChart(
-  { revenue, expenses }: { revenue: Revenue[], expenses: Expense[] }
-) {
-  const [options, setOptions] = useState({});
-  const [data, setData] = useState<ChartData>({
-    labels: [],
-    datasets: []
-  });
 
-  const setLayout = () => {
-    return {
-      plugins: {
-        legend: {
-          labels: {
-            font: {
-              size: 20
-            },
-            color: 'rgba(0, 0, 0, 0.8)',
-          }
-        },
-        tooltip: {
-          titleFont: {
-            size: 18,
-          },
-          bodyFont: {
-            size: 16,
-          },
-          padding: 10,
-          boxPadding: 8,
-          callbacks: {
-            label: function (context: TooltipItem) {
-              let label = ""
-              if (context.parsed.y !== null && context.raw) {
-                label += `${formatValueToBRL(context.raw)}`;
-              }
-              return label;
-            }
-          }
-        }
-      }
-    };
-  };
-
-  const drawChart = useMemo(() => {
-    if (revenue && expenses && revenue.length > 0 && expenses.length > 0) {
-      const groupByMonth = (items: (Revenue | Expense)[]) => {
-        return items.reduce((acc: Record<string, number>, curr: Revenue | Expense) => {
-          const month = curr.date.slice(5, 7);
-          const year = curr.date.slice(0, 4);
-          const key = `${year}-${month}`;
-          
-          if (!acc[key]) {
-            acc[key] = 0;
-          }
-          acc[key] += curr.value;
-          return acc;
-        }, {});
-      };
-
-      const revenueByMonth = groupByMonth(revenue);
-      const expensesByMonth = groupByMonth(expenses);
-
-      const today = new Date();
-      const last12Months = Array.from({ length: 12 }, (_, i) => {
-        const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
-        const month = (`0${date.getMonth() + 1}`).slice(-2);
-        const year = date.getFullYear().toString();
-        return `${year}-${month}`;
-      }).reverse();
-
-      const labels = last12Months.map(date => {
-        const [year, month] = date.split("-");
-        return `${monthNames[month as keyof MonthNames]} ${year}`;
-      });
-
-      const revenueValues = last12Months.map(date => revenueByMonth[date] || 0);
-      const expensesValues = last12Months.map(date => expensesByMonth[date] || 0);
-
-      const options = setLayout();
-      setOptions(options);
-
-      return {
-        labels: labels,
-        datasets: [
-          {
-            label: 'Receitas',
-            backgroundColor: 'rgba(19, 163, 0, 0.7)',
-            borderColor: 'rgba(19, 163, 0, 0.7)',
-            data: revenueValues,
-          },
-          {
-            label: 'Despesas',
-            backgroundColor: 'rgba(255, 0, 0, 0.7)',
-            borderColor: 'rgba(255, 0, 0, 0.7)',
-            data: expensesValues,
-          }
-        ],
-      };
+export function RevenueExpensesChart({
+  revenue,
+  expenses,
+}: {
+  revenue: Revenue[];
+  expenses: Expense[];
+}) {
+  const chartData = useMemo(() => {
+    if (!revenue.length && !expenses.length) {
+      return { labels: [], datasets: [] };
     }
+
+    const revenueByMonth = groupValuesByMonth(revenue);
+    const expensesByMonth = groupValuesByMonth(expenses);
+
+    const today = new Date();
+    const last12Months = Array.from({ length: 12 }, (_, i) => {
+      const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+      return `${year}-${month}`;
+    }).reverse();
+
+    const labels = last12Months.map(key => {
+      const [year, month] = key.split("-");
+      return `${monthNames[month as keyof MonthNames]} ${year}`;
+    });
+
     return {
-      labels: [],
-      datasets: []
+      labels,
+      datasets: [
+        {
+          label: "Receitas",
+          data: last12Months.map(key => revenueByMonth[key] || 0),
+          borderColor: "rgba(19, 163, 0, 0.8)",
+          backgroundColor: "rgba(19, 163, 0, 0.3)",
+        },
+        {
+          label: "Despesas",
+          data: last12Months.map(key => expensesByMonth[key] || 0),
+          borderColor: "rgba(255, 0, 0, 0.8)",
+          backgroundColor: "rgba(255, 0, 0, 0.3)",
+        },
+      ],
     };
   }, [revenue, expenses]);
 
-  useEffect(() => {
-    setData(drawChart);
-  }, [drawChart]);
+  if (!chartData.labels.length) {
+    return <span>Sem dados para exibir</span>;
+  }
 
   return (
-    data.labels.length > 0 ? (
-      <Line data={data} options={options} />
-    ) : (
-      <span>Sem dados para exibir</span>
-    )
+    <Line
+      data={chartData}
+      options={revenueExpensesLineChartOptions}
+    />
   );
-}
+};

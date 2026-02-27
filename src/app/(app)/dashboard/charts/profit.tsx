@@ -1,85 +1,34 @@
-'use client'
-import { useState, useEffect, useMemo } from 'react';
+"use client";
+
+import { useMemo } from "react";
 import { Bar } from "react-chartjs-2";
-import { ChartData, TooltipItem, ProfitData } from '@/types/chart';
-import { formatValueToBRL } from "@/utils/utils";
+import { ProfitData } from "@/types/chart";
+import { profitBarChartOptions } from "@/constants/charts";
 import "@/utils/chart";
 
-export default function ProfitChart(
-  { profit }: { profit: ProfitData }
-) {
-  const [options, setOptions] = useState({});
-  const [data, setData] = useState<ChartData>({
-    labels: [],
-    datasets: []
-  });
 
-  const setLayout = () => {
-    return {
-      plugins: {
-        legend: {
-          labels: {
-            font: {
-              size: 20
-            },
-            color: 'rgba(0, 0, 0, 0.8)',
-          }
-        },
-        tooltip: {
-          titleFont: {
-            size: 18,
-          },
-          bodyFont: {
-            size: 16,
-          },
-          padding: 10,
-          boxPadding: 8,
-          callbacks: {
-            label: function (context: TooltipItem) {
-              let label = ""
-              if (context.parsed.y !== null && context.raw) {
-                label += `${formatValueToBRL(context.raw)}`;
-              }
-              return label;
-            }
-          }
-        }
-      }
-    };
-  };
-
-  const drawChart = useMemo(() => {
-    if (profit && profit.profit.length > 0 && profit.labels.length > 0) {
-      const options = setLayout();
-      setOptions(options);
-
-      return {
-        labels: profit.labels,
-        datasets: [
-          {
-            label: 'Lucro bruto mensal',
-            backgroundColor: 'rgba(19, 163, 0, 0.7)',
-            borderColor: 'rgba(75,192,192,1)',
-            data: profit.profit,
-          }
-        ]
-      };
+export function ProfitChart({ profit }: { profit: ProfitData }) {
+  const chartData = useMemo(() => {
+    if (!profit || !profit.labels.length || !profit.profit.length) {
+      return { labels: [], datasets: [] };
     }
+
     return {
-      labels: [],
-      datasets: []
+      labels: profit.labels,
+      datasets: [
+        {
+          label: "Lucro bruto mensal",
+          data: profit.profit,
+          backgroundColor: "rgba(19, 163, 0, 0.7)",
+          borderColor: "rgba(19, 163, 0, 1)",
+        },
+      ],
     };
   }, [profit]);
 
-  useEffect(() => {
-    setData(drawChart);
-  }, [drawChart]);
+  if (!chartData.labels.length) {
+    return <span>Sem dados para exibir</span>;
+  }
 
-  return (
-    data.labels.length > 0 ? (
-      <Bar data={data} options={options} />
-    ) : (
-      <span>Sem dados para exibir</span>
-    )
-  );
-}
+  return <Bar data={chartData} options={profitBarChartOptions} />;
+};
