@@ -40,7 +40,7 @@ export function Header() {
   if (!headerConfig) return null;
 
   return (
-    <div className={styles.hearder}>
+    <header className={styles.hearder}>
       <div className={styles.text}>
         <div className={styles.heading}>
           <div className="flex">
@@ -85,6 +85,6 @@ export function Header() {
           Logout
         </button>
       )}
-    </div>
+    </header>
   );
 };

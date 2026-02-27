@@ -10,7 +10,7 @@ export default function AppLayout({
     <main className="app-area">
       <Header />
       <Sidebar />
-      <div className="content">{children}</div>
+      <div className="contentarea">{children}</div>
     </main>
   );
 }

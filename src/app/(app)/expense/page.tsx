@@ -205,5 +205,5 @@ export default function ExpensePage() {
         onChange={changePaymentStatus}
       />
     </div>
-  )
+  );
 };

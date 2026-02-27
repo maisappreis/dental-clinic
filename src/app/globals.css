@@ -38,6 +38,23 @@ body {
   box-shadow: 2px 2px 20px rgb(148, 148, 148);
 }
 
+.contentarea {
+  position: absolute;
+  top: 90px;
+  left: 230px;
+
+  width: 87vw;
+  height: 83vh;
+  background-color: var(--gray-light-color);
+}
+
+@media only screen and (max-width: 1300px) {
+  .contentarea {
+    left: 100px;
+    width: 92vw;
+  }
+}
+
 @media only screen and (max-width: 1000px) {
   body {
     min-height: 500px;
@@ -55,5 +72,12 @@ body {
     width: 95%;
     min-height: 300px;
     height: fit-content;
+  }
+
+  .contentarea {
+    top: 50px;
+    left: 70px;
+    width: 90vw;
+    height: 100vh;
   }
 }

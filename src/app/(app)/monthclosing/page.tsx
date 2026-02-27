@@ -2,9 +2,9 @@
 import { useEffect, useState, ChangeEvent } from 'react';
 import styles from "./MonthClosing.module.css";
 import Reports from './reports';
-import TabOne from './tab1';
-import TabTwo from './tab2';
-import TabThree from './tab3';
+import TabOne from './tabs/tab1';
+import TabTwo from './tabs/tab2';
+import TabThree from './tabs/tab3';
 import { Modal } from "@/components/modal/modal";
 import { Button } from "@/components/button/button";
 import { Loading } from "@/components/loading/loading";
