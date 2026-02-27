@@ -9,8 +9,8 @@ import { CreateUpdateModal } from "./modal/createUpdate";
 import { DeleteModal } from "./modal/delete";
 
 import { getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
-import { capitalize } from '@/utils/utils';
-import { applySearch } from "@/utils/filter";
+import { capitalizeFirstLetter } from '@/utils/utils';
+import { applySearch } from "@/utils/search";
 import { months, years } from "@/constants/date";
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -82,7 +82,7 @@ export default function RevenuePage() {
   const createRevenue = async (data: CreateRevenueDTO) => {
     await create({
       ...data,
-      name: capitalize(data.name),
+      name: capitalizeFirstLetter(data.name),
     });
     closeModal();
   };
@@ -90,7 +90,7 @@ export default function RevenuePage() {
   const updateRevenue = async (data: UpdateRevenueDTO) => {
     await update({
       ...data,
-      name: capitalize(data.name),
+      name: capitalizeFirstLetter(data.name),
     });
     closeModal();
   };

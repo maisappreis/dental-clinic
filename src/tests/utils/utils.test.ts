@@ -1,5 +1,5 @@
 import {
-  capitalize,
+  capitalizeFirstLetter,
   formatValueToBRL
 } from "@/utils/utils";
 import { type Revenue} from '@/types/revenue';
@@ -40,9 +40,9 @@ const mockExpenseData: Expense[] = [
 
 describe("Utils Functions", () => {
 
-  it("capitalize should capitalize the first letter of each word", () => {
-    expect(capitalize("hello world")).toBe("Hello World");
-    expect(capitalize("javaScript is awesome")).toBe("Javascript Is Awesome");
+  it("capitalizeFirstLetter should capitalizeFirstLetter the first letter of each word", () => {
+    expect(capitalizeFirstLetter("hello world")).toBe("Hello World");
+    expect(capitalizeFirstLetter("javaScript is awesome")).toBe("Javascript Is Awesome");
   });
 
   it("formatValueToBRL should format number to BRL currency", () => {

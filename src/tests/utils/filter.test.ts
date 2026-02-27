@@ -1,4 +1,4 @@
-import { applySearch } from "@/utils/filter";
+import { applySearch } from "@/utils/search";
 
 describe('Filter Utils Functions', () => {
   const data = [

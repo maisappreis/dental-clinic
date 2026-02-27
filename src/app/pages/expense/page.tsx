@@ -9,9 +9,9 @@ import { CreateUpdateModal } from "./modal/createUpdate";
 import { DeleteModal } from "./modal/delete";
 import { PaymentStatusModal } from "./modal/paymentStatus";
 
-import { capitalize } from "@/utils/utils";
+import { capitalizeFirstLetter } from "@/utils/utils";
 import { getCurrentYear, getCurrentMonth } from "@/utils/date";
-import { applySearch } from "@/utils/filter";
+import { applySearch } from "@/utils/search";
 import { getNextMonth, getMonthAndYear } from "@/utils/date";
 import { months, years } from "@/constants/date";
 
@@ -114,12 +114,12 @@ export default function ExpensePage() {
         ...data,
         month,
         year: parseInt(year),
-        name: capitalize(data.name),
+        name: capitalizeFirstLetter(data.name),
       };
     } else {
       return {
         ...data,
-        name: capitalize(data.name),
+        name: capitalizeFirstLetter(data.name),
       };
     }
   };
