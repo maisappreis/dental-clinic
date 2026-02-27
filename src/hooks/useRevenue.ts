@@ -2,6 +2,8 @@ import { useState, useCallback } from "react";
 import { RevenueService } from "@/services/revenue.service";
 import { useLoadingStore } from "@/stores/loading.store";
 import { useAlertStore } from "@/stores/alert.store";
+import { sortByDate } from "@/utils/sort";
+import { capitalizeFirstLetter } from '@/utils/utils';
 import {
   Revenue,
   CreateRevenueDTO,
@@ -17,7 +19,7 @@ export function useRevenue(initialRevenue: Revenue[] = []) {
 
   const refresh = useCallback(async () => {
     const data = await RevenueService.list();
-    setRevenue(data);
+    setRevenue(sortByDate(data, "desc"));
   }, []);
 
   const fetchRevenue = useCallback(async () => {
@@ -32,7 +34,12 @@ export function useRevenue(initialRevenue: Revenue[] = []) {
   const create = async (payload: CreateRevenueDTO) => {
     showLoading("Criando receita...");
     try {
-      await RevenueService.create(payload);
+      const formatedPayload = {
+        ...payload,
+        name: capitalizeFirstLetter(payload.name),
+      };
+
+      await RevenueService.create(formatedPayload);
       await refresh();
 
       alert.show({
@@ -53,7 +60,12 @@ export function useRevenue(initialRevenue: Revenue[] = []) {
   const update = async (payload: UpdateRevenueDTO) => {
     showLoading("Atualizando receita...");
     try {
-      await RevenueService.update(payload);
+      const formatedPayload = {
+        ...payload,
+        name: capitalizeFirstLetter(payload.name),
+      };
+
+      await RevenueService.update(formatedPayload);
       await refresh();
 
       alert.show({

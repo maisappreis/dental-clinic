@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
 import { RevenueTable } from "@/app/pages/revenue/table";
 import { Button } from "@/components/button/button";
@@ -8,9 +8,9 @@ import { Filter } from "@/components/filter/filter";
 import { CreateUpdateModal } from "./modal/createUpdate";
 import { DeleteModal } from "./modal/delete";
 
-import { getCurrentYear, getCurrentMonth, getMonthAndYear } from "@/utils/date";
-import { capitalizeFirstLetter } from '@/utils/utils';
+import { getCurrentYear, getCurrentMonth } from "@/utils/date";
 import { applySearch } from "@/utils/search";
+import { filterRevenueByMonthAndYear } from "@/utils/filter";
 import { months, years } from "@/constants/date";
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -19,7 +19,6 @@ import { Revenue, CreateRevenueDTO, UpdateRevenueDTO } from '@/types/revenue';
 
 
 export default function RevenuePage() {
-  const [filteredData, setFilteredData] = useState<any[]>([]);
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());
   const [search, setSearch] = useState("");
@@ -29,33 +28,23 @@ export default function RevenuePage() {
 
   const { revenue, create, update, remove, fetchRevenue } = useRevenue([]);
 
-  const filterData = useCallback(({ selectedMonth = month, selectedYear = year, }) => {
-    setMonth(selectedMonth)
-    setYear(selectedYear)
-    setSearch("");
+  const filteredData = useMemo<Revenue[]>(() => {
+    if (!revenue.length) return [];
 
-    if (revenue && revenue.length > 0) {
-      const filtered = revenue.filter(item => {
-        const [month, year] = getMonthAndYear(item.date);
-        if (selectedMonth === "Todos os meses" && selectedYear === "Todos") return revenue
-        if (selectedMonth === "Todos os meses") return year.toString() === selectedYear
-        if (selectedYear === "Todos") return month === selectedMonth
-        return (
-          month === selectedMonth && year.toString() === selectedYear
-        );
-      });
-      setFilteredData(filtered);
-    } else {
-      setFilteredData([]);
-    }
+    let result = revenue;
 
-  }, [month, year, revenue])
+    result = filterRevenueByMonthAndYear(result, {
+      month,
+      year,
+    });
 
-  const searchData = (search: string) => {
-    setSearch(search);
+    if (search) result = applySearch(result, search);
 
-    const filteredData = applySearch(revenue, search)
-    setFilteredData(filteredData);
+    return result;
+  }, [revenue, month, year, search]);
+
+  const searchData = (value: string) => {
+    setSearch(value);
   };
 
   const openCreateModal = (): void =>  {
@@ -80,18 +69,12 @@ export default function RevenuePage() {
   };
 
   const createRevenue = async (data: CreateRevenueDTO) => {
-    await create({
-      ...data,
-      name: capitalizeFirstLetter(data.name),
-    });
+    await create(data);
     closeModal();
   };
 
   const updateRevenue = async (data: UpdateRevenueDTO) => {
-    await update({
-      ...data,
-      name: capitalizeFirstLetter(data.name),
-    });
+    await update(data);
     closeModal();
   };
 
@@ -104,18 +87,6 @@ export default function RevenuePage() {
   useEffect(() => {
     fetchRevenue();
   }, [fetchRevenue]);
-
-  useEffect(() => {
-    if (revenue && revenue.length > 0) {
-      revenue.sort((a, b) => {
-        const dateA: Date = new Date(a.date);
-        const dateB: Date = new Date(b.date);
-        return dateA.getTime() + dateB.getTime();
-      });
-
-      filterData({ selectedMonth: month, selectedYear: year });
-    }
-  }, [revenue, filterData, month, year]);
 
   return (
     <div className="content">
@@ -132,10 +103,7 @@ export default function RevenuePage() {
               label: item,
               value: item,
             }))}
-            onChange={(value) => {
-              setMonth(value);
-              filterData({ selectedMonth: value });
-            }}
+            onChange={setMonth}
           />
           <Filter
             value={year}
@@ -143,10 +111,7 @@ export default function RevenuePage() {
               label: String(item),
               value: item,
             }))}
-            onChange={(value) => {
-              setYear(value);
-              filterData({ selectedYear: value });
-            }}
+            onChange={setYear}
           />
           <Search value={search} onValueChange={searchData} />
         </div>

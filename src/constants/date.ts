@@ -2,7 +2,7 @@ import { MonthNames } from '@/types/chart';
 
 export const months: string[] = [
   "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro", "Todos os meses"
+  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro", "Todos"
 ];
 
 export const years: string[] = [

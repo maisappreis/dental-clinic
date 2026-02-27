@@ -2,7 +2,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { scheduleOptions } from "@/constants/appointment";
-import { capitalizeFirstLetter } from '@/utils/utils';
 import { Button } from "@/components/button/button";
 import { useAgenda } from "@/hooks/useAgenda";
 import { Appointment, CreateAppointmentDTO, UpdateAppointmentDTO } from "@/types/agenda";
@@ -30,7 +29,6 @@ export default function AppointmentForm({ selectedPatient, closeModal }: Appoint
     const { name, value } = e.target;
 
     let newValue = value;
-    if (name === "name") newValue = capitalizeFirstLetter(value);
 
     setFormData((prevData) => ({
       ...prevData,

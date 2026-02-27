@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
 import { ExpenseTable } from "@/app/pages/expense/table";
 import { Button } from "@/components/button/button";
@@ -9,23 +9,22 @@ import { CreateUpdateModal } from "./modal/createUpdate";
 import { DeleteModal } from "./modal/delete";
 import { PaymentStatusModal } from "./modal/paymentStatus";
 
-import { capitalizeFirstLetter } from "@/utils/utils";
 import { getCurrentYear, getCurrentMonth } from "@/utils/date";
 import { applySearch } from "@/utils/search";
 import { getNextMonth, getMonthAndYear } from "@/utils/date";
+import { filterExpenseByMonthYearStatus } from "@/utils/filter";
 import { months, years } from "@/constants/date";
 
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useExpense } from "@/hooks/useExpense";
 import { Expense } from "@/types/expense";
-import { CreateExpenseDTO, UpdateExpenseDTO, ExpenseFormData } from "@/types/expense";
+import { CreateExpenseDTO, UpdateExpenseDTO } from "@/types/expense";
 
 
 export default function ExpensePage() {
-  const [filteredData, setFilteredData] = useState<any[]>([]);
   const [month, setMonth] = useState(getCurrentMonth());
   const [year, setYear] = useState(getCurrentYear());
-  const [statusPayment, setStatusPayment] = useState<string>("Todos");
+  const [statusPayment, setStatusPayment] = useState<"Pago" | "À pagar" | "Todos">("Todos");
   const [search, setSearch] = useState<string>("");
   const [selectedExpense, setSelectedExpense] = useState<Expense | undefined>(undefined);
   const [paymentStatusModalIsOpen, setPaymentStatusModalIsOpen] = useState<boolean>(false);
@@ -34,46 +33,27 @@ export default function ExpensePage() {
 
   const { expenses, create, update, remove, fetchExpenses } = useExpense([]);
 
-  const filterData = useCallback(({
-    selectedMonth = month,
-    selectedYear = year,
-    selectedStatus = statusPayment
-  }) => {
-    setMonth(selectedMonth)
-    setYear(selectedYear)
-    setStatusPayment(selectedStatus);
-    setSearch("");
+  const filteredData = useMemo(() => {
+    if (!expenses.length) return [];
 
-    let isPaid = false;
+    let result = expenses;
 
-    if (selectedStatus === "À pagar") isPaid = false;
-    if (selectedStatus === "Pago") isPaid = true;
+    result = filterExpenseByMonthYearStatus(result, {
+      month,
+      year,
+      status: statusPayment,
+    });
 
-    if (expenses && expenses.length > 0) {
-      const filtered = expenses.filter(item => {
-        if (selectedMonth === "Todos os meses" && selectedYear === "Todos" && selectedStatus === "Todos") return true;
-        if (selectedMonth === "Todos os meses" && selectedStatus === "Todos") return item.year.toString() === selectedYear;
-        if (selectedMonth === "Todos os meses" && selectedYear === "Todos") return item.is_paid === isPaid;
-        if (selectedYear === "Todos" && selectedStatus === "Todos") return item.month === selectedMonth;
-
-        if (selectedMonth === "Todos os meses") return item.year.toString() === selectedYear && item.is_paid === isPaid;
-        if (selectedYear === "Todos") return item.month === selectedMonth && item.is_paid === isPaid;
-        if (selectedStatus === "Todos") return item.month === selectedMonth && item.year.toString() === selectedYear;
-        return item.month === selectedMonth && item.year.toString() === selectedYear && item.is_paid === isPaid;
-      });
-      setFilteredData(filtered);
-    } else {
-      setFilteredData([]);
+    if (search) {
+      result = applySearch(result, search);
     }
 
-  }, [month, year, statusPayment, expenses]);
+    return result;
+  }, [expenses, month, year, statusPayment, search]);
 
   const searchData = (search: string) => {
     setSearch(search);
-
-    const filteredData = applySearch(expenses, search)
-    setFilteredData(filteredData);
-  }
+  };
 
   const changePaymentStatus = async () => {
     if (selectedExpense) await updateExpenseStatus(selectedExpense)
@@ -107,34 +87,13 @@ export default function ExpensePage() {
     setSelectedExpense(undefined);
   };
 
-  const prepareDataForSubmission = (data: ExpenseFormData) => {
-    if (data.date) {
-      const [month, year] = getMonthAndYear(data.date);
-      return {
-        ...data,
-        month,
-        year: parseInt(year),
-        name: capitalizeFirstLetter(data.name),
-      };
-    } else {
-      return {
-        ...data,
-        name: capitalizeFirstLetter(data.name),
-      };
-    }
-  };
-
   const createExpense = async (data: CreateExpenseDTO) => {
-    const preparedData = prepareDataForSubmission(data);
-    await create(preparedData);
+    await create(data);
     closeModal();
   };
 
   const updateExpense = async (data: UpdateExpenseDTO) => {
-    console.log('updateExpense', data)
-
-    const preparedData = prepareDataForSubmission(data);
-    await update(preparedData);
+    await update(data);
     closeModal();
   };
 
@@ -153,17 +112,18 @@ export default function ExpensePage() {
     closeModal();
   };
 
-  const createNextMonthExpense  = async (data: UpdateExpenseDTO) => {
-    const selectedExpenseClone = {...data}
-    const nextMonthDate = getNextMonth(selectedExpenseClone.date);
-    const [month, year] = getMonthAndYear(nextMonthDate);
+  const createNextMonthExpense = async (expense: UpdateExpenseDTO) => {
+    const nextDate = getNextMonth(expense.date);
+    const [month, year] = getMonthAndYear(nextDate);
 
-    selectedExpenseClone.date = nextMonthDate;
-    selectedExpenseClone.is_paid = false;
-    selectedExpenseClone.month = month;
-    selectedExpenseClone.year = parseInt(year);
+    await create({
+      ...expense,
+      date: nextDate,
+      is_paid: false,
+      month,
+      year: Number(year),
+    });
 
-    await create(selectedExpenseClone);
     closeModal();
   };
 
@@ -176,18 +136,6 @@ export default function ExpensePage() {
   useEffect(() => {
     fetchExpenses();
   }, [fetchExpenses]);
-
-  useEffect(() => {
-    if (expenses && expenses.length > 0) {
-      expenses.sort((a, b) => {
-        const dateA: Date = new Date(a.date);
-        const dateB: Date = new Date(b.date);
-        return dateA.getTime() - dateB.getTime();
-      });
-
-      filterData({ selectedMonth: month, selectedYear: year, selectedStatus: statusPayment });
-    }
-  }, [expenses, filterData, month, year, statusPayment]);
 
   return (
     <div className="content">
@@ -204,10 +152,7 @@ export default function ExpensePage() {
               label: item,
               value: item,
             }))}
-            onChange={(value) => {
-              setMonth(value);
-              filterData({ selectedMonth: value });
-            }}
+            onChange={setMonth}
           />
           <Filter
             value={year}
@@ -215,10 +160,7 @@ export default function ExpensePage() {
               label: String(item),
               value: item,
             }))}
-            onChange={(value) => {
-              setYear(value);
-              filterData({ selectedYear: value });
-            }}
+            onChange={setYear}
           />
           <Filter
             value={statusPayment}
@@ -227,10 +169,7 @@ export default function ExpensePage() {
               { label: "Pago", value: "Pago" },
               { label: "Todos", value: "Todos" },
             ]}
-            onChange={(value) => {
-              setStatusPayment(value);
-              filterData({ selectedStatus: value });
-            }}
+            onChange={setStatusPayment}
           />
           <Search value={search} onValueChange={searchData} />
         </div>

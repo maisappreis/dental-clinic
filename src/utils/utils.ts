@@ -1,3 +1,6 @@
+import { getMonthAndYear } from "@/utils/date";
+import { ExpenseFormData } from "@/types/expense";
+
 const LOWERCASE_WORDS = ["da", "de", "do", "das", "dos", "e"];
 
 export const capitalizeFirstLetter = (text: string): string => {
@@ -13,6 +16,23 @@ export const capitalizeFirstLetter = (text: string): string => {
         : word[0].toUpperCase() + word.slice(1)
     )
     .join(" ");
+};
+
+export const prepareDataForSubmission = (data: ExpenseFormData) => {
+  if (data.date) {
+    const [month, year] = getMonthAndYear(data.date);
+    return {
+      ...data,
+      month,
+      year: parseInt(year),
+      name: capitalizeFirstLetter(data.name),
+    };
+  } else {
+    return {
+      ...data,
+      name: capitalizeFirstLetter(data.name),
+    };
+  }
 };
 
 export function formatValueToBRL(value: number): string {

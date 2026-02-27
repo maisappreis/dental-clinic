@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { AgendaService } from "@/services/agenda.service";
 import { useLoadingStore } from "@/stores/loading.store";
 import { useAlertStore } from "@/stores/alert.store";
+import { capitalizeFirstLetter } from '@/utils/utils';
 import { Appointment, CreateAppointmentDTO, UpdateAppointmentDTO } from "@/types/agenda";
 
 export function useAgenda(initialAppointment: Appointment[] = []) {
@@ -28,7 +29,12 @@ export function useAgenda(initialAppointment: Appointment[] = []) {
   const create = async (payload: CreateAppointmentDTO) => {
     showLoading("Criando agendamento...");
     try {
-      await AgendaService.create(payload);
+      const formatedPayload = {
+        ...payload,
+        name: capitalizeFirstLetter(payload.name),
+      };
+
+      await AgendaService.create(formatedPayload);
       await refresh();
 
       alert.show({
@@ -49,7 +55,12 @@ export function useAgenda(initialAppointment: Appointment[] = []) {
   const update = async (payload: UpdateAppointmentDTO) => {
     showLoading("Atualizando agendamento...");
     try {
-      const updatedAppointment = await AgendaService.update(payload);
+      const formatedPayload = {
+        ...payload,
+        name: capitalizeFirstLetter(payload.name),
+      };
+
+      const updatedAppointment = await AgendaService.update(formatedPayload);
       await refresh();
 
       alert.show({
