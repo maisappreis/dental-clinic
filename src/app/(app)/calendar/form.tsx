@@ -1,128 +1,106 @@
 
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, forwardRef, useImperativeHandle } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Input } from "@/components/form/input";
+import { Select } from "@/components/form/select";
+import { Textarea } from "@/components/form/textarea";
 import { scheduleOptions } from "@/constants/appointment";
-import { Button } from "@/components/button/button";
-import { useAgenda } from "@/hooks/useAgenda";
-import { Appointment, CreateAppointmentDTO, UpdateAppointmentDTO } from "@/types/agenda";
+import { AppointmentFormData, AppointmentFormRef } from "@/types/agenda";
 
 interface AppointmentFormProps {
-  selectedPatient?: Appointment;
-  closeModal: () => void;
+  defaultValues?: Partial<AppointmentFormData>;
+  onSubmit: (data: AppointmentFormData) => void;
 }
 
-export default function AppointmentForm({ selectedPatient, closeModal }: AppointmentFormProps) {
-  const [isFormValid, setIsFormValid] = useState<boolean>(false);
-  const [formData, setFormData] = useState({
-    id: 0,
-    date: "",
-    time: "",
-    name: "",
-    notes: ""
+export const AppointmentForm = forwardRef<
+  AppointmentFormRef,
+  AppointmentFormProps
+>(function AppointmentForm({ defaultValues, onSubmit }, ref) {
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<AppointmentFormData>({
+    defaultValues: defaultValues ?? {
+      name: "",
+      date: "",
+      time: "",
+      notes: "",
+    },
   });
 
-  const { agenda, create, update, remove, fetch } = useAgenda([]);
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-
-    let newValue = value;
-
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: newValue,
-    }));
-  };
-
-  const saveAppointment = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (selectedPatient && selectedPatient.id && selectedPatient.id > 0) {
-      await updateAppointment(selectedPatient);
-    } else {
-      await createAppointment();
-    }
-  }
-
-  const createAppointment = async () => {
-    await create(formData);
-    closeModal();
-  };
-
-  const updateAppointment = async (patient: UpdateAppointmentDTO) => {
-    await update(patient);
-    closeModal();
-  };
-
   useEffect(() => {
-    setFormData({
-      id: selectedPatient?.id || 0,
-      name: selectedPatient?.name || "",
-      date: selectedPatient?.date || "",
-      time: selectedPatient?.time || "",
-      notes: selectedPatient?.notes || ""
-    });
-  }, [selectedPatient]);
+    if (!defaultValues) return;
+    reset(defaultValues);
+  }, [defaultValues, reset]);
 
-  useEffect(() => {
-    if (
-      formData.name !== "" &&
-      formData.date !== "" &&
-      formData.time !== ""
-    ) {
-      setIsFormValid(true);
-    } else {
-      setIsFormValid(false);
-    }
-  }, [formData]);
+  useImperativeHandle(ref, () => ({
+    submit: handleSubmit(onSubmit),
+  }));
 
   return (
-    <form className="form-area" onSubmit={saveAppointment}>
-      <div className="flex form-item">
-        <label htmlFor="name" className="form-label">Paciente:</label>
-        <input id="name" name="name" type="text" className="form-input" value={formData.name}
-          onChange={handleInputChange} required />
-      </div>
+    <form>
+      <Controller
+        name="name"
+        control={control}
+        rules={{ required: "Paciente é obrigatório" }}
+        render={({ field, fieldState }) => (
+          <Input
+            label="Paciente"
+            {...field}
+            error={fieldState.error?.message}
+          />
+        )}
+      />
 
-      <div className="flex form-item">
-        <label htmlFor="date" className="form-label">Data:</label>
-        <input id="date" name="date" type="date" className="form-input" value={formData.date}
-          onChange={handleInputChange} required />
-      </div>
+      <Controller
+        name="date"
+        control={control}
+        rules={{ required: "Data é obrigatória" }}
+        render={({ field, fieldState }) => (
+          <Input
+            label="Data"
+            type="date"
+            {...field}
+            error={fieldState.error?.message}
+          />
+        )}
+      />
 
-      <div className="flex form-item">
-        <label htmlFor="time" className="form-label">Horário:</label>
-        <select id="time" name="time" className="form-select"
-          value={formData.time} onChange={handleInputChange} required>
-          {scheduleOptions.map((option, i) => (
-            <option key={i} value={option}>{option}</option>
-          ))}
-        </select>
-      </div>
+      <Controller
+        name="time"
+        control={control}
+        rules={{ required: "Horário" }}
+        render={({ field, fieldState }) => (
+          <Select
+            label="Horário"
+            value={field.value}
+            options={scheduleOptions.map((item) => ({
+              label: item,
+              value: item,
+            }))}
+            onChange={field.onChange}
+            error={fieldState.error?.message}
+          />
+        )}
+      />
 
-      <div className="flex form-item">
-        <label htmlFor="notes" className="form-label">Notas:</label>
-        <textarea id="notes" name="notes" className="form-textarea" value={formData.notes}
-          onChange={handleInputChange} />
-      </div>
-
-      <div className="flex justify-around mt-3">
-        <Button
-          type="submit"
-          label="Salvar"
-          variant="primary"
-          size="lg"
-          disabled={!isFormValid}
-        />
-        <Button
-          label="Cancelar"
-          variant="secondary"
-          size="md"
-          onClick={closeModal}
-        />
-      </div>
+      <Controller
+        name="notes"
+        control={control}
+        rules={{ maxLength: { value: 500, message: "Máx. 500 caracteres" } }}
+        render={({ field, fieldState }) => (
+          <Textarea
+            label="Observações"
+            placeholder="Digite aqui..."
+            value={field.value}
+            onChange={field.onChange}
+            error={fieldState.error?.message}
+          />
+        )}
+      />
     </form>
-  )
-}
+  );
+});

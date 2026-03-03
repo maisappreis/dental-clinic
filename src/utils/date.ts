@@ -61,3 +61,32 @@ export function getNextMonthName(currentMonth: string): MonthName {
   
   return validMonths[nextIndex];
 };
+
+export interface WeekDay {
+  dayWeek: string;
+  day: string;
+  date: string;
+}
+
+export function getCurrentWeekDays(): WeekDay[] {
+  const base = new Date();
+  const mondayOffset = base.getDay() === 0 ? -6 : 1 - base.getDay();
+
+  const weekLabels = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+
+  return weekLabels.map((label, index) => {
+    const d = new Date(base);
+    d.setDate(base.getDate() + mondayOffset + index);
+
+    return {
+      dayWeek: label,
+      day: d.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+      }),
+      date: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+        d.getDate()
+      ).padStart(2, "0")}`,
+    };
+  });
+};

@@ -1,78 +1,137 @@
 "use client";
 import { useState, useMemo, useEffect } from "react";
 import styles from "./Calendar.module.css";
-import Appointments from "./appointments";
-import { Modal } from "@/components/modal/modal";
-import AppointmentForm from "./form";
-import { scheduleOptions, initialAppointmentFormat } from "@/constants/appointment";
+import { Appointments } from "@/app/(app)/calendar/appointments";
+import { CreateUpdateModal } from "@/app/(app)/calendar/modal/createUpdate";
+import { DeleteModal } from "@/app/(app)/calendar/modal/delete";
+import { ReadOnlyModal } from "@/app/(app)/calendar/modal/readOnly";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { scheduleOptions } from "@/constants/appointment";
+import { getCurrentWeekDays } from "@/utils/date";
 import { useAgenda } from "@/hooks/useAgenda";
+import {
+  Appointment,
+  CreateAppointmentDTO,
+  UpdateAppointmentDTO,
+  SelectedAppointment,
+  CalendarSlot,
+  CalendarRow
+} from "@/types/agenda";
 
 
 export default function Calendar() {
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [modalTitle, setModalTitle] = useState<string>("");
+  const [selectedAppointment, setSelectedAppointment] = useState<SelectedAppointment>({ mode: null });
+  const [createUpdateModalIsOpen, setCreateUpdateModalIsOpen] = useState<boolean>(false);
+  const [readyOnlyModalIsOpen, setReadyOnlyModalIsOpen] = useState<boolean>(false);
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
 
-  const { agenda, fetch } = useAgenda([]);
+  const { agenda, create, update, remove, fetch } = useAgenda([]);
 
-  const daysOfWeek = useMemo(() => {
-    const today = new Date();
-    const startOfWeek = today.getDate() - today.getDay() + 1;
-    const days = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+  const daysOfWeek = useMemo(() => getCurrentWeekDays(), []);
 
-    return days.map((day, index) => {
-      const currentDay = new Date(today.setDate(startOfWeek + index));
-      const dayFormatted = currentDay.toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "2-digit",
-      });
-
-      const formattedDate = `${currentDay.getFullYear()}-${String(currentDay.getMonth() + 1).padStart(2, '0')}-${String(currentDay.getDate()).padStart(2, '0')}`;
-
-      return { dayWeek: day, day: dayFormatted, date: formattedDate };
-    });
-  }, []);
-
-  const initialAppointments = scheduleOptions.map(time => ({
-    time,
-    patients: daysOfWeek.map(day => ({
-      ...initialAppointmentFormat[0],
+  const initialAppointments = useMemo<CalendarRow[]>(() => {
+    return scheduleOptions.map(time => ({
       time,
-      date: day.date
-    }))
-  }));
+      slots: daysOfWeek.map(day => ({
+        date: day.date,
+        time,
+        appointment: undefined,
+      })),
+    }));
+  }, [daysOfWeek]);
 
   const appointments = useMemo(() => {
-    const updatedAppointments = [...initialAppointments];
+    const grid = initialAppointments.map(row => ({
+      ...row,
+      slots: row.slots.map(slot => ({ ...slot })),
+    }));
 
-    agenda.forEach(({ id, date, time, name, notes }) => {
-      const dayIndex = daysOfWeek.findIndex(day => day.date === date);
-      if (dayIndex !== -1) {
-        const appointment = updatedAppointments.find(a => a.time === time);
-        if (appointment) {
-          appointment.patients[dayIndex] = {
-            id,
-            date,
-            time,
-            name,
-            notes: notes,
-          };
-        }
+    agenda.forEach(appointment => {
+      const row = grid.find(r => r.time === appointment.time);
+      const colIndex = daysOfWeek.findIndex(d => d.date === appointment.date);
+
+      if (row && colIndex !== -1) {
+        row.slots[colIndex].appointment = appointment;
       }
     });
 
-    return updatedAppointments;
-  }, [daysOfWeek, initialAppointments, agenda]);
+    return grid;
+  }, [agenda, daysOfWeek, initialAppointments]);
 
-  const addAppointment = () => {
-    setShowModal(true);
-    setModalTitle("Novo Agendamento");
-  }
+  const openCreateModal = () => {
+    setSelectedAppointment({
+      mode: "create",
+      draft: {
+        date: "",
+        time: "",
+        name: "",
+        notes: "",
+      },
+    });
+    setCreateUpdateModalIsOpen(true);
+  };
+
+  const openUpdateModal = (appointment: UpdateAppointmentDTO): void => {
+    setSelectedAppointment({
+      mode: "update",
+      draft: appointment,
+    });
+    setCreateUpdateModalIsOpen(true);
+  };
+
+  const openDeleteModal = (appointment: Appointment): void => {
+    setSelectedAppointment({
+      mode: "view",
+      appointment,
+    });
+    setDeleteModalIsOpen(true);
+  };
+
+  const openAppointmentModal = (slot: CalendarSlot) => {
+    if (slot.appointment) {
+      setSelectedAppointment({
+        mode: "view",
+        appointment: slot.appointment,
+      });
+
+      setReadyOnlyModalIsOpen(true);
+    } else {
+      setSelectedAppointment({
+        mode: "create",
+        draft: {
+          date: slot.date,
+          time: slot.time,
+          name: "",
+          notes: "",
+        },
+      });
+      setCreateUpdateModalIsOpen(true);
+    }
+  };
+
+  const createAppointment = async (data: CreateAppointmentDTO) => {
+    await create(data);
+    closeModal();
+  };
+
+  const updateAppointment = async (data: UpdateAppointmentDTO) => {
+    await update(data);
+    closeModal();
+  };
+
+  const deleteAppointment = async () => {
+    if (selectedAppointment.mode !== "view") return;
+    await remove(selectedAppointment.appointment.id);
+    closeModal();
+  };
 
   const closeModal = () => {
-    setShowModal(false);
-  }
+    setCreateUpdateModalIsOpen(false);
+    setReadyOnlyModalIsOpen(false);
+    setDeleteModalIsOpen(false);
+    setSelectedAppointment({ mode: null });
+  };
 
   useEffect(() => {
     fetch();
@@ -82,7 +141,7 @@ export default function Calendar() {
     <div className="content">
       <div className={styles.grid}>
         <div className={`${styles.week} ${styles.time} ${styles.font} cursor-pointer`}
-          onClick={addAppointment}>
+          onClick={openCreateModal}>
           <FontAwesomeIcon icon={faPlus} className={styles.icon} />
         </div>
         {daysOfWeek.map((day, index) => (
@@ -95,28 +154,33 @@ export default function Calendar() {
           <Appointments
             key={appointment.time}
             time={appointment.time}
-            patients={appointment.patients}
-            //setAgenda={setAgenda}
+            slots={appointment.slots}
+            onOpen={openAppointmentModal}
           />
         ))}
       </div>
 
-      <Modal open={showModal} onClose={closeModal}>
-        <Modal.Header>
-          {modalTitle}
-        </Modal.Header>
+      <ReadOnlyModal
+        open={readyOnlyModalIsOpen}
+        appointment={selectedAppointment}
+        onClose={closeModal}
+        onUpdate={openUpdateModal}
+        onDelete={openDeleteModal}/>
 
-        <Modal.Body>
-          <AppointmentForm
-            //setAgenda={setAgenda}
-            closeModal={closeModal}
-          />
-        </Modal.Body>
+      <CreateUpdateModal
+        open={createUpdateModalIsOpen}
+        appointment={selectedAppointment}
+        onClose={closeModal}
+        onCreate={createAppointment}
+        onUpdate={updateAppointment}
+      />
 
-        {/* <Modal.Footer>
-          //TODO: Botões aqui
-        </Modal.Footer> */}
-      </Modal>
+      <DeleteModal
+        open={deleteModalIsOpen}
+        appointment={selectedAppointment}
+        onClose={closeModal}
+        onDelete={deleteAppointment}
+      />
     </div>
-  )
-}
+  );
+};
