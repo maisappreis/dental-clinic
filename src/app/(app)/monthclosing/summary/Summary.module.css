@@ -1,0 +1,32 @@
+.summary {
+  background-color: rgb(230, 230, 230);
+  box-shadow: 0 8px 6px -6px rgb(99, 99, 99);
+  border-radius: 20px;
+  padding: 20px;
+  margin: 0 15px;
+}
+
+.inputs {
+  background-color: rgb(214, 255, 224);
+  box-shadow: 0 8px 6px -6px rgb(99, 99, 99);
+  border-radius: 20px;
+  padding: 20px;
+  margin: 0 15px;
+}
+
+.outputs {
+  background-color: rgb(249, 199, 199);
+  box-shadow: 0 8px 6px -6px rgb(99, 99, 99);
+  border-radius: 20px;
+  padding: 20px;
+  margin: 0 15px;
+}
+
+.box {
+  padding: 20px 30px;
+  margin: 0 15px;
+  background-color: var(--blue-light-color);
+  box-shadow: 0 8px 6px -6px rgb(99, 99, 99);
+  border-radius: 20px;
+  cursor: pointer;
+}

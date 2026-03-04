@@ -52,3 +52,32 @@ export function filterExpenseByMonthYearStatus(
     return true;
   });
 };
+
+export function filterRevenue (
+  revenue: Revenue[],
+  selectedNumberMonth: number,
+  selectedYear: number
+) {
+  if (revenue && revenue.length > 0) {
+    const currentMonth = selectedNumberMonth;
+    const currentYear = selectedYear
+
+    const updatedRevenue = revenue.map(item => {
+      let releaseDate = new Date(item.date);
+
+      return {
+        ...item,
+        release_date: releaseDate.toISOString().slice(0, 10),
+      };
+    });
+
+    const filteredRevenue = updatedRevenue.filter(item => {
+      const releaseMonth = parseInt(item.release_date.slice(5, 7));
+      const releaseYear = parseInt(item.release_date.slice(0, 4));
+
+      return releaseMonth === currentMonth && releaseYear === currentYear;
+    });
+
+    return filteredRevenue
+  }
+};

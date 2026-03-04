@@ -5,16 +5,16 @@ import { Table, Column } from "@/components/table/table";
 import { formatDate } from "@/utils/date";
 import { formatValueToBRL } from "@/utils/utils";
 import { Revenue } from "@/types/revenue";
-import styles from "./MonthClosing.module.css";
+import styles from "../MonthClosing.module.css";
 
 interface TabOneTableActions {
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>, index: number) => void;
-}
+};
 
 interface TabOneTableProps {
   data: Revenue[];
   actions: TabOneTableActions;
-}
+};
 
 export function TabOneTable({ data, actions }: TabOneTableProps) {
   const columns = createColumns(actions);
@@ -47,10 +47,15 @@ export function TabOneTable({ data, actions }: TabOneTableProps) {
         align: "center",
         accessor: "payment",
         render: (row) => {
-          const isHighlighted = ["Débito", "Crédito à vista", "Crédito à prazo"].includes(row.payment);
+          const isHighlighted = 
+            ["Débito", "Crédito à vista", "Crédito à prazo"]
+            .includes(row.payment);
 
           return (
-            <span style={isHighlighted ? { color: 'red', fontWeight: 'bold' } : undefined}>
+            <span
+              style={isHighlighted
+                ? { color: 'red', fontWeight: 'bold' }
+                : undefined}>
               {row.payment}
             </span>
           )
@@ -67,10 +72,14 @@ export function TabOneTable({ data, actions }: TabOneTableProps) {
         header: "Valor Bruto",
         align: "center",
         render: (row) => {
-          const isHighlighted = ["Débito", "Crédito à vista", "Crédito à prazo"].includes(row.payment);
+          const isHighlighted = 
+            ["Débito", "Crédito à vista", "Crédito à prazo"].includes(row.payment);
 
           return (
-            <span style={isHighlighted ? { color: 'red', fontWeight: 'bold' } : undefined}>
+            <span 
+              style={isHighlighted
+                ? { color: 'red', fontWeight: 'bold' }
+                : undefined}>
               {formatValueToBRL(row.value)}
             </span>
           )

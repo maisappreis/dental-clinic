@@ -11,6 +11,7 @@ import {
 
 export function useMonthClosing(initialMonthClosing: MonthClosing[] = []) {
   const [monthClosing, setMonthClosing] = useState<MonthClosing[]>(initialMonthClosing);
+  const [isLoading, setIsLoading] = useState(false);
 
   const alert = useAlertStore.getState();
   const showLoading = useLoadingStore((s) => s.show);
@@ -22,13 +23,13 @@ export function useMonthClosing(initialMonthClosing: MonthClosing[] = []) {
   }, []);
 
   const fetchMonthClosing = useCallback(async (year: number) => {
-    showLoading("Carregando histórico de fechamentos de caixa...");
+    setIsLoading(true);
     try {
       await refresh(year);
     } finally {
-      hideLoading();
+      setIsLoading(false);
     }
-  }, [refresh, showLoading, hideLoading]);
+  }, [refresh]);
 
   const create = async (payload: CreateMonthClosingDTO) => {
     showLoading('Salvando dados...');
@@ -98,6 +99,7 @@ export function useMonthClosing(initialMonthClosing: MonthClosing[] = []) {
 
   return {
     monthClosing,
+    isLoading,
     fetchMonthClosing,
     create,
     update,

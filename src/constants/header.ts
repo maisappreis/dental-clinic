@@ -34,9 +34,24 @@ export const HEADER_CONFIG: Record<
     subtitle: "Controle do pagamento das contas",
     icon: faMoneyBillTransfer,
   },
-  "/monthclosing/": {
+  "/monthclosing/reports/": {
     title: "Fechamento de caixa",
-    subtitle: "Encerramento do caixa mensal",
+    subtitle: "Relatórios dos fechamentos de caixa",
+    icon: faBook,
+  },
+  "/monthclosing/tab1/": {
+    title: "Fechamento de caixa",
+    subtitle: "Descontando taxas de cartão de crédito e débito",
+    icon: faBook,
+  },
+  "/monthclosing/tab2/": {
+    title: "Fechamento de caixa",
+    subtitle: "Avaliação dos montantes de entradas e saídas",
+    icon: faBook,
+  },
+  "/monthclosing/summary/": {
+    title: "Fechamento de caixa",
+    subtitle: "Resumo dos resultados",
     icon: faBook,
   },
 };

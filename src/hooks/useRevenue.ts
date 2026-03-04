@@ -17,15 +17,17 @@ export function useRevenue(initialRevenue: Revenue[] = []) {
   const showLoading = useLoadingStore((s) => s.show);
   const hideLoading = useLoadingStore((s) => s.hide);
 
-  const refresh = useCallback(async () => {
+  const refresh = useCallback(async (): Promise<Revenue[]> => {
     const data = await RevenueService.list();
-    setRevenue(sortByDate(data, "desc"));
+    const sorted = sortByDate(data, "desc");
+    setRevenue(sorted);
+    return sorted;
   }, []);
 
   const fetchRevenue = useCallback(async () => {
     showLoading("Carregando receitas...");
     try {
-      await refresh();
+      return await refresh();
     } finally {
       hideLoading();
     }

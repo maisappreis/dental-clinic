@@ -5,7 +5,7 @@ import styles from "./css/Checkbox.module.css";
 
 interface CheckboxProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "checked"> {
-  label?: string;
+  label?: React.ReactNode;
   checked?: boolean;
   error?: string;
   onChange?: (checked: boolean) => void;
