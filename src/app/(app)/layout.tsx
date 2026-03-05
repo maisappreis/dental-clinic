@@ -8,9 +8,13 @@ export default function AppLayout({
 }) {
   return (
     <main className="app-area">
-      <Header />
       <Sidebar />
-      <div className="contentarea">{children}</div>
+      <div className="app-layout">
+        <Header />
+        <div className="app-content">
+          {children}
+        </div>
+      </div>
     </main>
   );
 }

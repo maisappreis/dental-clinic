@@ -13,12 +13,12 @@
 }
 
 .blue {
-    background-color: var(--blue-dark-color);
+    background-color: var(--secondary-color);
     color: white;
 }
 
 .header {
-    background-color: var(--blue-darker-color);
+    background-color: var(--primary-color);
     color: white;
     display: flex;
     flex-direction: column;
@@ -34,18 +34,18 @@
 }
 
 .gray {
-    background-color: var(--gray-dark-color);
+    background-color: var(--gray-darker);
 }
 
 .graylight {
-    background-color: var(--gray-light-color);
+    background-color: var(--gray-lighter);
     color: black;
     font-size: 16px;
     cursor: pointer;
 }
 
 .graylight:hover {
-    background-color: var(--blue-light-color);
+    background-color: var(--tertiary-color);
 }
 
 .schedule {

@@ -29,7 +29,7 @@ td {
 }
 
 th {
-  background-color: var(--blue-dark-color);
+  background-color: var(--secondary-color);
   color: white;
   text-align: center;
   font-size: 16px;
@@ -40,7 +40,7 @@ tr:nth-child(even) {
 }
 
 tr:hover {
-  background-color: var(--blue-light-color);
+  background-color: var(--tertiary-color);
 }
 
 .table-icon {
@@ -71,7 +71,7 @@ tr:hover {
 }
 
 .pagination-button {
-  background-color: var(--red-dark-color);
+  background-color: var(--red-darker);
   color: white;
   border: none;
   padding: 5px 16px;
@@ -121,7 +121,7 @@ tr:hover {
 
 .no-data {
   font-size: 20px;
-  background-color: var(--red-light-color);
+  background-color: var(--red-lighter);
   font-weight: bold;
   margin: 70px 20px;
   padding: 30px;

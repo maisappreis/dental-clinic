@@ -2,29 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --black-color: black;
-  --gray-dark-color: rgb(58, 58, 58);
-  --gray-light-color: rgb(228, 228, 228);
-  --red-dark-color: rgb(178, 15, 15);
-  --red-light-color: rgb(239, 182, 182);
-  --blue-light-color: rgb(207, 217, 254);
-  --blue-dark-color: rgb(1, 32, 144);
-  --blue-darker-color: rgb(0, 14, 63);
-}
+@import "./styles/variables.css";
 
 body {
-  background-color: var(--gray-light-color);
+  background-color: var(--secondary-color);
 }
 
 .app-area {
   display: flex;
   flex-direction: column;
-  min-height: 90vh;
-  font-size: 18px;
+  justify-content: flex-end;
 }
 
-.content {
+.app-layout {
+  position: relative;
+  z-index: 1;
+
+  margin-left: var(--sidebar-width);
+
+  width: var(--content-width);
+  height: 100vh;
+
+  background-color: var(--gray-lighter);
+  border-radius: 50px 0 0 50px;
+}
+
+.app-content {
   display: flex;
   flex-direction: column;
   justify-content: left;
@@ -35,49 +38,12 @@ body {
   height: 75vh;
   min-height: 70vh;
   background-color: white;
-  box-shadow: 2px 2px 20px rgb(148, 148, 148);
+  border-radius: 16px;
+  box-shadow: 2px 2px 20px rgb(148, 148, 148);;
 }
 
-.contentarea {
-  position: absolute;
-  top: 90px;
-  left: 230px;
-
-  width: 87vw;
-  height: 83vh;
-  background-color: var(--gray-light-color);
-}
-
-@media only screen and (max-width: 1300px) {
-  .contentarea {
-    left: 100px;
-    width: 92vw;
-  }
-}
-
-@media only screen and (max-width: 1000px) {
-  body {
-    min-height: 500px;
-  }
-
-  .app-area {
-    min-height: 100px;
-    font-size: 14px;
-    overflow-y: auto;
-  }
-
-  .content {
-    padding: 15px;
-    margin: 15px;
-    width: 95%;
-    min-height: 300px;
-    height: fit-content;
-  }
-
-  .contentarea {
-    top: 50px;
-    left: 70px;
-    width: 90vw;
-    height: 100vh;
-  }
+.divider {
+  height: 1px;
+  margin: 10px 0;
+  background: linear-gradient(to right, transparent, white, transparent);
 }

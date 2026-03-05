@@ -1,7 +1,9 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import styles from "./styles/Sidebar.module.css";
+import { usePathname, useRouter } from "next/navigation";
 import { Logotype } from "./logotype";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,9 +11,9 @@ import {
   faCalendar,
   faHandHoldingDollar,
   faMoneyBillTransfer,
+  faRightToBracket,
   faBook,
 } from "@fortawesome/free-solid-svg-icons";
-import styles from "./styles/Sidebar.module.css";
 
 
 const options = [
@@ -23,7 +25,27 @@ const options = [
 ];
 
 export function Sidebar() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const pathname = usePathname();
+
+  const router = useRouter();
+
+  const loginUser = () => {
+    router.push("/login");
+  };
+
+  const logoutUser = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    window.location.reload();
+
+    router.push("/login");
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    setIsAuthenticated(!!token);
+  }, []);
 
   return (
     <aside className={styles.sidebar}>
@@ -53,6 +75,28 @@ export function Sidebar() {
           );
         })}
       </ul>
+
+      <div>
+        <div className="divider"></div>
+
+        {isAuthenticated ? (
+          <button className={styles.userlog} onClick={logoutUser}>
+            <FontAwesomeIcon
+              icon={faRightToBracket}
+              className={styles.icon}
+            />
+            <span className={styles.text}>Logout</span>
+          </button>
+          ) : (
+          <button className={styles.userlog} onClick={loginUser}>
+            <FontAwesomeIcon
+              icon={faRightToBracket}
+              className={styles.icon}
+            />
+            <span className={styles.text}>Login</span>
+          </button>
+        )}
+      </div>
     </aside>
   );
 };

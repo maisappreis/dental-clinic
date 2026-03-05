@@ -6,7 +6,7 @@
 .tab {
   padding: 10px;
   width: 20vw;
-  background-color: var(--blue-dark-color);
+  background-color: var(--secondary-color);
   color: white;
   text-align: center;
   border-top-right-radius: 30px;

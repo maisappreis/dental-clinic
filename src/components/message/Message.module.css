@@ -1,6 +1,6 @@
 .box {
   font-size: 20px;
-  background-color: var(--red-light-color);
+  background-color: var(--red-lighter);
   font-weight: bold;
   margin: 70px 20px;
   padding: 30px;
@@ -17,5 +17,5 @@
 }
 
 .error {
-  background-color: var(--red-light-color);
+  background-color: var(--red-lighter);
 }

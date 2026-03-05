@@ -1,0 +1,59 @@
+:root {
+   /* ============= COLORS ============= */
+
+  --primary-color: rgb(36, 43, 67);
+  --secondary-color: rgb(32, 57, 91);
+  --tertiary-color: rgb(207, 217, 254);
+
+  --gray-darker: rgb(117, 117, 117);
+  --gray-medium: rgb(214, 214, 214);
+  --gray-lighter: rgb(238, 238, 238);
+
+  --red-darker: rgb(156, 4, 4);
+  --red-medium: red;
+  --red-lighter: rgb(243, 186, 186);
+
+  --success-color: green;
+  --info-color: orange;
+  --error-color: red;
+
+  /* ============= LAYOUT ============= */
+
+  --header-height: 90px;
+  --header-font-size: 24px;
+  --header-icon-size: 30px;
+  --header-icon-margin: 15px 12px 10px 12px;
+  --header-subtitle-visibility: block;
+
+  --sidebar-width: 230px;
+  --sidebar-text-visibility: block;
+  --sidebar-logo-size: 70px;
+
+  --content-width: calc(100% - var(--sidebar-width));
+
+  --text-size: 18px;
+  
+}
+
+@media (max-width: 1200px) {
+  :root {
+    --sidebar-width: 100px;
+    --sidebar-text-visibility: none;
+    --sidebar-logo-size: 50px;
+  }
+}
+
+@media (max-width: 1000px) {
+  :root {
+    --header-height: 40px;
+    --header-font-size: 20px;
+    --header-icon-size: 20px;
+    --header-icon-margin: 12px;
+    --header-subtitle-visibility: none;
+
+    --sidebar-width: 85px;
+    --sidebar-logo-size: 40px;
+
+    --text-size: 14px;
+  }
+}
