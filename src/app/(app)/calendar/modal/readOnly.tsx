@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import styles from "../Calendar.module.css";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { Modal } from "@/components/modal/modal";
 import { Button } from "@/components/button/button";
@@ -40,17 +41,17 @@ export function ReadOnlyModal({
       <Modal.Body>
         <div>
           <div>
-            <h3 className="mb-3">
+            <p className={styles.appointmentItem}>
               Paciente: <strong>{name}</strong>
-            </h3>
-            <h3 className="mb-3">
+            </p>
+            <p className={styles.appointmentItem}>
               Dia: <strong>{formatDate(date)}</strong>
-            </h3>
-            <h3 className="mb-3">
+            </p>
+            <p className={styles.appointmentItem}>
               Horário: <strong>{time}</strong>
-            </h3>
-            <p className="mb-3">
-              Observações: {notes}
+            </p>
+            <p className={styles.appointmentItem}>
+              Observações: <strong>{notes}</strong>
             </p>
           </div>
         </div>

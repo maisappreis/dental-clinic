@@ -23,6 +23,10 @@ export function RevenueExpensesChart({
       return { labels: [], datasets: [] };
     }
 
+    const styles = getComputedStyle(document.documentElement);
+    const revenueColor = styles.getPropertyValue("--success-color");
+    const expenseColor = styles.getPropertyValue("--error-color");
+
     const revenueByMonth = groupValuesByMonth(revenue);
     const expensesByMonth = groupValuesByMonth(expenses);
 
@@ -45,14 +49,14 @@ export function RevenueExpensesChart({
         {
           label: "Receitas",
           data: last12Months.map(key => revenueByMonth[key] || 0),
-          borderColor: "rgba(19, 163, 0, 0.8)",
-          backgroundColor: "rgba(19, 163, 0, 0.3)",
+          borderColor: revenueColor,
+          backgroundColor: revenueColor
         },
         {
           label: "Despesas",
           data: last12Months.map(key => expensesByMonth[key] || 0),
-          borderColor: "rgba(255, 0, 0, 0.8)",
-          backgroundColor: "rgba(255, 0, 0, 0.3)",
+          borderColor: expenseColor,
+          backgroundColor: expenseColor
         },
       ],
     };

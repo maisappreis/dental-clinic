@@ -90,7 +90,7 @@ export function ExpenseTable({ data, actions }: ExpenseTableProps) {
           const isTooltipOpen = tooltipRowId === row.id;
 
           return (
-            <div>
+            <div className="flex justify-end">
               {row.notes && (
                 <Tooltip
                   content={row.notes}

@@ -140,12 +140,12 @@ export default function Calendar() {
   return (
     <div className="app-content">
       <div className={styles.grid}>
-        <div className={`${styles.week} ${styles.time} ${styles.font} cursor-pointer`}
+        <div className={styles.addBtn}
           onClick={openCreateModal}>
-          <FontAwesomeIcon icon={faPlus} className={styles.icon} />
+          <FontAwesomeIcon icon={faPlus} className={styles.addIcon} />
         </div>
         {daysOfWeek.map((day, index) => (
-          <div key={index} className={`${styles.week} ${styles.header} ${styles.font}`}>
+          <div key={index} className={styles.day}>
             <span>{day.dayWeek}</span>
             <span>{day.day}</span>
           </div>

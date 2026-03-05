@@ -1,13 +1,22 @@
 import { ChartOptions, TooltipItem } from "chart.js";
 import { formatValueToBRL } from "@/utils/utils";
 
-export const barChartOptions = {
+export const proceduresBarChartOptions = {
   plugins: {
-    legend: {
-      labels: {
-        font: { size: 20 },
-        color: "rgba(0, 0, 0, 0.8)",
+    title: {
+      display: true,
+      text: "Procedimentos mais realizados",
+      font: {
+        size: 18,
+        weight: "bold" as const,
       },
+      padding: {
+        top: 10,
+        bottom: 20,
+      },
+    },
+    legend: {
+      display: false,
     },
     tooltip: {
       titleFont: { size: 18 },
@@ -25,15 +34,22 @@ export const barChartOptions = {
   },
 };
 
-export const lineChartOptions: ChartOptions<"line"> = {
+export const proceduresLineChartOptions: ChartOptions<"line"> = {
   plugins: {
-    legend: {
-      labels: {
-        font: {
-          size: 20,
-        },
-        color: "rgba(0, 0, 0, 0.8)",
+    title: {
+      display: true,
+      text: "Número de procedimentos realizados",
+      font: {
+        size: 18,
+        weight: "bold" as const,
       },
+      padding: {
+        top: 10,
+        bottom: 20,
+      },
+    },
+    legend: {
+      display: false,
     },
     tooltip: {
       titleFont: {
@@ -57,13 +73,20 @@ export const lineChartOptions: ChartOptions<"line"> = {
 
 export const profitBarChartOptions: ChartOptions<"bar"> = {
   plugins: {
-    legend: {
-      labels: {
-        font: {
-          size: 20,
-        },
-        color: "rgba(0, 0, 0, 0.8)",
+    title: {
+      display: true,
+      text: "Lucro Bruto Mensal",
+      font: {
+        size: 18,
+        weight: "bold" as const,
       },
+      padding: {
+        top: 10,
+        bottom: 20,
+      },
+    },
+    legend: {
+      display: false,
     },
     tooltip: {
       titleFont: {
@@ -87,13 +110,20 @@ export const profitBarChartOptions: ChartOptions<"bar"> = {
 
 export const revenueExpensesLineChartOptions: ChartOptions<"line"> = {
   plugins: {
-    legend: {
-      labels: {
-        font: {
-          size: 20,
-        },
-        color: "rgba(0, 0, 0, 0.8)",
+    title: {
+      display: true,
+      text: "Receita x Despesas",
+      font: {
+        size: 18,
+        weight: "bold" as const,
       },
+      padding: {
+        top: 10,
+        bottom: 20,
+      },
+    },
+    legend: {
+      display: false,
     },
     tooltip: {
       titleFont: {

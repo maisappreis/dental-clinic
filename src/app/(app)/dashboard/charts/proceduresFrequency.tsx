@@ -7,13 +7,16 @@ import { ChartData } from "@/types/chart";
 import "@/utils/chart";
 
 import { getMostPerformedProcedures } from "@/utils/charts";
-import { barChartOptions } from "@/constants/charts";
+import { proceduresBarChartOptions } from "@/constants/charts";
 
 type Props = {
   revenue: Revenue[];
 };
 
 export function MostPerformedProceduresChart({ revenue }: Props) {
+  const styles = getComputedStyle(document.documentElement);
+  const color = styles.getPropertyValue("--primary-color");
+
   const chartData = useMemo<ChartData>(() => {
     if (!revenue.length) {
       return { labels: [], datasets: [] };
@@ -27,16 +30,15 @@ export function MostPerformedProceduresChart({ revenue }: Props) {
         {
           label: "Procedimentos mais realizados",
           data: procedures.map(([, count]) => count),
-          backgroundColor: "rgba(1, 32, 144, 0.7)",
-          borderColor: "rgba(75,192,192,1)",
+          backgroundColor: color
         },
       ],
     };
-  }, [revenue]);
+  }, [revenue, color]);
 
   if (!chartData.labels.length) {
     return <span>Sem dados para exibir</span>;
   }
 
-  return <Bar data={chartData} options={barChartOptions} />;
+  return <Bar data={chartData} options={proceduresBarChartOptions} />;
 };

@@ -29,9 +29,11 @@ export function DeleteModal({
       </Modal.Header>
 
       <Modal.Body>
-        Tem certeza que deseja excluir o valor de
-        <strong> {formatValueToBRL(revenue.value)} </strong> do paciente
-        <strong> {revenue.name}</strong>?
+        <p className="text-base">
+          Tem certeza que deseja excluir o valor de
+          <strong> {formatValueToBRL(revenue.value)} </strong> do(a) paciente
+          <strong> {revenue.name}</strong>?
+        </p>
       </Modal.Body>
 
       <Modal.Footer>

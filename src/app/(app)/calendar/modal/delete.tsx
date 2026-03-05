@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import styles from "../Calendar.module.css";
 import { Modal } from "@/components/modal/modal";
 import { Button } from "@/components/button/button";
 import { SelectedAppointment } from "@/types/agenda";
@@ -31,8 +32,10 @@ export function DeleteModal({
       </Modal.Header>
 
       <Modal.Body>
-        Tem certeza que deseja excluir o agendamento 
-        do paciente <strong>{name}</strong>?
+        <p className="text-base">
+          Tem certeza que deseja excluir o agendamento 
+          do(a) paciente <strong>{name}</strong>?
+        </p>
       </Modal.Body>
 
       <Modal.Footer>

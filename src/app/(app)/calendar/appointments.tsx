@@ -26,14 +26,14 @@ export function Appointments({
 
   return (
     <>
-      <div className={`${styles.schedule} ${styles.blue} ${styles.text}`}>{time}</div>
+      <div className={styles.time}>{time}</div>
       {slots.map((slot, index) => (
         <button
           key={index}
-          className={`${styles.schedule} ${styles.graylight}`}
+          className={styles.appointment}
           onClick={() => onOpen(slot)}>
           <div className="flex justify-center">
-            <p className={`${styles.text}`}>
+            <p className={styles.text}>
               {slot.appointment?.name ? shortName(slot.appointment?.name) : ""}
             </p>
           </div>

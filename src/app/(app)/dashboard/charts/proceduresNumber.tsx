@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { Line } from "react-chartjs-2";
 import { Revenue } from "@/types/revenue";
 import { monthNames } from "@/constants/date";
-import { lineChartOptions } from "@/constants/charts";
+import { proceduresLineChartOptions } from "@/constants/charts";
 import { groupRevenueByMonth } from "@/utils/charts";
 import "@/utils/chart";
 
@@ -18,6 +18,9 @@ export function NumberOfProceduresChart({
     if (!revenue.length) {
       return { labels: [], datasets: [] };
     }
+
+    const styles = getComputedStyle(document.documentElement);
+    const color = styles.getPropertyValue("--primary-color");
 
     const groupedByMonth = groupRevenueByMonth(revenue);
 
@@ -38,8 +41,8 @@ export function NumberOfProceduresChart({
         {
           label: "Número de procedimentos realizados",
           data: values,
-          borderColor: "rgba(1, 32, 144)",
-          backgroundColor: "rgba(1, 32, 144)",
+          backgroundColor: color,
+          borderColor: color,
           tension: 0.3,
         },
       ],
@@ -50,5 +53,5 @@ export function NumberOfProceduresChart({
     return <span>Sem dados para exibir</span>;
   }
 
-  return <Line data={chartData} options={lineChartOptions} />;
+  return <Line data={chartData} options={proceduresLineChartOptions} />;
 };

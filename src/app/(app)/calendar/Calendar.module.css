@@ -1,67 +1,74 @@
 .grid {
-    display: grid;
-    grid-template-columns: auto repeat(6, 1fr);
-    gap: 10px;
+  display: grid;
+  grid-template-columns: auto repeat(6, 1fr);
+  gap: 10px;
 }
 
-.week {
-    font-weight: bold;
-    padding: 5px 30px;
-    text-align: center;
-    border-radius: 10px;
-    font-size: 15px;
+.addBtn {
+  background-color: var(--quaternary-color);
+  color: var(--primary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  cursor: pointer;
 }
 
-.blue {
-    background-color: var(--secondary-color);
-    color: white;
+.addBtn:hover {
+  background-color: var(--tertiary-color);
+  color: white;
 }
 
-.header {
-    background-color: var(--primary-color);
-    color: white;
-    display: flex;
-    flex-direction: column;
+.addIcon {
+  font-size: 20px;
+}
+
+.day,
+.addBtn,
+.font {
+  font-weight: bold;
+  font-size: 15px;
+  padding: 5px 30px;
+  text-align: center;
 }
 
 .time {
-    background-color: green;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100px;
+  background-color: var(--tertiary-color);
+  color: white;
 }
 
-.gray {
-    background-color: var(--gray-darker);
+.time,
+.appointment {
+  text-align: center;
+  padding: 6px 15px;
 }
 
-.graylight {
-    background-color: var(--gray-lighter);
-    color: black;
-    font-size: 16px;
-    cursor: pointer;
+.day,
+.addBtn,
+.appointment,
+.time {
+  border-radius: 5px;
 }
 
-.graylight:hover {
-    background-color: var(--tertiary-color);
+.day {
+  background-color: var(--primary-color);
+  color: white;
+  display: flex;
+  flex-direction: column;
 }
 
-.schedule {
-    text-align: center;
-    padding: 6px 15px;
-    border-radius: 10px;
+.appointment {
+  background-color: var(--gray-lighter);
+  color: black;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-.info {
-    margin: 5px;
-    cursor: pointer;
-    font-size: 15px;
-    color: black;
-    width: 20px;
+.appointment:hover {
+  background-color: var(--quaternary-color);
 }
 
+.time,
 .text {
   display: flex;
   justify-content: center;
@@ -69,35 +76,7 @@
   font-size: 15px;
 }
 
-.icon {
-  zoom: 1.5;
-}
-
-@media only screen and (max-width: 1000px) {
-  .week {
-    padding: 5px;
-    font-size: 14px;
-    border-radius: 10px;
-  }
-
-  .time {
-    width: fit-content;
-  }
-
-  .schedule {
-    padding: 6px;
-    border-radius: 10px;
- }
-
- .info {
-   display: none;
-  }
-
-  .font {
-    font-size: 12px;
-  }
-
-  .text {
-    font-size: 12px;
-  }
+.appointmentItem {
+  font-size: 16px;
+  margin-bottom: 20px;
 }

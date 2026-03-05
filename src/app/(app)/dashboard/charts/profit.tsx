@@ -13,14 +13,16 @@ export function ProfitChart({ profit }: { profit: ProfitData }) {
       return { labels: [], datasets: [] };
     }
 
+    const styles = getComputedStyle(document.documentElement);
+    const barColor = styles.getPropertyValue("--tertiary-color");
+
     return {
       labels: profit.labels,
       datasets: [
         {
           label: "Lucro bruto mensal",
           data: profit.profit,
-          backgroundColor: "rgba(19, 163, 0, 0.7)",
-          borderColor: "rgba(19, 163, 0, 1)",
+          backgroundColor: barColor
         },
       ],
     };
