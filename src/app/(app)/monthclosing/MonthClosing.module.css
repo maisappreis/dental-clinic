@@ -47,6 +47,11 @@
   font-size: 16px;
 }
 
+.label {
+  margin: 5px 15px 0 0;
+  min-width: fit-content;
+}
+
 @media only screen and (min-width: 1600px) {
   .overflow {
     max-height: 465px;

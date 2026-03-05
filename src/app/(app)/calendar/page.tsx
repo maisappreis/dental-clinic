@@ -138,7 +138,7 @@ export default function Calendar() {
   }, [fetch]);
 
   return (
-    <div className="content">
+    <div className="app-content">
       <div className={styles.grid}>
         <div className={`${styles.week} ${styles.time} ${styles.font} cursor-pointer`}
           onClick={openCreateModal}>

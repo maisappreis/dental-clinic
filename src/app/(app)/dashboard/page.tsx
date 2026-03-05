@@ -23,13 +23,17 @@ export default function Dashboard() {
   }, [fetchRevenue, fetchExpenses, fetchProfit]);
 
   return (
-    <div className="content align-middle">
-      <div id="area" className={styles.area}>
+    <div className={styles.chartarea}>
+      <div className={styles.chartitem}>
         <RevenueExpensesChart revenue={revenue} expenses={expenses} />
+      </div>
+      <div className={styles.chartitem}>
         <MostPerformedProceduresChart revenue={revenue} />
       </div>
-      <div id="area" className={styles.area}>
+      <div className={styles.chartitem}>
         <NumberOfProceduresChart revenue={revenue} />
+      </div>
+      <div className={styles.chartitem}>
         <ProfitChart profit={profit} />
       </div>
     </div>

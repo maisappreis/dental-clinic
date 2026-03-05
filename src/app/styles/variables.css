@@ -30,9 +30,11 @@
   --sidebar-logo-size: 70px;
 
   --content-width: calc(100% - var(--sidebar-width));
+  --content-margin: 15px 30px;
+  --content-border-radius: 25px;
 
   --text-size: 18px;
-  
+  --box-shadow: 2px 2px 20px rgb(148, 148, 148);
 }
 
 @media (max-width: 1200px) {

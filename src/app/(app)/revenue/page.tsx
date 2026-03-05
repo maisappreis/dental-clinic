@@ -89,7 +89,7 @@ export default function RevenuePage() {
   }, [fetchRevenue]);
 
   return (
-    <div className="content">
+    <div className="app-content">
       <div className="flex flex-column justify-between" style={{ marginBottom: 15 }}>
         <Button
           label="Nova Receita"

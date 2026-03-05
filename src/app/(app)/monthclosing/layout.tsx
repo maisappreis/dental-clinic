@@ -22,7 +22,7 @@ export default function MonthClosingLayout({
 
   return (
     <MonthClosingProvider>
-      <div className="content">
+      <div className="app-content">
         <div className={styles.tabs}>
           {TABS.map((tab) => {
             const isActive = pathname === tab.path;
