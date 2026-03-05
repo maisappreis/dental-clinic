@@ -71,7 +71,7 @@ export function CreateUpdateModal({
       </Modal.Body>
 
       <Modal.Footer>
-        <div className="flex justify-around mt-3">
+        <div className="button-area">
           <Button
             type="button"
             label="Salvar"

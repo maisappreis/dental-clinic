@@ -18,7 +18,7 @@
 .subtitle {
   font-size: 18px;
   margin: 2px 0 5px 15px;
-  display: var(--header-subtitle-visibility);
+  display: var(--text-visibility);
 }
 
 .icon {

@@ -48,3 +48,9 @@ body {
   margin: 10px 0;
   background: linear-gradient(to right, transparent, white, transparent);
 }
+
+.button-area {
+  display: flex;
+  justify-content: space-around;
+  gap: 0.75rem;
+}

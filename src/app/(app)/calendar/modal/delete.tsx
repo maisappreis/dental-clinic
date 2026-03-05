@@ -36,7 +36,7 @@ export function DeleteModal({
       </Modal.Body>
 
       <Modal.Footer>
-        <div className="flex justify-around">
+        <div className="button-area">
           <Button
             label="Excluir"
             variant="danger"

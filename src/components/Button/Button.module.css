@@ -18,17 +18,17 @@
 */
 
 .primary {
-  background: green;
+  background: var(--secondary-color);
   color: white;
 }
 
 .secondary {
-  background: #e5e7eb;
-  color: #4f78d0;
+  background: var(--gray-medium);
+  color: var(--secondary-color);
 }
 
 .danger {
-  background: red;
+  background: var(--red-medium);
   color: white;
 }
 
@@ -77,4 +77,11 @@
 
 .label {
   white-space: nowrap;
+  display: var(--text-visibility);
+}
+
+@media (max-width: 1000px) {
+  .icon {
+    margin-right: 0;
+  }
 }

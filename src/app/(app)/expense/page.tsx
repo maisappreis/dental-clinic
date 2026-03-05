@@ -139,7 +139,7 @@ export default function ExpensePage() {
 
   return (
     <div  className="app-content">
-      <div className="flex flex-column justify-between" style={{ marginBottom: 15 }}>
+      <div className="flex flex-column justify-between mb-5">
         <Button
           label="Nova Despesa"
           icon={faPlus}

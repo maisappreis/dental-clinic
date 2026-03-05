@@ -34,7 +34,7 @@ export function PaymentStatusModal({
       </Modal.Body>
 
       <Modal.Footer>
-        <div className="flex justify-around">
+        <div className="button-area">
           <Button
             label="Confirmar"
             variant="primary"

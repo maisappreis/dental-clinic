@@ -116,7 +116,7 @@ export function CashClosingModal({
       </Modal.Body>
 
       <Modal.Footer>
-        <div className="flex justify-around mt-4">
+        <div className="button-area">
           <Button
             label="Confirmar"
             variant="primary"

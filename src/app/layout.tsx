@@ -3,7 +3,6 @@ import { Montserrat } from "next/font/google";
 import { Providers } from "./providers";
 
 import "./globals.css";
-import "./styles/button.css";
 import "./styles/form.css";
 import "./styles/table.css";
 

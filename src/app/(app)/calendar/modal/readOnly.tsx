@@ -57,7 +57,7 @@ export function ReadOnlyModal({
       </Modal.Body>
 
       <Modal.Footer>
-        <div className="flex justify-center">
+        <div className="button-area">
           <Button
             label="Editar"
             variant="primary"
