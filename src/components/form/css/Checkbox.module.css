@@ -1,7 +1,8 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  align-items: end;
+  gap: 10px;
   margin-top: 10px;
 }
 
@@ -21,8 +22,9 @@
 }
 
 .label {
-  font-size: 0.875rem;
-  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 500;
+  color: black;
 }
 
 .errorMessage {

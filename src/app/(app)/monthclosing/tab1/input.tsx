@@ -1,3 +1,5 @@
+import styles from "../MonthClosing.module.css";
+
 interface RateInputProps {
   id: string;
   label: string;
@@ -8,7 +10,7 @@ interface RateInputProps {
 export function RateInput({ id, label, value, onChange }: RateInputProps) {
   return (
     <div className="flex">
-      <label htmlFor={id} className="form-label mb-1">
+      <label htmlFor={id} className={styles.label}>
         {label}
       </label>
 
@@ -16,7 +18,7 @@ export function RateInput({ id, label, value, onChange }: RateInputProps) {
         id={id}
         name={id}
         type="number"
-        className="form-input"
+        className={styles.input}
         value={value}
         min="0"
         step="0.001"

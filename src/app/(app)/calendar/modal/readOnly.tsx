@@ -39,7 +39,7 @@ export function ReadOnlyModal({
 
       <Modal.Body>
         <div>
-          <div className="my-5 text-left">
+          <div>
             <h3 className="mb-3">
               Paciente: <strong>{name}</strong>
             </h3>
@@ -49,7 +49,7 @@ export function ReadOnlyModal({
             <h3 className="mb-3">
               Horário: <strong>{time}</strong>
             </h3>
-            <p className="my-4">
+            <p className="mb-3">
               Observações: {notes}
             </p>
           </div>

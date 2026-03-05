@@ -2,11 +2,14 @@
   padding: 12px;
   width: 25vw;
   height: 50px;
-  font-weight: bold;
-  font-size: 15px;
+  font-size: var(--text-size);
   border-radius: 5px;
-  border: 2px solid #b4b4b4;
   margin-left: 10px;
+  background: var(--gray-lighter);
+}
+
+.search::placeholder {
+  color: var(--gray-darker);
 }
 
 @media only screen and (max-width: 1000px) {

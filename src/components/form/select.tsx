@@ -1,6 +1,7 @@
 "use client";
 
 import React, { forwardRef } from "react";
+import styles from "./css/Form.module.css";
 
 export interface SelectOption {
   label: string;
@@ -27,9 +28,9 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     const id = React.useId();
 
     return (
-      <div className="form-item">
+      <div className={styles.wrapper}>
         {label && (
-          <label htmlFor={id} className="form-label">
+          <label htmlFor={id} className={styles.label}>
             {label}
           </label>
         )}
@@ -37,7 +38,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         <select
           ref={ref}
           id={id}
-          className={`form-select ${error ? "error" : ""}`}
+          className={`${styles.select} ${error ? "error" : ""}`}
           value={value ?? ""}
           aria-invalid={!!error}
           aria-describedby={error ? `${id}-error` : undefined}
@@ -61,7 +62,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         {error && (
           <span
             id={`${id}-error`}
-            className="form-error"
+            className={styles.error}
           >
             {error}
           </span>
