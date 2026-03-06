@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect } from "react";
 import styles from "./Alert.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
