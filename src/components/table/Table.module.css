@@ -1,7 +1,7 @@
 .wrapper {
   width: 100%;
   overflow-x: auto;
-  max-height: 60vh;
+  max-height: 50vh;
 }
 
 .table {

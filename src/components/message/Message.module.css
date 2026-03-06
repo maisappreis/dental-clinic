@@ -1,8 +1,6 @@
 .box {
-  font-size: 20px;
+  font-size: 18px;
   background-color: var(--red-lighter);
-  font-weight: bold;
-  margin: 70px 20px;
   padding: 30px;
   border-radius: 10px;
   text-align: center;

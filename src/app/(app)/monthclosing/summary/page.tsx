@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import styles from "./Summary.module.css";
+import styles from "../MonthClosing.module.css";
 import { SummaryBlock } from "@/app/(app)/monthclosing/summary/block";
 import { MessageCard } from "@/components/message/message";
 import { formatValueToBRL } from "@/utils/utils";
@@ -24,14 +24,19 @@ export default function Summary() {
 
   const data = buildMonthClosingSummary(selectedMonthClosing);
 
+  const balanceColor =
+    data.balance >= 0 ? styles.green : styles.red;
+
   return (
-    <div className="flex-col">
-      <div className="flex justify-center w-full">
-        <div className={styles.summary}>
-          <SummaryBlock title="Resumo" items={data.summary} />
+    <div className="flex flex-col justify-between w-full h-full">
+      <div className="flex flex-col md:flex-row justify-between gap-3">
+        <div className={`${styles.summary} flex-1`}>
+          <SummaryBlock
+            title="Resumo"
+            items={data.summary} />
         </div>
 
-        <div className={styles.inputs}>
+        <div className={`${styles.inputs} flex-1`}>
           <SummaryBlock
             title="Entradas"
             items={data.inputs}
@@ -39,7 +44,7 @@ export default function Summary() {
           />
         </div>
 
-        <div className={styles.outputs}>
+        <div className={`${styles.outputs} flex-1`}>
           <SummaryBlock
             title="Saídas"
             items={data.outputs}
@@ -48,13 +53,10 @@ export default function Summary() {
         </div>
       </div>
 
-      <div className="flex justify-center w-full mt-4">
-        <div className={`flex ${styles.box}`}>
-          <h3 className="font-bold">
-            Saldo consultório:{" "}
-            {formatValueToBRL(data.balance)}
-          </h3>
-        </div>
+      <div className="flex justify-center w-full">
+        <h3 className={`font-bold text-2xl ${balanceColor}`}>
+          SALDO: {formatValueToBRL(data.balance)}
+        </h3>
       </div>
     </div>
   );

@@ -18,7 +18,7 @@ export function RateInput({ id, label, value, onChange }: RateInputProps) {
         id={id}
         name={id}
         type="number"
-        className={styles.input}
+        className={styles.inputWide}
         value={value}
         min="0"
         step="0.001"

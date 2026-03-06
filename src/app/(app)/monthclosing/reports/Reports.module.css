@@ -1,8 +1,0 @@
-.box {
-  padding: 20px 30px;
-  margin: 0 15px;
-  background-color: var(--quaternary-color);
-  box-shadow: 0 8px 6px -6px rgb(99, 99, 99);
-  border-radius: 20px;
-  cursor: pointer;
-}

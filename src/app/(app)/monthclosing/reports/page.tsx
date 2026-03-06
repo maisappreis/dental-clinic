@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import styles from "./Reports.module.css";
+import styles from "../MonthClosing.module.css";
 import { Button } from "@/components/button/button";
 import { Select } from "@/components/form/select";
 import { Spinner } from "@/components/spinner/spinner";
@@ -54,15 +54,15 @@ export default function Reports() {
   }, [fetchMonthClosing, year]);
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full flex flex-col justify-between">
       {isLoading && <Spinner />}
 
-      <div className="flex justify-left w-full flex-wrap">
+      <div className="flex justify-left w-full flex-wrap gap-3">
         {!isLoading && monthClosing.length > 0 && (
           monthClosing.map((report) => (
             <div
               key={report.id}
-              className={styles.box}
+              className={styles.report}
               onClick={() => openExistingReport(report)}
             >
               {report.reference}
@@ -71,29 +71,32 @@ export default function Reports() {
         )}
 
         {!isLoading && monthClosing.length === 0 && (
-          <MessageCard 
-            title="Nenhum relatório de fechamento de caixa encontrado neste ano."
-            subtitle="Tente selecionar outro ano."
-            variant="error"
-          />
+          <div className="w-full">
+            <MessageCard 
+              title="Nenhum relatório de fechamento de caixa encontrado neste ano."
+              subtitle="Tente selecionar outro ano."
+              variant="error"
+            />
+          </div>
+          
         )}
       </div>
 
-      <div className="flex mb-4">
-        <Select
-          label="Ano:"
-          value={year}
-          options={years.map((item) => ({
-            label: item,
-            value: item,
-          }))}
-          onChange={(year) => {
-            setYear(Number(year));
-          }}
-        />
-      </div>
+      <div className="flex justify-between items-end">
+        <div className="w-40">
+          <Select
+            label="Ano:"
+            value={year}
+            options={years.map((item) => ({
+              label: item,
+              value: item,
+            }))}
+            onChange={(year) => {
+              setYear(Number(year));
+            }}
+          />
+        </div>
 
-      <div className="flex justify-end w-full align-bottom mt-3">
         <Button
           label="Novo Fechamento"
           variant="primary"

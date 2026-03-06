@@ -5,7 +5,7 @@ import styles from "./Button.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
-type ButtonVariant = "primary" | "secondary" | "danger";
+type ButtonVariant = "primary" | "secondary" | "danger" | "default";
 type ButtonSize = "sm" | "md" | "lg";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -19,7 +19,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export function Button({
   label,
   icon = undefined,
-  variant = "primary",
+  variant = "default",
   size = "md",
   isLoading = false,
   disabled,
@@ -35,6 +35,7 @@ export function Button({
         styles.button,
         styles[variant],
         styles[size],
+        icon && styles.hasIcon,
         isDisabled && styles.disabled,
       ].filter(Boolean).join(" ")}
     >

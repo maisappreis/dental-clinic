@@ -87,7 +87,7 @@ export function TabOneTable({ data, actions }: TabOneTableProps) {
       },
       {
         key: "net_value",
-        header: "Valor Líquido",
+        header: "Valor Líq.",
         align: "center",
         render: (row, index) => {
           return (
@@ -95,7 +95,7 @@ export function TabOneTable({ data, actions }: TabOneTableProps) {
               id={`net-value-${index}`}
               name="net-value"
               type="number"
-              className={styles.input}
+              className={styles.inputThin}
               onChange={(e) => actions.onInputChange(e, index)}
               value={row.net_value}
               min="0.001"

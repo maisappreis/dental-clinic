@@ -1,3 +1,24 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+
+  width: 92%;
+  height: calc(100vh - var(--header-height) - 40px);
+  margin: var(--content-margin);
+  box-sizing: border-box;
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+
+  background-color: white;
+  border-radius: 0 0 var(--content-border-radius) var(--content-border-radius);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
 .tabs {
   display: flex;
   width: 100%;
@@ -5,55 +26,145 @@
 
 .tab {
   padding: 10px;
-  width: 20vw;
-  background-color: var(--secondary-color);
+  width: 25%;
+  height: 70px;
+  background-color: var(--tertiary-color);
+
   color: white;
   text-align: center;
-  border-top-right-radius: 30px;
+  font-size: 18px;
+
+  border-radius: var(--content-border-radius) var(--content-border-radius) 0 0;
+  box-shadow: 0 -4px 6px rgba(0,0,0,0.2);
   cursor: pointer;
 }
 
-.tab:disabled {
-  opacity: 0.7;
-  pointer-events: none;
-}
-
 .tab:hover {
-  background-color: rgb(112, 139, 234);
-  color: black;
+  background-color: var(--secondary-color);
+  color: white;
   font-weight: bold;
 }
 
-.content {
-  margin: 15px 0 auto 0;
-  width: 100%;
-  height: 100%;
-}
-
-.overflow {
-  max-height: 300px;
-  overflow: auto;
-}
-
 .selected {
-  background-color: green;
+  background-color: white;
+  color: var(--primary-color);
+  font-weight: bold;
+  cursor: default;
 }
 
-.input {
-  width: 50%;
-  padding: 5px;
-  border-radius: 5px;
-  border: 2px solid #b4b4b4;
-  font-size: 16px;
+.selected:hover {
+  background-color: white;
+  color: var(--primary-color);
+}
+
+.report {
+  font-weight: 500;
+  background-color: var(--quaternary-color);
+  cursor: pointer;
+  width: 200px;
+  text-align: center;
+}
+
+.report:hover {
+  background-color: var(--tertiary-color);
+  font-weight: 700;
+  color: white;
+}
+
+.report,
+.income,
+.summary,
+.inputs,
+.outputs {
+  box-shadow: 0 8px 6px -6px rgb(99, 99, 99);
+  border-radius: 20px;
+  padding: 30px;
+}
+
+.summary {
+  background-color: rgb(230, 230, 230);
+}
+
+.inputs {
+  background-color: rgb(214, 255, 224);
+}
+
+.outputs {
+  background-color: rgb(249, 199, 199);
+}
+
+.income {
+  background-color: var(--quaternary-color);
+}
+
+.inputThin {
+  background: white;
+  padding: 2px 12px;
+}
+
+.inputWide {
+  background: var(--gray-lighter);
+  padding: 6px 12px;
+}
+
+.inputThin,
+.inputWide {
+  width: 100%;
+  font-size: 0.95rem;
+  color: black;
+  border-radius: 8px;
+}
+
+.inputThin:focus,
+.inputWide:focus {
+  border-color: var(--gray-medium);
+  box-shadow: 0 0 0 3px rgba(21, 59, 139, 0.15);
+  outline: none;
 }
 
 .label {
   margin: 5px 15px 0 0;
   min-width: fit-content;
+  font-weight: 500;
 }
 
-@media only screen and (min-width: 1600px) {
-  .overflow {
-    max-height: 465px;
+.speechbubble {
+  position: absolute;
+  bottom: 6vh;
+  left: 7vw;
+  font-size: 14px;
+  background-color: #c1ffc5;
+  border-radius: 15px;
+  padding: 10px 20px;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 8px 6px -6px rgb(99, 99, 99);
+}
+
+.speechbubble::after {
+  content: '';
+  position: absolute;
+
+  top: -20px;
+  left: 50px;
+  border-width: 0px 20px 20px;
+
+  border-style: solid;
+  border-color: #c1ffc5 transparent;
+  display: block;
+  width: 0;
+}
+
+.red {
+  color: red;
+}
+
+.green {
+  color: green;
+}
+
+@media only screen and (max-width: 1000px) {
+  .speechbubble {
+    display: none;
   }
 }

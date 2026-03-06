@@ -1,4 +1,4 @@
-import styles from "./Tab2.module.css";
+import styles from "../MonthClosing.module.css";
 import { formatValueToBRL } from "@/utils/utils";
 
 type SummaryVariant = "default" | "positive" | "negative";
@@ -20,7 +20,7 @@ export function SummaryRow({
       : "";
 
   return (
-    <div className="flex justify-between my-2">
+    <div className="flex justify-between">
       <span className={`font-bold ${colorClass}`}>
         {label}:
       </span>

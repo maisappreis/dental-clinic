@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/button/button";
@@ -86,19 +87,15 @@ export default function TabOne() {
         }}
       />
 
-      <div className="flex justify-end w-full align-bottom my-3">
+      <div className="flex justify-end gap-3 mt-3">
         <Button
           label="Salvar"
           variant="primary"
           size="lg"
           onClick={saveRevenue}
         />
-      </div>
-
-      <div className="flex justify-end w-full align-bottom my-3">
         <Button
           label="Avançar"
-          variant="primary"
           size="lg"
           onClick={() => router.push("/monthclosing/tab2")}
         />

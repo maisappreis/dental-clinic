@@ -10,15 +10,17 @@ export function SummaryBlock({
   total?: number;
 }) {
   return (
-    <div>
-      <h3 className="font-bold mb-4 text-center">{title}</h3>
-
-      {items.map((item) => (
-        <div key={item.label} className="flex justify-between my-2">
-          <span>{item.label}</span>
-          <span>{formatValueToBRL(item.value)}</span>
-        </div>
-      ))}
+    <div className="flex flex-col justify-between h-full">
+      <div>
+        <h2 className="font-bold mb-5 text-center">{title}</h2>
+      
+        {items.map((item) => (
+          <div key={item.label} className="flex justify-between my-2 font-medium">
+            <span>{item.label}</span>
+            <span>{formatValueToBRL(item.value)}</span>
+          </div>
+        ))}
+      </div>
 
       {total !== undefined && (
         <div className="flex justify-between mt-4 font-bold">

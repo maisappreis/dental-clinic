@@ -1,7 +1,8 @@
-'use client'
-import { useEffect, useState, useMemo } from 'react';
+"use client"
+
+import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import styles from "./Tab2.module.css";
+import styles from "../MonthClosing.module.css";
 import { MessageCard } from "@/components/message/message";
 import { Button } from "@/components/button/button";
 import { SummaryRow } from "@/app/(app)/monthclosing/tab2/summary";
@@ -106,24 +107,24 @@ export default function TabTwo() {
   };
 
   return (
-    <div>
-      <div className="flex justify-center">
-        <div className={`${styles.box} w-1/2`}>
+    <div className="w-full h-full flex flex-col justify-between">
+      <div className="flex flex-col md:flex-row justify-center gap-3">
+        <div className={`${styles.income} w-full md:w-1/2`}>
           {[
             { id: "bankValue", label: "Banco do Brasil" },
             { id: "cashValue", label: "Dinheiro" },
             { id: "cardValue", label: "Cartão" },
             { id: "cardValueNext", label: "Cartão mês seguinte" },
           ].map(({ id, label }) => (
-            <div key={id} className="flex form-item">
-              <label htmlFor={id} className="form-label">
+            <div key={id} className="flex form-item mb-3">
+              <label htmlFor={id} className={styles.label}>
                 {label}:
               </label>
               <input
                 id={id}
                 name={id}
                 type="number"
-                className="form-input"
+                className={styles.inputWide}
                 value={form[id as keyof ValuesForm]}
                 onChange={handleInputChange}
                 min="0.001"
@@ -132,14 +133,6 @@ export default function TabTwo() {
               />
             </div>
           ))}
-
-          <div className={styles.speechbubble}>
-            <strong>Cartão do mês seguinte: </strong>
-            podem haver valores que são referentes a receita do
-            mês que vem, mas que já estão liberados.
-            Esses valores devem ser subtraídos, pois entrarão
-            apenas no mês seguinte.
-          </div>
 
           <div className="flex justify-end mt-3">
             <Button
@@ -151,38 +144,41 @@ export default function TabTwo() {
           </div>
         </div>
 
-        <div className={`${styles.summary} w-1/2`}>
-          <SummaryRow
-            label="Soma das entradas"
-            value={sumValues}
-          />
-          <SummaryRow
-            label="Receita Líquida"
-            value={totalMonthlyRevenue}
-          />
+        <div className={`${styles.summary} flex flex-col justify-between gap-4 w-full md:w-1/2`}>
+          <div className="flex flex-col gap-4">
+            <SummaryRow
+              label="Soma das entradas"
+              value={sumValues}
+            />
+            <SummaryRow
+              label="Receita Líquida"
+              value={totalMonthlyRevenue}
+            />
+          </div>
+          
+          <div className="flex flex-col gap-4">
+            <p>
+              A soma das entradas deve ser igual à receita líquida.
+            </p>
 
-          <p className="my-4">
-            A soma das entradas deve ser igual à receita líquida.
-          </p>
-
-          <SummaryRow
-            label="Diferença"
-            value={diffValues}
-            variant={
-              diffValues > 0
-                ? "positive"
-                : diffValues < 0
-                ? "negative"
-                : "positive"
-            }
-          />
+            <SummaryRow
+              label="Diferença"
+              value={diffValues}
+              variant={
+                diffValues > 0
+                  ? "positive"
+                  : diffValues < 0
+                  ? "negative"
+                  : "positive"
+              }
+            />
+          </div>
         </div>
       </div>
 
       <div className="flex justify-end mt-3">
         <Button
           label="Avançar"
-          variant="primary"
           size="lg"
           onClick={() => router.push("/monthclosing/summary")} />
       </div>

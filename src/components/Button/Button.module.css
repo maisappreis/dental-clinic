@@ -18,18 +18,39 @@
 */
 
 .primary {
-  background: var(--secondary-color);
+  background: var(--success-color);
   color: white;
+}
+
+.primary:hover {
+  background: rgb(0, 136, 0);
 }
 
 .secondary {
   background: var(--gray-medium);
-  color: var(--secondary-color);
+  color: rgb(36, 36, 36);
+}
+
+.secondary:hover {
+  background: var(--gray-darker);
+}
+
+.default {
+  background: var(--secondary-color);
+  color: white;
+}
+
+.default:hover {
+  background: var(--primary-color);
 }
 
 .danger {
   background: var(--red-medium);
   color: white;
+}
+
+.danger:hover {
+  background: var(--red-darker);
 }
 
 /*
@@ -77,6 +98,9 @@
 
 .label {
   white-space: nowrap;
+}
+
+.hasIcon .label {
   display: var(--text-visibility);
 }
 

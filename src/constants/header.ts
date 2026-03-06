@@ -34,6 +34,11 @@ export const HEADER_CONFIG: Record<
     subtitle: "Controle do pagamento das contas",
     icon: faMoneyBillTransfer,
   },
+  "/monthclosing/": {
+    title: "Fechamento de caixa",
+    subtitle: "Relatórios dos fechamentos de caixa",
+    icon: faBook,
+  },
   "/monthclosing/reports/": {
     title: "Fechamento de caixa",
     subtitle: "Relatórios dos fechamentos de caixa",

@@ -138,7 +138,7 @@ export default function ExpensePage() {
   }, [fetchExpenses]);
 
   return (
-    <div  className="app-content">
+    <div className="app-content">
       <div className="flex flex-column justify-between mb-5">
         <Button
           label="Nova Despesa"
