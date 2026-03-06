@@ -1,6 +1,6 @@
 "use client";
 
-import React, { forwardRef, TextareaHTMLAttributes, useId } from "react";
+import { forwardRef, TextareaHTMLAttributes, useId } from "react";
 import styles from "./css/Form.module.css";
 
 interface TextareaProps

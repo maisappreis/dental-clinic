@@ -55,7 +55,7 @@ export function CashClosingModal({
       </Modal.Header>
 
       <Modal.Body>
-        <div className="flex">
+        <div className="flex gap-3">
           <Select
             value={form.month}
             options={months.map((item) => ({

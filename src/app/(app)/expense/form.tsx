@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, forwardRef, useImperativeHandle } from "react";
+import { useEffect, forwardRef, useImperativeHandle } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Input } from "@/components/form/input";
 import { Checkbox } from "@/components/form/checkbox";

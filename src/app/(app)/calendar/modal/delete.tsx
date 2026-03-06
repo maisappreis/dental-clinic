@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-import styles from "../Calendar.module.css";
 import { Modal } from "@/components/modal/modal";
 import { Button } from "@/components/button/button";
 import { SelectedAppointment } from "@/types/agenda";

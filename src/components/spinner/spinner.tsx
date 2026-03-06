@@ -1,5 +1,3 @@
-"use client";
-
 import styles from "./Spinner.module.css";
 
 interface SpinnerProps {

@@ -1,6 +1,6 @@
 "use client";
-import React, { useEffect } from "react";
 
+import { useEffect } from "react";
 import styles from "@/app/(app)/dashboard/Charts.module.css";
 import { RevenueExpensesChart } from "@/app/(app)/dashboard/charts/revenue";
 import { ProfitChart } from "@/app/(app)/dashboard/charts/profit";

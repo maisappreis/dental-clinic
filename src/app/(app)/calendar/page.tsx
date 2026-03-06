@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useMemo, useEffect } from "react";
 import styles from "./Calendar.module.css";
 import { Appointments } from "@/app/(app)/calendar/appointments";

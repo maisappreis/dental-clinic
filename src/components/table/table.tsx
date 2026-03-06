@@ -1,5 +1,3 @@
-"use client";
-
 import styles from "./Table.module.css";
 
 export interface Column<T> {

@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import styles from "../MonthClosing.module.css";
 import { SummaryBlock } from "@/app/(app)/monthclosing/summary/block";
 import { MessageCard } from "@/components/message/message";

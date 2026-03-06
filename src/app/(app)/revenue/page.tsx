@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import { RevenueTable } from "@/app/(app)/revenue/table";
 import { Button } from "@/components/button/button";

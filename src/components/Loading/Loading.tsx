@@ -1,4 +1,3 @@
-"use client";
 import styles from "./Loading.module.css";
 import { ReactNode } from "react";
 

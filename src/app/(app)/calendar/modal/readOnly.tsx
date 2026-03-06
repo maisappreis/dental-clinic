@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import styles from "../Calendar.module.css";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { Modal } from "@/components/modal/modal";

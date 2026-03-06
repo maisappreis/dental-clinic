@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { Modal } from "@/components/modal/modal";
 import { Button } from "@/components/button/button";
 import { ExpenseForm } from "@/app/(app)/expense/form";
