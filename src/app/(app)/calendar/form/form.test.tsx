@@ -1,56 +1,6 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import React from "react";
 import { AppointmentForm } from "./form";
-
-jest.mock("@/components/form/input", () => ({
-  Input: ({ label, value, onChange, type = "text", error }: any) => (
-    <div>
-      <label>{label}</label>
-      <input
-        aria-label={label}
-        type={type}
-        value={value || ""}
-        onChange={(e) => onChange(e.target.value)}
-      />
-      {error && <span>{error}</span>}
-    </div>
-  ),
-}));
-
-jest.mock("@/components/form/select", () => ({
-  Select: ({ label, value, options, onChange, error }: any) => (
-    <div>
-      <label>{label}</label>
-      <select
-        aria-label={label}
-        value={value || ""}
-        onChange={(e) => onChange(e.target.value)}
-      >
-        <option value="">Selecione</option>
-        {options.map((o: any) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
-      {error && <span>{error}</span>}
-    </div>
-  ),
-}));
-
-jest.mock("@/components/form/textarea", () => ({
-  Textarea: ({ label, value, onChange, error }: any) => (
-    <div>
-      <label>{label}</label>
-      <textarea
-        aria-label={label}
-        value={value || ""}
-        onChange={(e) => onChange(e.target.value)}
-      />
-      {error && <span>{error}</span>}
-    </div>
-  ),
-}));
 
 jest.mock("@/constants/appointment", () => ({
   scheduleOptions: ["09:00", "10:00"],
@@ -113,7 +63,9 @@ describe("AppointmentForm", () => {
       target: { value: "Consulta" },
     });
 
-    await ref.current.submit();
+    await act(async () => {
+      await ref.current.submit();
+    });
 
     expect(onSubmit).toHaveBeenCalled();
   });

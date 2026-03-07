@@ -1,25 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { CreateUpdateModal } from "@/app/(app)/calendar/modals/createUpdate";
 
-const submitMock = jest.fn();
-
-/* eslint-disable react/display-name */
-jest.mock("@/components/modal/modal", () => {
-  const Modal = ({ children }: any) => <div>{children}</div>;
-
-  Modal.Header = ({ children }: any) => <div>{children}</div>;
-  Modal.Body = ({ children }: any) => <div>{children}</div>;
-  Modal.Footer = ({ children }: any) => <div>{children}</div>;
-
-  return { Modal };
-});
-
-jest.mock("@/components/button/button", () => ({
-  Button: ({ label, onClick }: any) => (
-    <button onClick={onClick}>{label}</button>
-  ),
-}));
-
 jest.mock("@/app/(app)/calendar/form/form", () => {
   const React = require("react");
 
