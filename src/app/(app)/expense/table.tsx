@@ -4,7 +4,9 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { Table, Column } from "@/components/table/table";
+import { Pagination } from "@/components/pagination/pagination";
 import { Tooltip } from "@/components/tooltip/tooltip";
+import { usePagination } from "@/hooks/usePagination";
 import { formatDate } from "@/utils/date";
 import { formatValueToBRL } from "@/utils/utils";
 import { Expense } from "@/types/expense";
@@ -23,6 +25,15 @@ interface ExpenseTableProps {
 export function ExpenseTable({ data, actions }: ExpenseTableProps) {
   const columns = createColumns(actions);
   const [tooltipRowId, setTooltipRowId] = useState<number | null>(null);
+
+  const { page, setPage } = usePagination();
+
+  const pageSize = 30;
+
+  const paginatedData = data.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
 
   function createColumns(actions: ExpenseTableActions): Column<Expense>[] {
     return [
@@ -133,10 +144,18 @@ export function ExpenseTable({ data, actions }: ExpenseTableProps) {
   };
 
   return (
-    <Table
-      data={data}
-      columns={columns}
-      rowKey={(row) => row.id}
-    />
+    <>
+      <Table
+        data={paginatedData}
+        columns={columns}
+        rowKey={(row) => row.id}
+      />
+
+      <Pagination
+        page={page}
+        totalPages={Math.ceil(data.length / pageSize)}
+        onPageChange={setPage}
+      />
+    </>
   );
 };

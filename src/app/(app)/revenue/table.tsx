@@ -4,7 +4,9 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan, faCircleInfo, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { Table, Column } from "@/components/table/table";
+import { Pagination } from "@/components/pagination/pagination";
 import { Tooltip } from "@/components/tooltip/tooltip";
+import { usePagination } from "@/hooks/usePagination";
 import { formatDate } from "@/utils/date";
 import { formatValueToBRL } from "@/utils/utils";
 import { Revenue } from "@/types/revenue";
@@ -22,6 +24,15 @@ interface RevenueTableProps {
 export function RevenueTable({ data, actions }: RevenueTableProps) {
   const columns = createColumns(actions);
   const [tooltipRowId, setTooltipRowId] = useState<number | null>(null);
+
+  const { page, setPage } = usePagination();
+
+  const pageSize = 30;
+
+  const paginatedData = data.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
 
   function createColumns(actions: RevenueTableActions): Column<Revenue>[] {
     return [
@@ -137,10 +148,18 @@ export function RevenueTable({ data, actions }: RevenueTableProps) {
   };
 
   return (
-    <Table
-      data={data}
-      columns={columns}
-      rowKey={(row) => row.id}
-    />
+    <>
+      <Table
+        data={paginatedData}
+        columns={columns}
+        rowKey={(row) => row.id}
+      />
+
+      <Pagination
+        page={page}
+        totalPages={Math.ceil(data.length / pageSize)}
+        onPageChange={setPage}
+      />
+    </>
   );
 };
