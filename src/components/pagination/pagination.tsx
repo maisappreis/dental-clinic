@@ -56,12 +56,12 @@ export function Pagination({
 
       {pages.map((p, i) =>
         p === "..." ? (
-          <span key={i} className={styles.dots}>
+          <span key={`dots-${i}`} className={styles.dots}>
             ...
           </span>
         ) : (
           <button
-            key={p}
+            key={`page-${p}-${i}`}
             onClick={() => onPageChange(p)}
             className={`${styles.page} ${
               p === page ? styles.active : ""

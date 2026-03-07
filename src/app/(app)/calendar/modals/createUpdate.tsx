@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { Modal } from "@/components/modal/modal";
 import { Button } from "@/components/button/button";
-import { AppointmentForm } from "@/app/(app)/calendar/form";
+import { AppointmentForm } from "@/app/(app)/calendar/form/form";
 import {
   SelectedAppointment,
   CreateAppointmentDTO,

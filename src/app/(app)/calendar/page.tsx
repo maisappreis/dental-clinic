@@ -2,10 +2,10 @@
 
 import { useState, useMemo, useEffect } from "react";
 import styles from "./Calendar.module.css";
-import { Appointments } from "@/app/(app)/calendar/appointments";
-import { CreateUpdateModal } from "@/app/(app)/calendar/modal/createUpdate";
-import { DeleteModal } from "@/app/(app)/calendar/modal/delete";
-import { ReadOnlyModal } from "@/app/(app)/calendar/modal/readOnly";
+import { Appointments } from "@/app/(app)/calendar/appointments/appointments";
+import { CreateUpdateModal } from "@/app/(app)/calendar/modals/createUpdate";
+import { DeleteModal } from "@/app/(app)/calendar/modals/delete";
+import { ReadOnlyModal } from "@/app/(app)/calendar/modals/readOnly";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { scheduleOptions } from "@/constants/appointment";
