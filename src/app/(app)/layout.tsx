@@ -1,5 +1,5 @@
-import { Header } from "@/app/(app)/layout/header";
-import { Sidebar } from "@/app/(app)/layout/sidebar";
+import { Header } from "@/app/(app)/layout/header/header";
+import { Sidebar } from "@/app/(app)/layout/sidebar/sidebar";
 
 export default function AppLayout({
   children,

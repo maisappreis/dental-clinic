@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import styles from "./styles/Sidebar.module.css";
+import styles from "./Sidebar.module.css";
 import { usePathname, useRouter } from "next/navigation";
-import { Logotype } from "./logotype";
+import { Logotype } from "../logotype/logotype";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChartLine,

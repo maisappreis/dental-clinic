@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import styles from "./styles/Header.module.css";
+import styles from "./Header.module.css";
 import { HEADER_CONFIG } from "@/constants/header";
 
 export function Header() {

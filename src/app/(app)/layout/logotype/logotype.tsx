@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTooth } from "@fortawesome/free-solid-svg-icons";
-import styles from "./styles/Sidebar.module.css";
+import styles from "../sidebar/Sidebar.module.css";
 
 export function Logotype() {
   return (
