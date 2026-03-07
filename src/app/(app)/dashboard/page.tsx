@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import styles from "@/app/(app)/dashboard/Charts.module.css";
-import { RevenueExpensesChart } from "@/app/(app)/dashboard/charts/revenue";
+import { RevenueExpensesChart } from "@/app/(app)/dashboard/charts/revenueExpenses";
 import { ProfitChart } from "@/app/(app)/dashboard/charts/profit";
 import { NumberOfProceduresChart } from "@/app/(app)/dashboard/charts/proceduresNumber";
 import { MostPerformedProceduresChart } from "@/app/(app)/dashboard/charts/proceduresFrequency";
