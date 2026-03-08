@@ -6,14 +6,20 @@ export function applySearch<T extends { name: string }>(
 ): T[] {
   if (!search.trim()) return data;
 
+  const normalize = (text: string) =>
+  text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
   const terms = search
     .toLowerCase()
     .split(",")
-    .map(term => term.trim())
+    .map(term => normalize(term.trim()))
     .filter(Boolean);
 
   return data.filter(item => {
-    const name = item.name.toLowerCase();
+    const name = normalize(item.name);
     return terms.some(term => name.includes(term));
   });
 }
