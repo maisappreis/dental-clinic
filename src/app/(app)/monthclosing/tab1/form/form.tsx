@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { RateInput } from "@/app/(app)/monthclosing/tab1/input";
+import { RateInput } from "@/app/(app)/monthclosing/tab1/input/input";
 import { Rates } from "@/types/monthClosing";
 
 interface RatesFormProps {

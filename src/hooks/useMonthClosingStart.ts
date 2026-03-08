@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { filterRevenue } from "@/utils/filter";
-import { useMonthClosingFlow } from "@/app/(app)/monthclosing/provider";
+import { useMonthClosingFlow } from "@/app/(app)/monthclosing/provider/provider";
 import { useRevenue } from "@/hooks/useRevenue";
 import { MonthClosing } from "@/types/monthClosing";
 import { Revenue } from "@/types/revenue";

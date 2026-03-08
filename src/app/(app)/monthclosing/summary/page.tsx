@@ -5,7 +5,7 @@ import { SummaryBlock } from "@/app/(app)/monthclosing/summary/block";
 import { MessageCard } from "@/components/message/message";
 import { formatValueToBRL } from "@/utils/utils";
 import { buildMonthClosingSummary } from "@/app/(app)/monthclosing/domain/summaryUtils";
-import { useMonthClosingFlow } from "@/app/(app)/monthclosing/provider";
+import { useMonthClosingFlow } from "@/app/(app)/monthclosing/provider/provider";
 
 
 export default function Summary() {

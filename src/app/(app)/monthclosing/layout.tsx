@@ -3,7 +3,7 @@
 import { ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import styles from "./MonthClosing.module.css";
-import { MonthClosingProvider } from "@/app/(app)/monthclosing/provider";
+import { MonthClosingProvider } from "@/app/(app)/monthclosing/provider/provider";
 
 const TABS = [
   { label: "Relatórios", path: "/monthclosing/reports/" },

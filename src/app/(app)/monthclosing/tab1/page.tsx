@@ -4,11 +4,11 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/button/button";
 import { MessageCard } from "@/components/message/message";
-import { RatesForm } from "@/app/(app)/monthclosing/tab1/form";
-import { TabOneTable } from "@/app/(app)/monthclosing/tab1/table";
+import { RatesForm } from "@/app/(app)/monthclosing/tab1/form/form";
+import { TabOneTable } from "@/app/(app)/monthclosing/tab1/table/table";
 import { useMonthClosing } from "@/hooks/useMonthClosing";
 import { orderRevenue, calculateNetRevenue } from  "@/app/(app)/monthclosing/domain/tab1Utils";
-import { useMonthClosingFlow } from "@/app/(app)/monthclosing/provider";
+import { useMonthClosingFlow } from "@/app/(app)/monthclosing/provider/provider";
 import { Revenue } from '@/types/revenue';
 import { Rates } from "@/types/monthClosing";
 

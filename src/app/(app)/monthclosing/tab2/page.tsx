@@ -6,7 +6,7 @@ import styles from "../MonthClosing.module.css";
 import { MessageCard } from "@/components/message/message";
 import { Button } from "@/components/button/button";
 import { SummaryRow } from "@/app/(app)/monthclosing/tab2/summary";
-import { useMonthClosingFlow } from "@/app/(app)/monthclosing/provider";
+import { useMonthClosingFlow } from "@/app/(app)/monthclosing/provider/provider";
 import { useMonthClosing } from "@/hooks/useMonthClosing";
 import { MonthClosing } from "@/types/monthClosing";
 

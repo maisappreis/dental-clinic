@@ -162,3 +162,7 @@ jest.mock("@/components/pagination/pagination", () => ({
 jest.mock("@/components/tooltip/tooltip", () => ({
   Tooltip: ({ children }: any) => <span>{children}</span>,
 }));
+
+jest.mock("@/components/message/message", () => ({
+  MessageCard: ({ title }: any) => <div>{title}</div>,
+}));
