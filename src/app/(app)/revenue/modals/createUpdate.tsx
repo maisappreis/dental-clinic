@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { Modal } from "@/components/modal/modal";
 import { Button } from "@/components/button/button";
-import { RevenueForm } from "@/app/(app)/revenue/form";
+import { RevenueForm } from "@/app/(app)/revenue/form/form";
 import {
   Revenue,
   CreateRevenueDTO,

@@ -131,21 +131,25 @@ jest.mock("@/components/form/textarea", () => {
   return { Textarea };
 });
 
+jest.mock("@fortawesome/react-fontawesome", () => ({
+  FontAwesomeIcon: ({ icon, onClick }: any) => (
+    <span data-testid={`icon-${icon?.iconName}`} onClick={onClick} />
+  ),
+}));
+
 jest.mock("@/components/table/table", () => ({
-  Table: ({ data, columns }: any) => (
-    <table>
-      <tbody>
-        {data.map((row: any) => (
-          <tr key={row.id}>
-            {columns.map((col: any) => (
-              <td key={col.key}>
-                {col.render ? col.render(row) : row[col.accessor]}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+  Table: ({ data, columns, rowKey }: any) => (
+    <div>
+      {data.map((row: any) => (
+        <div key={rowKey(row)} data-testid={`row-${rowKey(row)}`}>
+          {columns.map((col: any) => (
+            <span key={col.key}>
+              {col.render ? col.render(row) : row[col.accessor]}
+            </span>
+          ))}
+        </div>
+      ))}
+    </div>
   ),
 }));
 
@@ -156,6 +160,5 @@ jest.mock("@/components/pagination/pagination", () => ({
 }));
 
 jest.mock("@/components/tooltip/tooltip", () => ({
-  Tooltip: ({ children }: any) => <div>{children}</div>,
+  Tooltip: ({ children }: any) => <span>{children}</span>,
 }));
-

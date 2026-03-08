@@ -1,12 +1,12 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
 
-import { RevenueTable } from "@/app/(app)/revenue/table";
+import { RevenueTable } from "@/app/(app)/revenue/table/table";
 import { Button } from "@/components/button/button";
 import { Search } from "@/components/search/search";
 import { Filter } from "@/components/filter/filter";
-import { CreateUpdateModal } from "./modal/createUpdate";
-import { DeleteModal } from "./modal/delete";
+import { CreateUpdateModal } from "./modals/createUpdate";
+import { DeleteModal } from "./modals/delete";
 
 import { getCurrentYear, getCurrentMonth } from "@/utils/date";
 import { applySearch } from "@/utils/search";
