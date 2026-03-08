@@ -1,8 +1,9 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import TabOne from "./page";
+import { render, screen, fireEvent } from "@testing-library/react";
+import TabTwo from "./page";
 
 const pushMock = jest.fn();
-const updateNetValuesMock = jest.fn();
+const createMock = jest.fn().mockResolvedValue({});
+const updateMock = jest.fn().mockResolvedValue({});
 
 jest.mock("next/navigation", () => ({
   useRouter: () => ({
@@ -10,115 +11,91 @@ jest.mock("next/navigation", () => ({
   }),
 }));
 
-jest.mock("@/app/(app)/monthclosing/tab1/form/form", () => ({
-  RatesForm: ({ onChange }: any) => (
-    <button
-      data-testid="change-rates"
-      onClick={() =>
-        onChange({
-          debit: 2,
-          cashCredit: 4,
-          installmentCredit: 5,
-        })
-      }
-    >
-      change rates
-    </button>
-  ),
-}));
-
-jest.mock("@/app/(app)/monthclosing/tab1/table/table", () => ({
-  TabOneTable: ({ data, actions }: any) => (
-    <div>
-      {data.map((r: any, i: number) => (
-        <input
-          key={r.id}
-          data-testid={`net-${i}`}
-          value={r.net_value}
-          onChange={(e) => actions.onInputChange(e, i)}
-        />
-      ))}
-    </div>
-  ),
-}));
-
 jest.mock("@/hooks/useMonthClosing", () => ({
   useMonthClosing: () => ({
-    updateNetValues: updateNetValuesMock,
+    create: createMock,
+    update: updateMock,
   }),
 }));
+
+const monthClosingFlowMock = {
+  selectedMonthClosing: {
+    id: 1,
+    bank_value: 10,
+    cash_value: 20,
+    card_value: 30,
+    card_value_next_month: 5,
+  },
+  setSelectedMonthClosing: jest.fn(),
+  closingRevenue: [
+    {
+      id: 1,
+      release_date: "2025-01-01",
+      net_value: 50,
+      value: 100,
+      payment: "Dinheiro",
+    },
+    {
+      id: 2,
+      release_date: "2025-01-01",
+      net_value: 50,
+      value: 100,
+      payment: "Dinheiro",
+    },
+  ],
+};
 
 jest.mock("@/app/(app)/monthclosing/provider/provider", () => ({
-  useMonthClosingFlow: () => ({
-    selectedMonthClosing: {
-      id: 1,
-      bank_value: 0,
-      cash_value: 0,
-      card_value: 0,
-      card_value_next_month: 0,
-    },
-    setSelectedMonthClosing: jest.fn(),
-    closingRevenue: [
-      {
-        net_value: 100,
-      },
-    ],
-  }),
+  useMonthClosingFlow: () => monthClosingFlowMock,
 }));
 
-jest.mock(
-  "@/app/(app)/monthclosing/domain/tab1Utils",
-  () => ({
-    orderRevenue: (data: any) => data,
-    calculateNetRevenue: (data: any) =>
-      data.map((r: any) => ({ ...r, net_value: 90 })),
-  })
-);
+jest.mock("@/app/(app)/monthclosing/tab2/summary", () => ({
+  SummaryRow: ({ label }: any) => <div>{label}</div>,
+}));
 
-describe("TabOne", () => {
+describe("TabTwo", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it("renders table when revenue exists", () => {
-    render(<TabOne />);
+  it("renders form inputs", () => {
+    render(<TabTwo />);
 
-    expect(screen.getByTestId("net-0")).toBeInTheDocument();
+    expect(screen.getByLabelText("Banco do Brasil:")).toBeInTheDocument();
+    expect(screen.getByLabelText("Dinheiro:")).toBeInTheDocument();
+    expect(screen.getByLabelText("Cartão:")).toBeInTheDocument();
+    expect(screen.getByLabelText("Cartão mês seguinte:")).toBeInTheDocument();
   });
 
-  it("updates net value when input changes", () => {
-    render(<TabOne />);
+  it("updates input values", () => {
+    render(<TabTwo />);
 
-    const input = screen.getByTestId("net-0");
+    const input = screen.getByLabelText("Banco do Brasil:");
 
-    fireEvent.change(input, { target: { value: "80" } });
+    fireEvent.change(input, { target: { value: "100" } });
 
-    expect((input as HTMLInputElement).value).toBe("80");
+    expect((input as HTMLInputElement).value).toBe("100");
   });
 
-  it("saves revenue", async () => {
-    render(<TabOne />);
+  it("calls update when saving existing closing", async () => {
+    render(<TabTwo />);
 
     fireEvent.click(screen.getByText("Salvar"));
 
-    await waitFor(() => {
-      expect(updateNetValuesMock).toHaveBeenCalled();
-    });
+    expect(updateMock).toHaveBeenCalled();
   });
 
-  it("navigates to next tab", () => {
-    render(<TabOne />);
+  it("navigates to summary page", () => {
+    render(<TabTwo />);
 
     fireEvent.click(screen.getByText("Avançar"));
 
-    expect(pushMock).toHaveBeenCalledWith("/monthclosing/tab2");
+    expect(pushMock).toHaveBeenCalledWith("/monthclosing/summary");
   });
 
-  it("changes rates", () => {
-    render(<TabOne />);
+  it("calculates difference correctly", () => {
+    render(<TabTwo />);
 
-    fireEvent.click(screen.getByTestId("change-rates"));
-
-    expect(screen.getByTestId("net-0")).toBeInTheDocument();
+    expect(screen.getByText("Diferença")).toBeInTheDocument();
   });
 });

@@ -1,8 +1,8 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import TabOne from "./page";
 
 const pushMock = jest.fn();
-const updateNetValuesMock = jest.fn();
+const updateNetValuesMock = jest.fn().mockResolvedValue(undefined);
 
 jest.mock("next/navigation", () => ({
   useRouter: () => ({
@@ -48,18 +48,28 @@ jest.mock("@/hooks/useMonthClosing", () => ({
   }),
 }));
 
+const monthClosingFlowMock = {
+  selectedMonthClosing: {
+    id: 1,
+    bank_value: 0,
+    cash_value: 0,
+    card_value: 0,
+    card_value_next_month: 0,
+  },
+  setSelectedMonthClosing: jest.fn(),
+  closingRevenue: [
+    {
+      id: 1,
+      release_date: "2025-01-01",
+      net_value: 0,
+      value: 100,
+      payment: "Dinheiro",
+    },
+  ],
+};
+
 jest.mock("@/app/(app)/monthclosing/provider/provider", () => ({
-  useMonthClosingFlow: () => ({
-    closingRevenue: [
-      {
-        id: 1,
-        date: "2025-01-01",
-        net_value: 0,
-        value: 100,
-        payment: "Dinheiro",
-      },
-    ],
-  }),
+  useMonthClosingFlow: () => monthClosingFlowMock,
 }));
 
 jest.mock(
@@ -92,14 +102,12 @@ describe("TabOne", () => {
     expect((input as HTMLInputElement).value).toBe("80");
   });
 
-  it("saves revenue", async () => {
+  it("saves revenue", () => {
     render(<TabOne />);
 
     fireEvent.click(screen.getByText("Salvar"));
 
-    await waitFor(() => {
-      expect(updateNetValuesMock).toHaveBeenCalled();
-    });
+    expect(updateNetValuesMock).toHaveBeenCalled();
   });
 
   it("navigates to next tab", () => {
