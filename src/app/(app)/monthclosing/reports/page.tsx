@@ -131,7 +131,6 @@ export default function Reports() {
 
         <Button
           label="Novo Fechamento"
-          variant="primary"
           size="lg"
           onClick={openCreateModal}
         />

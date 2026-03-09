@@ -1,6 +1,8 @@
 "use client";
 
 import styles from "../MonthClosing.module.css";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/button/button";
 import { SummaryBlock } from "@/app/(app)/monthclosing/summary/block";
 import { MessageCard } from "@/components/message/message";
 import { formatValueToBRL } from "@/utils/utils";
@@ -10,6 +12,8 @@ import { useMonthClosingFlow } from "@/app/(app)/monthclosing/provider/provider"
 
 export default function Summary() {
   const { selectedMonthClosing } = useMonthClosingFlow();
+
+  const router = useRouter();
 
   if (!selectedMonthClosing) {
     return (
@@ -56,6 +60,14 @@ export default function Summary() {
         <h3 className={`font-bold text-2xl ${balanceColor}`}>
           SALDO: {formatValueToBRL(data.balance)}
         </h3>
+      </div>
+
+      <div className="flex justify-end w-full">
+        <Button
+          label="Concluir"
+          size="lg"
+          onClick={() => router.push("/monthclosing/reports")}
+        />
       </div>
     </div>
   );
