@@ -1,4 +1,4 @@
-import styles from "../MonthClosing.module.css";
+import styles from "../../MonthClosing.module.css";
 
 interface RateInputProps {
   id: string;

@@ -151,18 +151,24 @@ export default function ExpensePage() {
         <div className="flex justify-end">
           <Filter
             value={month}
-            options={months.map((item) => ({
-              label: item,
-              value: item,
-            }))}
+            options={[
+              { label: "Todos", value: "Todos" },
+              ...months.map((item) => ({
+                label: item,
+                value: item,
+              })),
+            ]}
             onChange={setMonth}
           />
           <Filter
             value={year}
-            options={years.map((item) => ({
-              label: String(item),
-              value: item,
-            }))}
+            options={[
+              { label: "Todos", value: "Todos" },
+              ...years.map((item) => ({
+                label: item,
+                value: item,
+              })),
+            ]}
             onChange={setYear}
           />
           <Filter

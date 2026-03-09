@@ -2,12 +2,12 @@ import { MonthNames } from '@/types/chart';
 
 export const months: string[] = [
   "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro", "Todos"
+  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
 ];
 
 export const years: string[] = [
   "2023", "2024", "2025", "2026", "2027", "2028", "2029",
-  "2030", "2031", "2032", "2033", "2034", "Todos"
+  "2030", "2031", "2032", "2033", "2034"
 ];
 
 export const monthNames: MonthNames = {

@@ -5,7 +5,7 @@ import { Table, Column } from "@/components/table/table";
 import { formatDate } from "@/utils/date";
 import { formatValueToBRL } from "@/utils/utils";
 import { Revenue } from "@/types/revenue";
-import styles from "../MonthClosing.module.css";
+import styles from "../../MonthClosing.module.css";
 
 interface TabOneTableActions {
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>, index: number) => void;
