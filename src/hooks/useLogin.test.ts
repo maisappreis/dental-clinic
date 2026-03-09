@@ -1,24 +1,21 @@
 import { renderHook, act } from "@testing-library/react";
-import { useExpense } from "./useExpense";
-import { ExpenseService } from "@/services/expense.service";
+import { useLogin } from "./useLogin";
+import { LoginService } from "@/services/login.service";
 import { useLoadingStore } from "@/stores/loading.store";
 import { useAlertStore } from "@/stores/alert.store";
-import { prepareDataForSubmission } from "@/utils/utils";
-import { sortByDate } from "@/utils/sort";
 
-jest.mock("@/services/expense.service");
+jest.mock("@/services/login.service");
 jest.mock("@/stores/loading.store");
 jest.mock("@/stores/alert.store");
-jest.mock("@/utils/utils");
-jest.mock("@/utils/sort");
 
-describe("useExpense", () => {
+describe("useLogin", () => {
   const show = jest.fn();
   const hide = jest.fn();
   const alertShow = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
+    localStorage.clear();
 
     (useLoadingStore as unknown as jest.Mock).mockImplementation((selector) =>
       selector({ show, hide })
@@ -28,77 +25,67 @@ describe("useExpense", () => {
       show: alertShow,
     });
 
-    (sortByDate as jest.Mock).mockImplementation((data) => data);
-    (prepareDataForSubmission as jest.Mock).mockImplementation((d) => d);
+    jest.spyOn(console, "error").mockImplementation(() => {});
   });
 
-  it("fetches expenses", async () => {
-    const mockData = [{ id: 1 }];
-
-    (ExpenseService.list as jest.Mock).mockResolvedValue(mockData);
-
-    const { result } = renderHook(() => useExpense());
-
-    await act(async () => {
-      await result.current.fetchExpenses();
+  it("logs in successfully", async () => {
+    (LoginService.login as jest.Mock).mockResolvedValue({
+      access: "access123",
+      refresh: "refresh123",
     });
 
-    expect(show).toHaveBeenCalledWith("Carregando despesas...");
-    expect(hide).toHaveBeenCalled();
-    expect(result.current.expenses).toEqual(mockData);
-  });
-
-  it("creates expense", async () => {
-    (ExpenseService.create as jest.Mock).mockResolvedValue({});
-    (ExpenseService.list as jest.Mock).mockResolvedValue([]);
-
-    const { result } = renderHook(() => useExpense());
-
-    await act(async () => {
-      await result.current.create({ name: "teste" } as any);
-    });
-
-    expect(prepareDataForSubmission).toHaveBeenCalled();
-    expect(ExpenseService.create).toHaveBeenCalled();
-    expect(alertShow).toHaveBeenCalledWith({
-      message: "Despesa criada com sucesso!",
-      variant: "success",
-    });
-  });
-
-  it("updates expense", async () => {
-    const updated = { id: 1 };
-
-    (ExpenseService.update as jest.Mock).mockResolvedValue(updated);
-    (ExpenseService.list as jest.Mock).mockResolvedValue([]);
-
-    const { result } = renderHook(() => useExpense());
+    const { result } = renderHook(() => useLogin());
 
     let response;
 
     await act(async () => {
-      response = await result.current.update({ id: 1 } as any);
+      response = await result.current.login({
+        username: "admin",
+        password: "123456",
+      });
     });
 
-    expect(prepareDataForSubmission).toHaveBeenCalled();
-    expect(ExpenseService.update).toHaveBeenCalled();
-    expect(response).toEqual(updated);
-  });
-
-  it("removes expense", async () => {
-    (ExpenseService.remove as jest.Mock).mockResolvedValue({});
-    (ExpenseService.list as jest.Mock).mockResolvedValue([]);
-
-    const { result } = renderHook(() => useExpense());
-
-    await act(async () => {
-      await result.current.remove(1);
+    expect(show).toHaveBeenCalledWith("Fazendo login...");
+    expect(LoginService.login).toHaveBeenCalledWith({
+      username: "admin",
+      password: "123456",
     });
 
-    expect(ExpenseService.remove).toHaveBeenCalledWith(1);
+    expect(localStorage.getItem("accessToken")).toBe("access123");
+    expect(localStorage.getItem("refreshToken")).toBe("refresh123");
+
     expect(alertShow).toHaveBeenCalledWith({
-      message: "Despesa excluida com sucesso!",
+      message: "Login realizado com sucesso!",
       variant: "success",
     });
+
+    expect(hide).toHaveBeenCalled();
+    expect(response).toBe(true);
+  });
+
+  it("handles login error", async () => {
+    (LoginService.login as jest.Mock).mockRejectedValue(new Error("fail"));
+
+    const { result } = renderHook(() => useLogin());
+
+    let response;
+
+    await act(async () => {
+      response = await result.current.login({
+        username: "admin",
+        password: "123456",
+      });
+    });
+
+    expect(show).toHaveBeenCalledWith("Fazendo login...");
+    expect(LoginService.login).toHaveBeenCalled();
+
+    expect(alertShow).toHaveBeenCalledWith({
+      message: "Erro ao realizar o login..",
+      variant: "error",
+    });
+
+    expect(hide).toHaveBeenCalled();
+    expect(response).toBe(false);
   });
 });

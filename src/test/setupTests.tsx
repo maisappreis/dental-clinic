@@ -2,6 +2,18 @@ import "@testing-library/jest-dom";
 
 // Mock components
 
+jest.mock("@/components/alert/alert", () => ({
+  Alert: ({ message, variant }: any) => (
+    <div data-testid="alert">
+      {message}-{variant}
+    </div>
+  ),
+}));
+
+jest.mock("@/components/loading/loading", () => ({
+  Loading: ({ label }: any) => <div data-testid="loading">{label}</div>,
+}));
+
 jest.mock("@/components/button/button", () => ({
   Button: ({ label, onClick }: any) => (
     <button onClick={onClick}>{label}</button>
