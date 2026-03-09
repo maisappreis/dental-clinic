@@ -3,7 +3,7 @@
 import { Controller, useForm } from "react-hook-form";
 import styles from "./Login.module.css";
 import { Input } from "@/components/form/input";
-import { Button } from "@/components/button/button";
+import { Button } from "@/components/button__/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTooth } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";

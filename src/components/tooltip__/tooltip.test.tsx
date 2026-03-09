@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { Tooltip } from "@/components/tooltip/tooltip";
+import { Tooltip } from "@/components/tooltip__/tooltip";
 
 const mockRect = {
   top: 100,

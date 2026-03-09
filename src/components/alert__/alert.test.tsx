@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { Alert } from "@/components/alert/alert";
+import { Alert } from "@/components/alert__/alert";
 import "@testing-library/jest-dom";
 
 describe("Alert Component", () => {

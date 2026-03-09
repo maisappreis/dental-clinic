@@ -2,7 +2,7 @@
 
 import styles from "../MonthClosing.module.css";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/button/button";
+import { Button } from "@/components/button__/button";
 import { SummaryBlock } from "@/app/(app)/monthclosing/summary/block";
 import { MessageCard } from "@/components/message/message";
 import { formatValueToBRL } from "@/utils/utils";
