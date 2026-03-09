@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { Button } from "@/components/button__/button";
+import { Button } from "@/components/button/button";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 describe("Button Component", () => {

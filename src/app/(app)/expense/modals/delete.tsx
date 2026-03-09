@@ -1,7 +1,7 @@
 "use client";
 
 import { Modal } from "@/components/modal/modal";
-import { Button } from "@/components/button__/button";
+import { Button } from "@/components/button/button";
 import { formatValueToBRL } from "@/utils/utils";
 import { Expense } from "@/types/expense";
 

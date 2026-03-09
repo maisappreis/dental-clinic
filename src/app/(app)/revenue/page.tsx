@@ -2,7 +2,7 @@
 import { useState, useEffect, useMemo } from "react";
 
 import { RevenueTable } from "@/app/(app)/revenue/table/table";
-import { Button } from "@/components/button__/button";
+import { Button } from "@/components/button/button";
 import { Search } from "@/components/search/search";
 import { Filter } from "@/components/filter/filter";
 import { Spinner } from "@/components/spinner/spinner";

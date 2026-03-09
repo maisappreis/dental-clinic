@@ -3,7 +3,7 @@
 import styles from "../Calendar.module.css";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { Modal } from "@/components/modal/modal";
-import { Button } from "@/components/button__/button";
+import { Button } from "@/components/button/button";
 import { formatDate } from "@/utils/date";
 import { Appointment, SelectedAppointment } from "@/types/agenda";
 

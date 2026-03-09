@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import styles from "../MonthClosing.module.css";
-import { Button } from "@/components/button__/button";
+import { Button } from "@/components/button/button";
 import { Select } from "@/components/form/select";
 import { Spinner } from "@/components/spinner/spinner";
 import { MessageCard } from "@/components/message/message";

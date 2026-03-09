@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan, faCircleInfo, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { Table, Column } from "@/components/table/table";
 import { Pagination } from "@/components/pagination/pagination";
-import { Tooltip } from "@/components/tooltip__/tooltip";
+import { Tooltip } from "@/components/tooltip/tooltip";
 import { usePagination } from "@/hooks/usePagination";
 import { formatDate } from "@/utils/date";
 import { formatValueToBRL } from "@/utils/utils";
