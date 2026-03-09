@@ -25,5 +25,9 @@ export const MonthClosingService = {
   
   async updateNetValues(payload: UpdateNetValuesPayload[]): Promise<void> {
     await http.put(`${apiURL()}/update-net-values/`, payload);
-  }
+  },
+
+  async remove(id: number): Promise<void> {
+    await http.delete(`${apiURL()}/month_closing/${id}/`);
+  },
 };

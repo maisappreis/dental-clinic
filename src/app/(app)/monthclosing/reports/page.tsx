@@ -7,22 +7,27 @@ import { Select } from "@/components/form/select";
 import { Spinner } from "@/components/spinner/spinner";
 import { MessageCard } from "@/components/message/message";
 import { CashClosingModal } from "@/app/(app)/monthclosing/reports/modal";
+import { DeleteModal } from "@/app/(app)/monthclosing/reports/delete";
 import { years } from "@/constants/date";
 import { getCurrentYear } from "@/utils/date"
 import { useMonthClosing } from "@/hooks/useMonthClosing";
 import { useMonthClosingStart } from "@/hooks/useMonthClosingStart";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { MonthClosing, CashClosingConfirmation } from "@/types/monthClosing";
 
 
 export default function Reports() {
   const [year, setYear] = useState<number>(Number(getCurrentYear()));
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [selectedMonthClosing, setSelectedMonthClosing] = useState<MonthClosing | undefined>(undefined);
+  const [createModalIsOpen, setCreateModalIsOpen] = useState(false);
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
-  const { monthClosing, fetchMonthClosing, isLoading } = useMonthClosing([]);
+  const { monthClosing, fetchMonthClosing, remove, isLoading } = useMonthClosing([]);
   const { startFromExisting, startNew } = useMonthClosingStart();
 
   const startNewReport = (data: CashClosingConfirmation) => {
-    setShowModal(false);
+    setCreateModalIsOpen(false);
 
     startNew({
       id: 0,
@@ -43,11 +48,30 @@ export default function Reports() {
   };
 
   const openExistingReport = (report: MonthClosing) => {
+    setSelectedMonthClosing(report);
     startFromExisting(report);
   };
 
-  const openModal = async () => setShowModal(true);
-  const closeModal = () => setShowModal(false);
+  const openCreateModal = (): void =>  {
+    setSelectedMonthClosing(undefined);
+    setCreateModalIsOpen(true);
+  };
+
+  const openDeleteModal = (monthClosing: MonthClosing): void => {
+    setSelectedMonthClosing(monthClosing);
+    setDeleteModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setCreateModalIsOpen(false);
+    setDeleteModalIsOpen(false);
+  };
+
+  const deleteMonthClosing = async () => {
+    if (!selectedMonthClosing) return
+    await remove(selectedMonthClosing.id, Number(year));
+    closeModal();
+  };
 
   useEffect(() => {
     fetchMonthClosing(year);
@@ -66,6 +90,14 @@ export default function Reports() {
               onClick={() => openExistingReport(report)}
             >
               {report.reference}
+              <FontAwesomeIcon
+                icon={faTrashCan}
+                className={styles.trash}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openDeleteModal(report);
+                }}
+              />
             </div>
           ))
         )}
@@ -101,14 +133,21 @@ export default function Reports() {
           label="Novo Fechamento"
           variant="primary"
           size="lg"
-          onClick={openModal}
+          onClick={openCreateModal}
         />
       </div>
 
       <CashClosingModal
-        open={showModal}
+        open={createModalIsOpen}
         onConfirmation={startNewReport}
         onClose={closeModal}
+      />
+
+      <DeleteModal
+        open={deleteModalIsOpen}
+        monthClosing={selectedMonthClosing}
+        onClose={closeModal}
+        onDelete={deleteMonthClosing}
       />
     </div>
   );

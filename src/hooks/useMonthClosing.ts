@@ -97,12 +97,34 @@ export function useMonthClosing(initialMonthClosing: MonthClosing[] = []) {
     }
   };
 
+  const remove = async (id: number, year: number) => {
+    showLoading('Excluíndo fechamento de caixa...');
+    try {
+      await MonthClosingService.remove(id);
+      await refresh(year);
+
+      alert.show({
+        message: "Fechamento de caixa excluído com sucesso!",
+        variant: "success",
+      });
+    } catch (error) {
+      console.error(error)
+      alert.show({
+        message: "Erro ao excluir fechamento de caixa.",
+        variant: "error",
+      });
+    } finally {
+      hideLoading();
+    }
+  };
+
   return {
     monthClosing,
     isLoading,
     fetchMonthClosing,
     create,
     update,
-    updateNetValues
+    updateNetValues,
+    remove
   };
 };
