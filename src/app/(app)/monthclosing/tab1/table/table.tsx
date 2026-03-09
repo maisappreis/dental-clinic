@@ -113,6 +113,7 @@ export function TabOneTable({ data, actions }: TabOneTableProps) {
       data={data}
       columns={columns}
       rowKey={(row) => row.id}
+      maxHeight="50vh"
     />
   );
 };

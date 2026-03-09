@@ -14,6 +14,7 @@ interface TableProps<T> {
   columns: Column<T>[];
   rowKey: (row: T) => string | number;
   emptyMessage?: string;
+  maxHeight?: string;
 }
 
 export function Table<T>({
@@ -21,9 +22,10 @@ export function Table<T>({
   columns,
   rowKey,
   emptyMessage = "Nenhum resultado encontrado.",
+  maxHeight = "70vh"
 }: TableProps<T>) {
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} style={{ maxHeight }}>
       <table className={styles.table}>
         <thead className={styles.thead}>
           <tr>

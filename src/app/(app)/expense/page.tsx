@@ -152,22 +152,22 @@ export default function ExpensePage() {
           <Filter
             value={month}
             options={[
-              { label: "Todos", value: "Todos" },
               ...months.map((item) => ({
                 label: item,
                 value: item,
               })),
+              { label: "Todos", value: "Todos" },
             ]}
             onChange={setMonth}
           />
           <Filter
             value={year}
             options={[
-              { label: "Todos", value: "Todos" },
               ...years.map((item) => ({
                 label: item,
                 value: item,
               })),
+              { label: "Todos", value: "Todos" },
             ]}
             onChange={setYear}
           />
