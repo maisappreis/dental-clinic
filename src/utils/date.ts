@@ -1,65 +1,55 @@
-import { months } from "@/assets/data";
+import { months } from "@/constants/date";
 
-// Returns the current date as string.
+export type MonthName = typeof months[number];
+
+const today = ():Date => new Date();
+const currentYear = (): string => today().getFullYear().toString();
+
+const pad = (value: number): string => String(value).padStart(2, "0");
+const formatISO = (date: Date): string => `${currentYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+
 export function getCurrentDate(): string {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0');
-  const day = String(today.getDate()).padStart(2, '0');
-
-  return `${year}-${month}-${day}`;
+  return formatISO(today());
 };
 
-// Returns the current year as a string.
 export function getCurrentYear(): string {
-  const year = new Date().getFullYear();
+  const year = currentYear();
   return year.toString()
-}
+};
 
-// Returns the current month as a string.
 export function getCurrentMonth(): string {
-  const currentMonthIndex = new Date().getMonth();
+  const currentMonthIndex = today().getMonth();
   return months[currentMonthIndex];
-}
+};
 
-// Receives a month number and returns month name.
-export function getMonthName(monthNumber: string): string {
-  const index = parseInt(monthNumber, 10) - 1;
+export function getMonthName(monthNumber: string): MonthName {
+  const index = Number(monthNumber) - 1;
 
-  if (index >= 0 && index < months.length) {
-    return months[index];
-  } else {
-    return "Mês inválido";
+  if (!Number.isInteger(index) || index < 0 || index >= months.length) {
+    throw new Error(`Mês inválido: ${monthNumber}`);
   }
-}
 
-// Receives a date and returns month and year in string.
-export function getMonthAndYear(date: string): string [] {
+  return months[index];
+};
+
+export function getMonthAndYear(date: string): [string, string] {
   const month = getMonthName(date.split("-")[1])
   const year = date.split("-")[0]
   return [month, year]
-}
+};
 
-// Formats the date to "day/month/year" string.
 export function formatDate (date: string): string {
   const [year, month, day] = date.split('-');
   return `${day}/${month}/${year}`;
 };
 
-// Receives a date and returns the same date in the next month.
 export function getNextMonth(date: string): string {
-  const currentDate = new Date(date);
-  currentDate.setMonth(currentDate.getMonth() + 1);
+  const d = new Date(date);
+  d.setMonth(d.getMonth() + 1);
+  return formatISO(d);
+};
 
-  const year = currentDate.getFullYear();
-  const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-  const day = String(currentDate.getDate()).padStart(2, '0');
-
-  return `${year}-${month}-${day}`;
-}
-
-// Receives a month name and returns the next month name.
-export function getNextMonthName(currentMonth: string): string {
+export function getNextMonthName(currentMonth: string): MonthName {
   const validMonths = months.slice(0, 12);
   const currentIndex = validMonths.indexOf(currentMonth);
 
@@ -70,4 +60,33 @@ export function getNextMonthName(currentMonth: string): string {
   const nextIndex = (currentIndex + 1) % validMonths.length;
   
   return validMonths[nextIndex];
+};
+
+export interface WeekDay {
+  dayWeek: string;
+  day: string;
+  date: string;
 }
+
+export function getCurrentWeekDays(): WeekDay[] {
+  const base = new Date();
+  const mondayOffset = base.getDay() === 0 ? -6 : 1 - base.getDay();
+
+  const weekLabels = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+
+  return weekLabels.map((label, index) => {
+    const d = new Date(base);
+    d.setDate(base.getDate() + mondayOffset + index);
+
+    return {
+      dayWeek: label,
+      day: d.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+      }),
+      date: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+        d.getDate()
+      ).padStart(2, "0")}`,
+    };
+  });
+};

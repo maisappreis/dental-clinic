@@ -1,0 +1,19 @@
+.search {
+  padding: 12px;
+  width: 25vw;
+  height: 50px;
+  font-size: var(--text-size);
+  border-radius: 5px;
+  margin-left: 10px;
+  background: var(--gray-lighter);
+}
+
+.search::placeholder {
+  color: var(--gray-darker);
+}
+
+@media only screen and (max-width: 1000px) {
+  .search {
+    height: 40px;
+  }
+}

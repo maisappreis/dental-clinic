@@ -1,0 +1,27 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  height: var(--header-height);
+  width: 93%;
+
+  margin: 10px 20px 0 20px;
+}
+
+.title { 
+  font-weight: bold;
+  font-size: var(--header-font-size);
+  margin-top: 10px;
+}
+
+.subtitle {
+  font-size: 18px;
+  margin: 2px 0 5px 15px;
+  display: var(--text-visibility);
+}
+
+.icon {
+  margin: var(--header-icon-margin);
+  font-size: var(--header-icon-size);
+}

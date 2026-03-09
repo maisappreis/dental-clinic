@@ -1,0 +1,19 @@
+.box {
+  font-size: 18px;
+  background-color: var(--red-lighter);
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.default {
+  background-color: rgb(166, 207, 244);
+}
+
+.success {
+  background-color: rgb(185, 238, 185);
+}
+
+.error {
+  background-color: var(--red-lighter);
+}

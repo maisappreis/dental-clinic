@@ -1,0 +1,113 @@
+/*
+======================
+  Common
+======================
+*/
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.label {
+  font-size: 16px;
+  font-weight: 500;
+  color: black;
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+
+  font-size: 0.95rem;
+  color: black;
+
+  background: var(--gray-lighter);
+  border-radius: 8px;
+}
+
+.input,
+.select {
+  padding: 6px 12px;
+  height: 40px;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: var(--gray-medium);
+  box-shadow: 0 0 0 3px rgba(21, 59, 139, 0.15);
+  outline: none;
+}
+
+.select:disabled
+.textarea:disabled,
+.input:disabled {
+  color: var(--gray-darker);
+  cursor: not-allowed;
+}
+
+.input.error,
+.select.error {
+  border-color: red;
+}
+
+/*
+======================
+  Input
+======================
+*/
+
+.input {
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+/*
+======================
+  Textarea
+======================
+*/
+
+.textarea {
+  min-height: 70px;
+  padding: 10px 12px;
+
+  resize: vertical;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.textarea::placeholder {
+  color: var(--gray-darker);
+}
+
+/*
+======================
+  Error
+======================
+*/
+
+.error {
+  font-size: 14px;
+  color: red;
+  text-align: right;
+  font-weight: bold;
+}
+
+.error:focus {
+  border-color: red;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+}
+
+.errorMessage {
+  font-size: 0.75rem;
+  color: red;
+  line-height: 1.4;
+}

@@ -1,0 +1,33 @@
+.chartarea {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+
+  height: calc(100vh - var(--header-height) - 40px);
+  margin: var(--content-margin);
+  box-sizing: border-box;
+}
+
+.chartitem {
+  display: flex;
+  justify-content: center;
+
+  background: white;
+  border-radius: var(--content-border-radius);
+
+  padding: 20px;
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+}
+
+@media only screen and (max-width: 1000px) {
+  .chartarea {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .chartitem {
+    padding: 10px;
+    height: 300px;
+  }
+}

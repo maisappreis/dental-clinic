@@ -1,0 +1,103 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  width: var(--sidebar-width);
+  height: 100vh;
+
+  background-color: var(--secondary-color);
+  z-index: 0;
+}
+
+.ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.icon {
+  padding-right: 20px;
+  font-size: 22px;
+  color: white;
+}
+
+.icon:hover {
+  font-size: 26px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+
+  font-size: 1.1rem;
+  color: white;
+
+  padding: 25px 15px;
+  margin: 15px 0 15px 20px;
+  
+  text-align: left;
+  cursor: pointer;
+}
+
+.option:hover {
+  background-color: var(--primary-color);
+  font-weight: bold;
+  color: white;
+  border-radius: 15px 0 0 15px;
+}
+
+.selected {
+  background-color: var(--gray-lighter);
+  font-weight: bold;
+  color: black;
+  border-radius: 15px 0 0 15px;
+}
+
+.selectedIcon {
+  color: black;
+}
+
+.selectedIcon:hover {
+  color: white;
+}
+
+.text {
+  display: var(--sidebar-text-visibility);
+}
+
+.userlog {
+  display: flex;
+  padding: 10px 15px;
+  margin: 15px;
+
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.userlog:hover {
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  font-weight: 800;
+}
+
+.logoicon {
+  color: var(--quaternary-color);
+  font-size: var(--sidebar-logo-size);
+}
+
+@media only screen and (max-width: 1300px) {
+  .icon {
+      font-size: 25px;
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .option {
+    padding: 15px 20px;
+    margin: 20px 0 20px 10px;
+  }
+}

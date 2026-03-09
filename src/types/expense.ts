@@ -1,4 +1,4 @@
-export interface ExpenseProps {
+export interface Expense {
   id: number;
   year: number;
   month: string;
@@ -10,8 +10,25 @@ export interface ExpenseProps {
   notes: string;
 }
 
-export interface ExpenseData {
-  expenses: ExpenseProps[];
-  setExpenses: (newExpenses: ExpenseProps[]) => void;
-  loading: boolean;
+export type CreateExpenseDTO =
+  Omit<Expense, "id" | "year" | "month" | "is_paid"> & {
+    hasInstallments: boolean;
+};
+
+export type UpdateExpenseDTO = Expense & {
+  hasInstallments: boolean;
+};
+
+export interface ExpenseFormData {
+  id?: number;
+  name: string;
+  hasInstallments: boolean;
+  installments: string;
+  date: string;
+  value: number;
+  notes: string;
+}
+
+export interface ExpenseFormRef {
+  submit: () => void;
 }
