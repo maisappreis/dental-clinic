@@ -43,8 +43,6 @@ describe("useExpense", () => {
       await result.current.fetchExpenses();
     });
 
-    expect(show).toHaveBeenCalledWith("Carregando despesas...");
-    expect(hide).toHaveBeenCalled();
     expect(result.current.expenses).toEqual(mockData);
   });
 

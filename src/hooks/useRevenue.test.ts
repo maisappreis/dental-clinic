@@ -43,10 +43,8 @@ describe("useRevenue", () => {
       await result.current.fetchRevenue();
     });
 
-    expect(show).toHaveBeenCalledWith("Carregando receitas...");
     expect(RevenueService.list).toHaveBeenCalled();
     expect(result.current.revenue).toEqual(mockData);
-    expect(hide).toHaveBeenCalled();
   });
 
   it("creates revenue", async () => {

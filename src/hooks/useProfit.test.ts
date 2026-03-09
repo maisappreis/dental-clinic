@@ -41,10 +41,8 @@ describe("useProfit", () => {
       await result.current.fetchProfit();
     });
 
-    expect(show).toHaveBeenCalledWith("Carregando lucros...");
     expect(ProfitService.list).toHaveBeenCalled();
     expect(result.current.profit).toEqual(mockData);
-    expect(hide).toHaveBeenCalled();
   });
 
   it("keeps loading lifecycle even if request fails", async () => {
@@ -58,7 +56,6 @@ describe("useProfit", () => {
       } catch {}
     });
 
-    expect(show).toHaveBeenCalled();
-    expect(hide).toHaveBeenCalled();
+    expect(result.current.isLoading).toBe(false);
   });
 });

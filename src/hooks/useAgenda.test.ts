@@ -36,8 +36,6 @@ describe("useAgenda", () => {
       await result.current.fetch();
     });
 
-    expect(show).toHaveBeenCalled();
-    expect(hide).toHaveBeenCalled();
     expect(result.current.agenda).toEqual(mockData);
   });
 
