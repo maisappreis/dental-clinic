@@ -8,6 +8,7 @@ import { MonthNames } from "@/types/chart";
 import { monthNames } from "@/constants/date";
 import { groupValuesByMonth } from "@/utils/charts";
 import { revenueExpensesLineChartOptions } from "@/constants/charts";
+import styles from "../Charts.module.css";
 import "@/utils/chart";
 
 
@@ -23,9 +24,9 @@ export function RevenueExpensesChart({
       return { labels: [], datasets: [] };
     }
 
-    const styles = getComputedStyle(document.documentElement);
-    const revenueColor = styles.getPropertyValue("--success-color");
-    const expenseColor = styles.getPropertyValue("--error-color");
+    const style = getComputedStyle(document.documentElement);
+    const revenueColor = style.getPropertyValue("--success-color");
+    const expenseColor = style.getPropertyValue("--error-color");
 
     const revenueByMonth = groupValuesByMonth(revenue);
     const expensesByMonth = groupValuesByMonth(expenses);
@@ -63,7 +64,11 @@ export function RevenueExpensesChart({
   }, [revenue, expenses]);
 
   if (!chartData.labels.length) {
-    return <span>Sem dados para exibir</span>;
+    return (
+      <div className={styles.noData}>
+        <span>Sem dados para exibir</span>
+      </div>
+    );
   }
 
   return (

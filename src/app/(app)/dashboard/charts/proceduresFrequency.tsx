@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { Bar } from "react-chartjs-2";
 import { Revenue } from "@/types/revenue";
 import { ChartData } from "@/types/chart";
+import styles from "../Charts.module.css";
 import "@/utils/chart";
 
 import { getMostPerformedProcedures } from "@/utils/charts";
@@ -14,8 +15,8 @@ type Props = {
 };
 
 export function MostPerformedProceduresChart({ revenue }: Props) {
-  const styles = getComputedStyle(document.documentElement);
-  const color = styles.getPropertyValue("--primary-color");
+  const style = getComputedStyle(document.documentElement);
+  const color = style.getPropertyValue("--primary-color");
 
   const chartData = useMemo<ChartData>(() => {
     if (!revenue.length) {
@@ -37,7 +38,11 @@ export function MostPerformedProceduresChart({ revenue }: Props) {
   }, [revenue, color]);
 
   if (!chartData.labels.length) {
-    return <span>Sem dados para exibir</span>;
+    return (
+      <div className={styles.noData}>
+        <span>Sem dados para exibir</span>
+      </div>
+    );
   }
 
   return <Bar data={chartData} options={proceduresBarChartOptions} />;

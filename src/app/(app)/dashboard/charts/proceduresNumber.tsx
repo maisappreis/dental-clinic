@@ -6,6 +6,7 @@ import { Revenue } from "@/types/revenue";
 import { monthNames } from "@/constants/date";
 import { proceduresLineChartOptions } from "@/constants/charts";
 import { groupRevenueByMonth } from "@/utils/charts";
+import styles from "../Charts.module.css";
 import "@/utils/chart";
 
 
@@ -19,8 +20,8 @@ export function NumberOfProceduresChart({
       return { labels: [], datasets: [] };
     }
 
-    const styles = getComputedStyle(document.documentElement);
-    const color = styles.getPropertyValue("--primary-color");
+    const style = getComputedStyle(document.documentElement);
+    const color = style.getPropertyValue("--primary-color");
 
     const groupedByMonth = groupRevenueByMonth(revenue);
 
@@ -50,7 +51,11 @@ export function NumberOfProceduresChart({
   }, [revenue]);
 
   if (!chartData.labels.length) {
-    return <span>Sem dados para exibir</span>;
+    return (
+      <div className={styles.noData}>
+        <span>Sem dados para exibir</span>
+      </div>
+    );
   }
 
   return <Line data={chartData} options={proceduresLineChartOptions} />;

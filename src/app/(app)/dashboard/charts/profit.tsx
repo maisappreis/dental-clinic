@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { Bar } from "react-chartjs-2";
 import { ProfitData } from "@/types/chart";
 import { profitBarChartOptions } from "@/constants/charts";
+import styles from "../Charts.module.css";
 import "@/utils/chart";
 
 
@@ -13,8 +14,8 @@ export function ProfitChart({ profit }: { profit: ProfitData }) {
       return { labels: [], datasets: [] };
     }
 
-    const styles = getComputedStyle(document.documentElement);
-    const barColor = styles.getPropertyValue("--tertiary-color");
+    const style = getComputedStyle(document.documentElement);
+    const barColor = style.getPropertyValue("--tertiary-color");
 
     return {
       labels: profit.labels,
@@ -29,7 +30,11 @@ export function ProfitChart({ profit }: { profit: ProfitData }) {
   }, [profit]);
 
   if (!chartData.labels.length) {
-    return <span>Sem dados para exibir</span>;
+    return (
+      <div className={styles.noData}>
+        <span>Sem dados para exibir</span>
+      </div>
+    );
   }
 
   return <Bar data={chartData} options={profitBarChartOptions} />;

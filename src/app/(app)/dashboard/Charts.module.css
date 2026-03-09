@@ -20,6 +20,13 @@
   overflow: hidden;
 }
 
+.noData {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
 @media only screen and (max-width: 1000px) {
   .chartarea {
     grid-template-columns: 1fr;
