@@ -5,6 +5,7 @@ import { ExpenseTable } from "@/app/(app)/expense/table/table";
 import { Button } from "@/components/button/button";
 import { Search } from "@/components/search/search";
 import { Filter } from "@/components/filter/filter";
+import { Spinner } from "@/components/spinner/spinner";
 import { CreateUpdateModal } from "./modals/createUpdate";
 import { DeleteModal } from "./modals/delete";
 import { PaymentStatusModal } from "./modals/paymentStatus";
@@ -31,7 +32,7 @@ export default function ExpensePage() {
   const [createUpdateModalIsOpen, setCreateUpdateModalIsOpen] = useState(false);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
-  const { expenses, create, update, remove, fetchExpenses } = useExpense([]);
+  const { expenses, create, update, remove, fetchExpenses, isLoading } = useExpense([]);
 
   const filteredData = useMemo(() => {
     if (!expenses.length) return [];
@@ -108,7 +109,7 @@ export default function ExpensePage() {
 
     if (isPaid && !hasInstallments) {
       await createNextMonthExpense(response);
-    } 
+    }
     closeModal();
   };
 
@@ -174,15 +175,18 @@ export default function ExpensePage() {
           <Search value={search} onValueChange={searchData} />
         </div>
       </div>
-      <ExpenseTable
-        data={filteredData}
-        actions={{
-          onConfirmStatus: openConfirmationModal,
-          onOpenUpdate: openUpdateModal,
-          onOpenDelete: openDeleteModal,
-        }}
-      />
 
+      {isLoading ? (<Spinner/>): (
+        <ExpenseTable
+          data={filteredData}
+          actions={{
+            onConfirmStatus: openConfirmationModal,
+            onOpenUpdate: openUpdateModal,
+            onOpenDelete: openDeleteModal,
+          }}
+        />
+      )}
+      
       <CreateUpdateModal
         open={createUpdateModalIsOpen}
         expense={selectedExpense}

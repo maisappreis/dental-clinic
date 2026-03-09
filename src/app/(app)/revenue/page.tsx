@@ -5,6 +5,7 @@ import { RevenueTable } from "@/app/(app)/revenue/table/table";
 import { Button } from "@/components/button/button";
 import { Search } from "@/components/search/search";
 import { Filter } from "@/components/filter/filter";
+import { Spinner } from "@/components/spinner/spinner";
 import { CreateUpdateModal } from "./modals/createUpdate";
 import { DeleteModal } from "./modals/delete";
 
@@ -26,7 +27,7 @@ export default function RevenuePage() {
   const [createUpdateModalIsOpen, setCreateUpdateModalIsOpen] = useState(false);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
-  const { revenue, create, update, remove, fetchRevenue } = useRevenue([]);
+  const { revenue, create, update, remove, fetchRevenue, isLoading } = useRevenue([]);
 
   const filteredData = useMemo<Revenue[]>(() => {
     if (!revenue.length) return [];
@@ -117,14 +118,16 @@ export default function RevenuePage() {
         </div>
       </div>
 
-      <RevenueTable
-        data={filteredData}
-        actions={{
-          onOpenUpdate: openUpdateModal,
-          onOpenDelete: openDeleteModal,
-        }}
-      />
-
+      {isLoading ? (<Spinner/>) : (
+        <RevenueTable
+          data={filteredData}
+          actions={{
+            onOpenUpdate: openUpdateModal,
+            onOpenDelete: openDeleteModal,
+          }}
+        />
+      )}
+      
       <CreateUpdateModal
         open={createUpdateModalIsOpen}
         revenue={selectedRevenue}

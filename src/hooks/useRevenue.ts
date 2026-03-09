@@ -12,6 +12,7 @@ import {
 
 export function useRevenue(initialRevenue: Revenue[] = []) {
   const [revenue, setRevenue] = useState<Revenue[]>(initialRevenue);
+  const [isLoading, setIsLoading] = useState(true);
 
   const alert = useAlertStore.getState();
   const showLoading = useLoadingStore((s) => s.show);
@@ -25,13 +26,13 @@ export function useRevenue(initialRevenue: Revenue[] = []) {
   }, []);
 
   const fetchRevenue = useCallback(async () => {
-    showLoading("Carregando receitas...");
+    setIsLoading(true);
     try {
       return await refresh();
     } finally {
-      hideLoading();
+      setIsLoading(false);
     }
-  }, [refresh, showLoading, hideLoading]);
+  }, [refresh]);
 
   const create = async (payload: CreateRevenueDTO) => {
     showLoading("Criando receita...");
@@ -108,6 +109,7 @@ export function useRevenue(initialRevenue: Revenue[] = []) {
 
   return {
     revenue,
+    isLoading,
     fetchRevenue,
     refresh,
     create,

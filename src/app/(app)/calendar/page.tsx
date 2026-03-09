@@ -6,6 +6,7 @@ import { Appointments } from "@/app/(app)/calendar/appointments/appointments";
 import { CreateUpdateModal } from "@/app/(app)/calendar/modals/createUpdate";
 import { DeleteModal } from "@/app/(app)/calendar/modals/delete";
 import { ReadOnlyModal } from "@/app/(app)/calendar/modals/readOnly";
+import { Spinner } from "@/components/spinner/spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { scheduleOptions } from "@/constants/appointment";
@@ -27,7 +28,7 @@ export default function Calendar() {
   const [readyOnlyModalIsOpen, setReadyOnlyModalIsOpen] = useState<boolean>(false);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
 
-  const { agenda, create, update, remove, fetch } = useAgenda([]);
+  const { agenda, create, update, remove, fetch, isLoading } = useAgenda([]);
 
   const daysOfWeek = useMemo(() => getCurrentWeekDays(), []);
 
@@ -140,26 +141,28 @@ export default function Calendar() {
 
   return (
     <div className="app-content">
-      <div className={styles.grid}>
-        <div className={styles.addBtn}
-          onClick={openCreateModal}>
-          <FontAwesomeIcon icon={faPlus} className={styles.addIcon} />
-        </div>
-        {daysOfWeek.map((day, index) => (
-          <div key={index} className={styles.day}>
-            <span>{day.dayWeek}</span>
-            <span>{day.day}</span>
+      {isLoading ? (<Spinner/>): (
+        <div className={styles.grid}>
+          <div className={styles.addBtn}
+            onClick={openCreateModal}>
+            <FontAwesomeIcon icon={faPlus} className={styles.addIcon} />
           </div>
-        ))}
-        {appointments.map((appointment) => (
-          <Appointments
-            key={appointment.time}
-            time={appointment.time}
-            slots={appointment.slots}
-            onOpen={openAppointmentModal}
-          />
-        ))}
-      </div>
+          {daysOfWeek.map((day, index) => (
+            <div key={index} className={styles.day}>
+              <span>{day.dayWeek}</span>
+              <span>{day.day}</span>
+            </div>
+          ))}
+          {appointments.map((appointment) => (
+            <Appointments
+              key={appointment.time}
+              time={appointment.time}
+              slots={appointment.slots}
+              onOpen={openAppointmentModal}
+            />
+          ))}
+        </div>
+      )}
 
       <ReadOnlyModal
         open={readyOnlyModalIsOpen}

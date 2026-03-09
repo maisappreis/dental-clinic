@@ -11,7 +11,7 @@ import {
 
 export function useMonthClosing(initialMonthClosing: MonthClosing[] = []) {
   const [monthClosing, setMonthClosing] = useState<MonthClosing[]>(initialMonthClosing);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const alert = useAlertStore.getState();
   const showLoading = useLoadingStore((s) => s.show);

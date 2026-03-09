@@ -7,7 +7,8 @@ import { Appointment, CreateAppointmentDTO, UpdateAppointmentDTO } from "@/types
 
 export function useAgenda(initialAppointment: Appointment[] = []) {
   const [agenda, setAgenda] = useState<Appointment[]>(initialAppointment);
-  
+  const [isLoading, setIsLoading] = useState(true);
+
   const alert = useAlertStore.getState();
   const showLoading = useLoadingStore((s) => s.show);
   const hideLoading = useLoadingStore((s) => s.hide);
@@ -18,13 +19,13 @@ export function useAgenda(initialAppointment: Appointment[] = []) {
   }, []);
 
   const fetch = useCallback(async () => {
-    showLoading("Carregando agendamentos...");
+    setIsLoading(true);
     try {
       await refresh();
     } finally {
-      hideLoading();
+      setIsLoading(false);
     }
-  }, [refresh, showLoading, hideLoading]);
+  }, [refresh]);
 
   const create = async (payload: CreateAppointmentDTO) => {
     showLoading("Criando agendamento...");
@@ -103,6 +104,7 @@ export function useAgenda(initialAppointment: Appointment[] = []) {
 
   return {
     agenda,
+    isLoading,
     fetch,
     refresh,
     create,

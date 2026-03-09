@@ -12,6 +12,7 @@ import {
 
 export function useExpense(initialExpense: Expense[] = []) {
   const [expenses, setExpenses] = useState<Expense[]>(initialExpense);
+  const [isLoading, setIsLoading] = useState(true);
 
   const alert = useAlertStore.getState();
   const showLoading = useLoadingStore((s) => s.show);
@@ -23,13 +24,13 @@ export function useExpense(initialExpense: Expense[] = []) {
   }, []);
 
   const fetchExpenses = useCallback(async () => {
-    showLoading("Carregando despesas...");
+    setIsLoading(true);
     try {
       await refresh();
     } finally {
-      hideLoading();
+      setIsLoading(false);
     }
-  }, [refresh, showLoading, hideLoading]);
+  }, [refresh]);
 
   const create = async (payload: CreateExpenseDTO) => {
     showLoading("Criando despesa...");
@@ -102,6 +103,7 @@ export function useExpense(initialExpense: Expense[] = []) {
 
   return {
     expenses,
+    isLoading,
     fetchExpenses,
     refresh,
     create,

@@ -1,26 +1,24 @@
 import { useState, useCallback } from "react";
 import { ProfitService } from "@/services/profit.service";
-import { useLoadingStore } from "@/stores/loading.store";
 import { ProfitData } from "@/types/chart";
 
 export function useProfit(initialProfit: ProfitData = {profit: [], labels: []}) {
   const [profit, setProfit] = useState<ProfitData>(initialProfit);
-
-  const showLoading = useLoadingStore((s) => s.show);
-  const hideLoading = useLoadingStore((s) => s.hide);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchProfit = useCallback(async () => {
-    showLoading("Carregando lucros...");
+    setIsLoading(true);
     try {
       const data = await ProfitService.list();
       setProfit(data);
     } finally {
-      hideLoading();
+      setIsLoading(false);
     }
-  }, [showLoading, hideLoading]);
+  }, []);
 
   return {
     profit,
+    isLoading,
     fetchProfit
   };
 };

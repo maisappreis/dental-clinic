@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "./Calendar.module.css";
+import styles from "../Calendar.module.css";
 import { CalendarSlot } from "@/types/agenda";
 
 export interface AppointmentsProps {

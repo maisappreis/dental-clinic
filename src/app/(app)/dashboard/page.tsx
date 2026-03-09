@@ -6,15 +6,16 @@ import { RevenueExpensesChart } from "@/app/(app)/dashboard/charts/revenueExpens
 import { ProfitChart } from "@/app/(app)/dashboard/charts/profit";
 import { NumberOfProceduresChart } from "@/app/(app)/dashboard/charts/proceduresNumber";
 import { MostPerformedProceduresChart } from "@/app/(app)/dashboard/charts/proceduresFrequency";
+import { Spinner } from "@/components/spinner/spinner";
 import { useRevenue } from "@/hooks/useRevenue";
 import { useExpense } from "@/hooks/useExpense";
 import { useProfit } from "@/hooks/useProfit";
 
 
 export default function Dashboard() {
-  const { revenue, fetchRevenue } = useRevenue([]);
-  const { expenses, fetchExpenses } = useExpense([]);
-  const { profit, fetchProfit } = useProfit({profit: [], labels: []});
+  const { revenue, fetchRevenue, isLoading: isLoadingRevenue } = useRevenue([]);
+  const { expenses, fetchExpenses, isLoading: isLoadingExpenses } = useExpense([]);
+  const { profit, fetchProfit, isLoading: isLoadingProfit } = useProfit({profit: [], labels: []});
 
   useEffect(() => {
     fetchRevenue();
@@ -25,16 +26,32 @@ export default function Dashboard() {
   return (
     <div className={styles.chartarea}>
       <div className={styles.chartitem}>
-        <RevenueExpensesChart revenue={revenue} expenses={expenses} />
+        {isLoadingRevenue && isLoadingExpenses ? (
+          <Spinner/>
+        ) : (
+          <RevenueExpensesChart revenue={revenue} expenses={expenses} />
+        )}
       </div>
       <div className={styles.chartitem}>
-        <MostPerformedProceduresChart revenue={revenue} />
+        {isLoadingRevenue ? (
+          <Spinner/>
+        ) : (
+          <MostPerformedProceduresChart revenue={revenue} />
+        )}
       </div>
       <div className={styles.chartitem}>
-        <NumberOfProceduresChart revenue={revenue} />
+        {isLoadingRevenue ? (
+          <Spinner/>
+        ) : (
+          <NumberOfProceduresChart revenue={revenue} />
+        )}
       </div>
       <div className={styles.chartitem}>
-        <ProfitChart profit={profit} />
+        {isLoadingProfit ? (
+          <Spinner/>
+        ) : (
+          <ProfitChart profit={profit} />
+        )}
       </div>
     </div>
   );
