@@ -1,6 +1,5 @@
 import {
   capitalizeFirstLetter,
-  prepareDataForSubmission,
   formatValueToBRL,
   formatCPF,
 } from "./utils";
@@ -34,31 +33,6 @@ describe("capitalizeFirstLetter", () => {
     const result = capitalizeFirstLetter("");
 
     expect(result).toBe("");
-  });
-});
-
-describe("prepareDataForSubmission", () => {
-  const baseData = {
-    name: "conta de luz",
-    value: 100,
-  } as ExpenseFormData;
-
-  it("adds month and year when date exists", () => {
-    const result = prepareDataForSubmission({
-      ...baseData,
-      date: "2025-01-10",
-    });
-
-    expect(result.month).toBe("Janeiro");
-    expect(result.year).toBe(2025);
-    expect(result.name).toBe("Conta de Luz");
-  });
-
-  it("only formats name when date does not exist", () => {
-    const result = prepareDataForSubmission(baseData);
-
-    expect(result.name).toBe("Conta de Luz");
-    expect(result.month).toBeUndefined();
   });
 });
 

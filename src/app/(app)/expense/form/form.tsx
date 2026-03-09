@@ -25,26 +25,19 @@ export const ExpenseForm = forwardRef<
     formState: { errors },
   } = useForm<ExpenseFormData>({
     defaultValues: {
-      hasInstallments: false
-    },
+      installments: "",
+      ...defaultValues
+    }
   });
 
-  const hasInstallments = watch("hasInstallments");
-
-  const isValidInstallments = (installment: string): boolean => {
-    const integerNumber = parseInt(installment);
-    return Number.isInteger(integerNumber);
-  };
+  const installments = watch("installments");
+  const hasInstallments = installments !== "";
 
   useEffect(() => {
     if (!defaultValues) return;
 
     reset({
       ...defaultValues,
-      hasInstallments: Boolean(
-        defaultValues.installments &&
-        defaultValues.installments !== ""
-      ),
     });
   }, [defaultValues, reset]);
 
@@ -81,22 +74,16 @@ export const ExpenseForm = forwardRef<
         )}
       />
 
-      <Controller
-        name="hasInstallments"
-        control={control}
-        render={({ field }) => (
-          <Checkbox
-            label="Possui parcelas?"
-            checked={field.value}
-            onChange={(checked) => {
-              field.onChange(checked);
-
-              if (!checked) {
-                setValue("installments", "");
-              }
-            }}
-          />
-        )}
+      <Checkbox
+        label="Possui parcelas?"
+        checked={hasInstallments}
+        onChange={(checked) => {
+          if (!checked) {
+            setValue("installments", "");
+          } else {
+            setValue("installments", "2");
+          }
+        }}
       />
 
       {hasInstallments && (
@@ -104,9 +91,9 @@ export const ExpenseForm = forwardRef<
           name="installments"
           control={control}
           rules={{
+            required: "Número de parcelas obrigatório",
             validate: (value) =>
-              !hasInstallments ||
-              isValidInstallments(value || "")
+              Number.isInteger(Number(value))
                 ? true
                 : "Parcelas inválidas",
           }}

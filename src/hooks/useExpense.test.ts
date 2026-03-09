@@ -3,7 +3,6 @@ import { useExpense } from "./useExpense";
 import { ExpenseService } from "@/services/expense.service";
 import { useLoadingStore } from "@/stores/loading.store";
 import { useAlertStore } from "@/stores/alert.store";
-import { prepareDataForSubmission } from "@/utils/utils";
 import { sortByDate } from "@/utils/sort";
 
 jest.mock("@/services/expense.service");
@@ -29,7 +28,6 @@ describe("useExpense", () => {
     });
 
     (sortByDate as jest.Mock).mockImplementation((data) => data);
-    (prepareDataForSubmission as jest.Mock).mockImplementation((d) => d);
   });
 
   it("fetches expenses", async () => {
@@ -53,10 +51,12 @@ describe("useExpense", () => {
     const { result } = renderHook(() => useExpense());
 
     await act(async () => {
-      await result.current.create({ name: "teste" } as any);
+      await result.current.create({
+        name: "teste",
+        date: "2026-01-10",
+      } as any);
     });
 
-    expect(prepareDataForSubmission).toHaveBeenCalled();
     expect(ExpenseService.create).toHaveBeenCalled();
     expect(alertShow).toHaveBeenCalledWith({
       message: "Despesa criada com sucesso!",
@@ -75,10 +75,9 @@ describe("useExpense", () => {
     let response;
 
     await act(async () => {
-      response = await result.current.update({ id: 1 } as any);
+      response = await result.current.update({ id: 1, date: "2026-01-10" } as any);
     });
 
-    expect(prepareDataForSubmission).toHaveBeenCalled();
     expect(ExpenseService.update).toHaveBeenCalled();
     expect(response).toEqual(updated);
   });

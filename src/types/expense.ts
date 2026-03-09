@@ -10,19 +10,16 @@ export interface Expense {
   notes: string;
 }
 
-export type CreateExpenseDTO =
-  Omit<Expense, "id" | "year" | "month" | "is_paid"> & {
-    hasInstallments: boolean;
-};
+export type CreateExpenseDTO = Omit<Expense, "id">;
 
-export type UpdateExpenseDTO = Expense & {
-  hasInstallments: boolean;
-};
+export type UpdateExpenseDTO = Expense;
 
 export interface ExpenseFormData {
   id?: number;
   name: string;
-  hasInstallments: boolean;
+  year: number;
+  month: string;
+  is_paid: boolean;
   installments: string;
   date: string;
   value: number;

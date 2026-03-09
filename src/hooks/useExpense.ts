@@ -2,8 +2,9 @@ import { useState, useCallback } from "react";
 import { ExpenseService } from "@/services/expense.service";
 import { useLoadingStore } from "@/stores/loading.store";
 import { useAlertStore } from "@/stores/alert.store";
-import { prepareDataForSubmission } from "@/utils/utils";
+import { capitalizeFirstLetter } from "@/utils/utils";
 import { sortByDate } from "@/utils/sort";
+import { getMonthAndYear } from "@/utils/date";
 import {
   Expense,
   CreateExpenseDTO,
@@ -35,9 +36,14 @@ export function useExpense(initialExpense: Expense[] = []) {
   const create = async (payload: CreateExpenseDTO) => {
     showLoading("Criando despesa...");
     try {
-      const formatedPayload = prepareDataForSubmission(payload);
+      const [month, year] = getMonthAndYear(payload.date);
 
-      await ExpenseService.create(formatedPayload);
+      await ExpenseService.create({
+        ...payload,
+        month,
+        year: parseInt(year),
+        name: capitalizeFirstLetter(payload.name),
+      });
       await refresh();
 
       alert.show({
@@ -58,9 +64,15 @@ export function useExpense(initialExpense: Expense[] = []) {
   const update = async (payload: UpdateExpenseDTO) => {
     showLoading("Atualizando despesa...");
     try {
-      const formatedPayload = prepareDataForSubmission(payload);
+      const [month, year] = getMonthAndYear(payload.date);
 
-      const updatedExpense = await ExpenseService.update(formatedPayload);
+      const updatedExpense = await ExpenseService.update({
+        ...payload,
+        month,
+        year: parseInt(year),
+        name: capitalizeFirstLetter(payload.name),
+      });
+
       await refresh();
 
       alert.show({

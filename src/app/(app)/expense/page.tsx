@@ -98,11 +98,13 @@ export default function ExpensePage() {
     closeModal();
   };
 
-  const updateExpenseStatus = async (data: Expense) => {
+  const updateExpenseStatus = async (data: UpdateExpenseDTO) => {
     const response = await update({
       ...data,
       is_paid: !data.is_paid,
     });
+
+    if (!response) return
 
     const isPaid = response.is_paid;
     const hasInstallments = response.installments !== "";
