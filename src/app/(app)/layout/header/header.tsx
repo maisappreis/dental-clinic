@@ -1,22 +1,16 @@
 "use client";
-import { useEffect, useState } from "react";
+
 import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import { useUserStore } from "@/stores/user.store";
 import styles from "./Header.module.css";
 import { HEADER_CONFIG } from "@/constants/header";
 
 export function Header() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
   const pathname = usePathname();
+  const user = useUserStore((s) => s.user);
   
   const headerConfig = HEADER_CONFIG[pathname];
-
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    setIsAuthenticated(!!token);
-  }, []);
 
   if (!headerConfig) return null;
 
@@ -36,9 +30,11 @@ export function Header() {
           </p>
         </div>
 
-        {isAuthenticated && (
+        {user && (
           <div className="flex">
-            <h2 className={styles.title}>Olá, Dra Mirian</h2>
+            <h2 className={styles.title}>
+              Olá, {user?.first_name}
+            </h2>
           </div>
         )}
       </div>

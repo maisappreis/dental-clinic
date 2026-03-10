@@ -8,21 +8,21 @@ import {
 
 export const AgendaService = {
   async list(): Promise<Appointment[]> {
-    const { data } = await http.get(`${apiURL()}/agenda/`);
+    const { data } = await http.get(`${apiURL()}/appointment/`);
     return data;
   },
 
   async create(payload: CreateAppointmentDTO): Promise<Appointment> {
-    const { data } = await http.post(`${apiURL()}/agenda/create/`, payload);
+    const { data } = await http.post(`${apiURL()}/appointment/create/`, payload);
     return data;
   },
 
   async update(payload: UpdateAppointmentDTO): Promise<Appointment> {
-    const { data } = await http.patch(`${apiURL()}/agenda/${payload.id}/`, payload);
+    const { data } = await http.patch(`${apiURL()}/appointment/${payload.id}/`, payload);
     return data;
   },
 
   async remove(id: number): Promise<void> {
-    await http.delete(`${apiURL()}/agenda/${id}/`);
+    await http.delete(`${apiURL()}/appointment/${id}/`);
   },
 };

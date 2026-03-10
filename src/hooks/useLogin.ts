@@ -1,14 +1,17 @@
+import { useCallback } from "react";
 import { LoginService } from "@/services/login.service";
 import { useLoadingStore } from "@/stores/loading.store";
 import { useAlertStore } from "@/stores/alert.store";
+import { useUserStore } from "@/stores/user.store";
 import { LoginPayload } from "@/types/login";
 
 export function useLogin() {
-  const alert = useAlertStore.getState();
+  const alert = useAlertStore((s) => s);
   const showLoading = useLoadingStore((s) => s.show);
   const hideLoading = useLoadingStore((s) => s.hide);
+  const setUser = useUserStore((s) => s.setUser);
 
-  const login = async (payload: LoginPayload) => {
+  const login = useCallback(async (payload: LoginPayload) => {
     showLoading("Fazendo login...");
     try {
       const response = await LoginService.login(payload);
@@ -21,7 +24,9 @@ export function useLogin() {
         variant: "success",
       });
 
-      return true;
+      setUser(response.user);
+
+      return response;
     } catch (error) {
       console.error(error);
       alert.show({
@@ -33,7 +38,7 @@ export function useLogin() {
     } finally {
       hideLoading();
     }
-  };
+  }, [showLoading, hideLoading, alert, setUser]);
 
   return {
     login

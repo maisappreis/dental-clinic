@@ -78,10 +78,10 @@ export default function TabTwo() {
     if (!selectedMonthClosing || selectedMonthClosing.id === 0) return;
 
     setForm({
-      bankValue: selectedMonthClosing.bank_value,
-      cashValue: selectedMonthClosing.cash_value,
-      cardValue: selectedMonthClosing.card_value,
-      cardValueNext: selectedMonthClosing.card_value_next_month,
+      bankValue: selectedMonthClosing.bank_value ?? 0,
+      cashValue: selectedMonthClosing.cash_value ?? 0,
+      cardValue: selectedMonthClosing.card_value ?? 0,
+      cardValueNext: selectedMonthClosing.card_value_next_month ?? 0,
     });
   }, [selectedMonthClosing]);
 

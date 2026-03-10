@@ -5,6 +5,7 @@ import Link from "next/link";
 import styles from "./Sidebar.module.css";
 import { usePathname, useRouter } from "next/navigation";
 import { Logotype } from "../logotype/logotype";
+import { useUserStore } from "@/stores/user.store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChartLine,
@@ -26,7 +27,9 @@ const options = [
 
 export function Sidebar() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   const pathname = usePathname();
+  const clearUser = useUserStore((s) => s.clearUser);
 
   const router = useRouter();
 
@@ -35,6 +38,7 @@ export function Sidebar() {
   };
 
   const logoutUser = () => {
+    clearUser();
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     window.location.reload();

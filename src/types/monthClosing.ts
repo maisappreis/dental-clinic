@@ -12,7 +12,7 @@ export interface MonthClosing {
   gross_revenue: number;
   net_revenue: number;
   expenses: number;
-  profit: number;
+  net_profit: number;
   other_revenue: number;
   balance: number;
 };

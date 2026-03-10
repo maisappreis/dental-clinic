@@ -28,7 +28,7 @@ describe("AgendaService", () => {
 
     const result = await AgendaService.list();
 
-    expect(http.get).toHaveBeenCalledWith("http://api.test/agenda/");
+    expect(http.get).toHaveBeenCalledWith("http://api.test/appointment/");
     expect(result).toEqual(mockData);
   });
 
@@ -41,7 +41,7 @@ describe("AgendaService", () => {
     const result = await AgendaService.create(payload as any);
 
     expect(http.post).toHaveBeenCalledWith(
-      "http://api.test/agenda/create/",
+      "http://api.test/appointment/create/",
       payload
     );
     expect(result).toEqual(mockData);
@@ -56,7 +56,7 @@ describe("AgendaService", () => {
     const result = await AgendaService.update(payload as any);
 
     expect(http.patch).toHaveBeenCalledWith(
-      "http://api.test/agenda/1/",
+      "http://api.test/appointment/1/",
       payload
     );
     expect(result).toEqual(mockData);
@@ -67,6 +67,6 @@ describe("AgendaService", () => {
 
     await AgendaService.remove(1);
 
-    expect(http.delete).toHaveBeenCalledWith("http://api.test/agenda/1/");
+    expect(http.delete).toHaveBeenCalledWith("http://api.test/appointment/1/");
   });
 });
