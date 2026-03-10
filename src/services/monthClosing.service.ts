@@ -2,9 +2,9 @@ import { http } from "@/api/http";
 import { apiURL } from "@/api/base";
 import {
   MonthClosing,
-  CreateMonthClosingDTO,
+  UpdateNetValuesPayload,
   UpdateMonthClosingDTO,
-  UpdateNetValuesPayload
+  UpdateNetValuesResponse
 } from "@/types/monthClosing";
 
 export const MonthClosingService = {
@@ -13,18 +13,14 @@ export const MonthClosingService = {
     return data;
   },
 
-  async create(payload: CreateMonthClosingDTO): Promise<MonthClosing> {
-    const { data } = await http.post(`${apiURL()}/month_closing/create/`, payload);
-    return data;
-  },
-
   async update(payload: UpdateMonthClosingDTO): Promise<MonthClosing> {
     const { data } = await http.put(`${apiURL()}/month_closing/${payload.id}/`, payload);
     return data;
   },
   
-  async updateNetValues(payload: UpdateNetValuesPayload[]): Promise<void> {
-    await http.put(`${apiURL()}/update-net-values/`, payload);
+  async updateNetValues(payload: UpdateNetValuesPayload): Promise<UpdateNetValuesResponse> {
+     const { data } = await http.put(`${apiURL()}/update_net_values/`, payload);
+     return data;
   },
 
   async remove(id: number): Promise<void> {

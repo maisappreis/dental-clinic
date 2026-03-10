@@ -23,7 +23,11 @@ export default function TabOne() {
 
   const router = useRouter();
 
-  const { closingRevenue } = useMonthClosingFlow();
+  const {
+    closingRevenue,
+    selectedMonthClosing,
+    setSelectedMonthClosing
+  } = useMonthClosingFlow();
   const { updateNetValues } = useMonthClosing();
 
   const handleInputChange = (
@@ -41,13 +45,21 @@ export default function TabOne() {
   };
 
   const saveRevenue = async () => {
+    if (!selectedMonthClosing) return
+
     const payload = revenueData.map(({ id, net_value, date }) => ({
       id,
       net_value,
       date,
     }));
 
-    await updateNetValues(payload);
+    const response = await updateNetValues({
+      revenue: payload,
+      reference: selectedMonthClosing.reference
+    });
+
+    if (!response) return
+    setSelectedMonthClosing(response.month_closing);
   };
 
   const onRateChange = (rates: Rates) => {

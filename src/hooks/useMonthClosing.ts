@@ -4,9 +4,8 @@ import { useLoadingStore } from "@/stores/loading.store";
 import { useAlertStore } from "@/stores/alert.store";
 import {
   MonthClosing,
-  CreateMonthClosingDTO,
   UpdateMonthClosingDTO,
-  UpdateNetValuesPayload
+  UpdateNetValuesPayload,
 } from "@/types/monthClosing";
 
 export function useMonthClosing(initialMonthClosing: MonthClosing[] = []) {
@@ -31,28 +30,6 @@ export function useMonthClosing(initialMonthClosing: MonthClosing[] = []) {
     }
   }, [refresh]);
 
-  const create = async (payload: CreateMonthClosingDTO) => {
-    showLoading('Salvando dados...');
-    try {
-      const response = await MonthClosingService.create(payload);
-
-      alert.show({
-        message: "Dados salvos com sucesso!",
-        variant: "success",
-      });
-
-      return response;
-    } catch (error) {
-      console.error('Erro ao salvar os dados.', error)
-      alert.show({
-        message: "Erro ao salvar os dados.",
-        variant: "error",
-      });
-    } finally {
-      hideLoading();
-    }
-  };
-
   const update = async (payload: UpdateMonthClosingDTO) => {
     showLoading('Salvando dados...');
     try {
@@ -76,15 +53,17 @@ export function useMonthClosing(initialMonthClosing: MonthClosing[] = []) {
     }
   };
 
-  const updateNetValues = async (payload: UpdateNetValuesPayload[]) => {
+  const updateNetValues = async (payload: UpdateNetValuesPayload) => {
     showLoading("Atualizando valores líquidos...");
     try {
-      await MonthClosingService.updateNetValues(payload);
+      const response = await MonthClosingService.updateNetValues(payload);
 
       alert.show({
         message: "Valores líquidos atualizados com sucesso!",
         variant: "success",
       });
+
+      return response;
     } catch (error) {
       console.error('Erro ao atualizar os valores líquidos.', error);
 
@@ -122,7 +101,6 @@ export function useMonthClosing(initialMonthClosing: MonthClosing[] = []) {
     monthClosing,
     isLoading,
     fetchMonthClosing,
-    create,
     update,
     updateNetValues,
     remove

@@ -21,7 +21,7 @@ export function buildMonthClosingSummary(
     { label: "Receita Bruta:", value: closing.gross_revenue },
     { label: "Receita Líquida:", value: closing.net_revenue },
     { label: "Despesas:", value: closing.expenses },
-    { label: "Lucro Mirian:", value: closing.profit },
+    { label: "Lucro Líq. Mirian:", value: closing.profit },
   ];
 
   const inputs = [

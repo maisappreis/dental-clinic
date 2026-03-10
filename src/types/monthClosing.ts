@@ -23,21 +23,22 @@ export interface MonthClosingData {
   orderedRevenue: Revenue[]
 };
 
-// TODO: Enviando dados zerados para o back, que retorna com dados preenchidos
-// Correto era nem enviar zerado
-// Precisa alterar o back, ele coloca 0 como default, e não obriga o front enviar 0
-
-// export type CreateMonthClosingDTO =
-//   Omit<MonthClosing, "id" | "gross_revenue" | "net_revenue" | "expenses" | "profit" | "other_revenue" | "balance">;
-
-export type CreateMonthClosingDTO = MonthClosing;
-
 export type UpdateMonthClosingDTO = MonthClosing;
 
-export interface UpdateNetValuesPayload {
+export interface NetValuesRevenue {
   id: number;
   net_value: number;
   date: string;
+};
+
+export interface UpdateNetValuesPayload {
+  revenue: NetValuesRevenue[];
+  reference: string;
+};
+
+export interface UpdateNetValuesResponse {
+  month_closing: MonthClosing;
+  detail: string;
 };
 
 export interface CashClosingConfirmation {

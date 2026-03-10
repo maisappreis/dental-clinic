@@ -82,7 +82,7 @@ describe("MonthClosingService", () => {
       await MonthClosingService.updateNetValues(payload as any);
 
       expect(http.put).toHaveBeenCalledWith(
-        "http://api.test/update-net-values/",
+        "http://api.test/update_net_values/",
         payload
       );
     });

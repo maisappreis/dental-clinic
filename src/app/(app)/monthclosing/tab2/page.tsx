@@ -28,11 +28,10 @@ export default function TabTwo() {
   const [form, setForm] = useState<ValuesForm>(INITIAL_FORM);
 
   const router = useRouter();
-  const { create, update } = useMonthClosing();
+  const { update } = useMonthClosing();
   const { 
     selectedMonthClosing,
-    setSelectedMonthClosing, 
-    closingRevenue
+    setSelectedMonthClosing,
   } = useMonthClosingFlow();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,22 +54,10 @@ export default function TabTwo() {
       card_value_next_month: form.cardValueNext,
     };
 
-    const response =
-      selectedMonthClosing.id === 0
-        ? await create(payload)
-        : await update(payload);
+    const response = await update(payload);
 
     if (response) setSelectedMonthClosing(response);
   };
-
-  const totalMonthlyRevenue = useMemo(() => {
-    if (!closingRevenue || closingRevenue.length === 0) return 0;
-
-    return closingRevenue.reduce(
-      (acc, item) => acc + item.net_value,
-      0
-    );
-  }, [closingRevenue]);
 
   const sumValues = useMemo(() => {
     return (
@@ -82,8 +69,10 @@ export default function TabTwo() {
   }, [form]);
 
   const diffValues = useMemo(() => {
-    return sumValues - totalMonthlyRevenue;
-  }, [sumValues, totalMonthlyRevenue]);
+    if (!selectedMonthClosing) return 0
+
+    return sumValues - selectedMonthClosing.net_revenue;
+  }, [sumValues, selectedMonthClosing]);
 
   useEffect(() => {
     if (!selectedMonthClosing || selectedMonthClosing.id === 0) return;
@@ -152,7 +141,7 @@ export default function TabTwo() {
             />
             <SummaryRow
               label="Receita Líquida"
-              value={totalMonthlyRevenue}
+              value={selectedMonthClosing.net_revenue}
             />
           </div>
           
