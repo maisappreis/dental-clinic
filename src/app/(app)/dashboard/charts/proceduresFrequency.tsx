@@ -2,40 +2,32 @@
 
 import { useMemo } from "react";
 import { Bar } from "react-chartjs-2";
-import { Revenue } from "@/types/revenue";
-import { ChartData } from "@/types/chart";
+import { Chart } from "@/types/chart";
 import styles from "../Charts.module.css";
+import { proceduresBarChartOptions } from "@/constants/charts";
 import "@/utils/chart";
 
-import { getMostPerformedProcedures } from "@/utils/charts";
-import { proceduresBarChartOptions } from "@/constants/charts";
 
-type Props = {
-  revenue: Revenue[];
-};
-
-export function MostPerformedProceduresChart({ revenue }: Props) {
+export function MostPerformedProceduresChart({data}: {data: Chart}) {
   const style = getComputedStyle(document.documentElement);
   const color = style.getPropertyValue("--primary-color");
 
-  const chartData = useMemo<ChartData>(() => {
-    if (!revenue.length) {
+  const chartData = useMemo(() => {
+    if (!data.labels.length) {
       return { labels: [], datasets: [] };
     }
 
-    const procedures = getMostPerformedProcedures(revenue);
-
     return {
-      labels: procedures.map(([procedure]) => procedure),
+      labels: data.labels,
       datasets: [
         {
           label: "Procedimentos mais realizados",
-          data: procedures.map(([, count]) => count),
+          data: data.data,
           backgroundColor: color
         },
       ],
     };
-  }, [revenue, color]);
+  }, [data, color]);
 
   if (!chartData.labels.length) {
     return (

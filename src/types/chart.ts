@@ -1,3 +1,23 @@
+export interface Chart {
+  labels: string[];
+  data: number[];
+};
+
+export interface ChartRevenueExpense {
+  labels: string[];
+  data: {
+    revenue: number[];
+    expense: number[];
+  }
+};
+
+export interface Dashboard {
+  most_performed_procedures: Chart;
+  number_of_procedures: Chart;
+  monthly_profit: Chart;
+  revenue_versus_expense: ChartRevenueExpense;
+};
+
 export interface ChartData {
   labels: string[];
   datasets: {
@@ -6,7 +26,7 @@ export interface ChartData {
     borderColor?: string;
     data: number[];
   }[];
-}
+};
 
 export interface TooltipItem<TType extends ChartData = ChartData> {
   chart: ChartData;
@@ -17,7 +37,7 @@ export interface TooltipItem<TType extends ChartData = ChartData> {
   datasetIndex: number;
   parsed: any;
   element: any;
-}
+};
 
 export interface MonthNames {
   "01": string;
@@ -32,9 +52,4 @@ export interface MonthNames {
   "10": string;
   "11": string;
   "12": string;
-}
-
-export interface ProfitData {
-  profit: number[];
-  labels: string[];
-}
+};

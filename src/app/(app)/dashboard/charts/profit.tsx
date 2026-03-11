@@ -2,15 +2,15 @@
 
 import { useMemo } from "react";
 import { Bar } from "react-chartjs-2";
-import { ProfitData } from "@/types/chart";
+import { Chart } from "@/types/chart";
 import { profitBarChartOptions } from "@/constants/charts";
 import styles from "../Charts.module.css";
 import "@/utils/chart";
 
 
-export function ProfitChart({ profit }: { profit: ProfitData }) {
+export function ProfitChart({ data }: { data: Chart }) {
   const chartData = useMemo(() => {
-    if (!profit || !profit.labels.length || !profit.profit.length) {
+    if (!data.labels.length) {
       return { labels: [], datasets: [] };
     }
 
@@ -18,16 +18,16 @@ export function ProfitChart({ profit }: { profit: ProfitData }) {
     const barColor = style.getPropertyValue("--tertiary-color");
 
     return {
-      labels: profit.labels,
+      labels: data.labels,
       datasets: [
         {
           label: "Lucro bruto mensal",
-          data: profit.profit,
+          data: data.data,
           backgroundColor: barColor
         },
       ],
     };
-  }, [profit]);
+  }, [data]);
 
   if (!chartData.labels.length) {
     return (

@@ -7,50 +7,64 @@ import { ProfitChart } from "@/app/(app)/dashboard/charts/profit";
 import { NumberOfProceduresChart } from "@/app/(app)/dashboard/charts/proceduresNumber";
 import { MostPerformedProceduresChart } from "@/app/(app)/dashboard/charts/proceduresFrequency";
 import { Spinner } from "@/components/spinner/spinner";
-import { useRevenue } from "@/hooks/useRevenue";
-import { useExpense } from "@/hooks/useExpense";
-import { useProfit } from "@/hooks/useProfit";
+import { useDashboard } from "@/hooks/useDashboard";
 
 
 export default function Dashboard() {
-  const { revenue, fetchRevenue, isLoading: isLoadingRevenue } = useRevenue([]);
-  const { expenses, fetchExpenses, isLoading: isLoadingExpenses } = useExpense([]);
-  const { profit, fetchProfit, isLoading: isLoadingProfit } = useProfit({profit: [], labels: []});
+  const { dataChart, fetchDataChart, isLoading } = useDashboard({
+    most_performed_procedures: {
+      labels: [],
+      data: [],
+    },
+    number_of_procedures: {
+      labels: [],
+      data: [],
+    },
+    monthly_profit: {
+      labels: [],
+      data: [],
+    },
+    revenue_versus_expense:{
+      labels: [],
+      data: {
+        revenue: [],
+        expense: [],
+      }
+    }
+  });
 
   useEffect(() => {
-    fetchRevenue();
-    fetchExpenses();
-    fetchProfit();
-  }, [fetchRevenue, fetchExpenses, fetchProfit]);
+    fetchDataChart();
+  }, [fetchDataChart]);
 
   return (
     <div className={styles.chartarea}>
       <div className={styles.chartitem}>
-        {isLoadingRevenue && isLoadingExpenses ? (
+        {isLoading ? (
           <Spinner/>
         ) : (
-          <RevenueExpensesChart revenue={revenue} expenses={expenses} />
+          <RevenueExpensesChart data={dataChart.revenue_versus_expense} />
         )}
       </div>
       <div className={styles.chartitem}>
-        {isLoadingRevenue ? (
+        {isLoading ? (
           <Spinner/>
         ) : (
-          <MostPerformedProceduresChart revenue={revenue} />
+          <MostPerformedProceduresChart data={dataChart.most_performed_procedures} />
         )}
       </div>
       <div className={styles.chartitem}>
-        {isLoadingRevenue ? (
+        {isLoading ? (
           <Spinner/>
         ) : (
-          <NumberOfProceduresChart revenue={revenue} />
+          <NumberOfProceduresChart data={dataChart.number_of_procedures} />
         )}
       </div>
       <div className={styles.chartitem}>
-        {isLoadingProfit ? (
+        {isLoading ? (
           <Spinner/>
         ) : (
-          <ProfitChart profit={profit} />
+          <ProfitChart data={dataChart.monthly_profit} />
         )}
       </div>
     </div>

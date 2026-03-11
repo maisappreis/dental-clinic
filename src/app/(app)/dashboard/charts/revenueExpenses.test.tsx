@@ -7,10 +7,6 @@ jest.mock("react-chartjs-2", () => ({
   ),
 }));
 
-jest.mock("@/utils/charts", () => ({
-  groupValuesByMonth: jest.fn(),
-}));
-
 jest.mock("@/constants/charts", () => ({
   revenueExpensesLineChartOptions: {},
 }));
@@ -32,8 +28,6 @@ jest.mock("@/constants/date", () => ({
   },
 }));
 
-import { groupValuesByMonth } from "@/utils/charts";
-
 describe("RevenueExpensesChart", () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -50,36 +44,46 @@ describe("RevenueExpensesChart", () => {
   });
 
   it("renders empty message when no data", () => {
-    render(<RevenueExpensesChart revenue={[]} expenses={[]} />);
+    const data = {
+      labels: [],
+      data: {
+        revenue: [],
+        expense: [],
+      }
+    };
+
+    render(<RevenueExpensesChart data={data} />);
 
     expect(screen.getByText("Sem dados para exibir")).toBeInTheDocument();
   });
 
   it("renders chart when there is data", () => {
-    (groupValuesByMonth as jest.Mock).mockReturnValue({
-      "2025-01": 100,
-    });
+    const data = {
+      labels: ["Jan 2025"],
+      data: {
+        revenue: [1000],
+        expense: [200],
+      }
+    };
 
     render(
-      <RevenueExpensesChart
-        revenue={[{ date: "2025-01-01" } as any]}
-        expenses={[{ date: "2025-01-01" } as any]}
-      />
+      <RevenueExpensesChart data={data} />
     );
 
     expect(screen.getByTestId("line-chart")).toBeInTheDocument();
   });
 
   it("passes correct datasets to chart", () => {
-    (groupValuesByMonth as jest.Mock)
-      .mockReturnValueOnce({ "2026-03": 100 })
-      .mockReturnValueOnce({ "2026-03": 50 });
+    const data = {
+      labels: ["Mar 2026"],
+      data: {
+        revenue: [100],
+        expense: [50],
+      }
+    };
 
     render(
-      <RevenueExpensesChart
-        revenue={[{ date: "2026-03-01" } as any]}
-        expenses={[{ date: "2026-03-01" } as any]}
-      />
+      <RevenueExpensesChart data={data} />
     );
 
     const chart = screen.getByTestId("line-chart");

@@ -7,15 +7,9 @@ jest.mock("react-chartjs-2", () => ({
   ),
 }));
 
-jest.mock("@/utils/charts", () => ({
-  getMostPerformedProcedures: jest.fn(),
-}));
-
 jest.mock("@/constants/charts", () => ({
   proceduresBarChartOptions: {},
 }));
-
-import { getMostPerformedProcedures } from "@/utils/charts";
 
 describe("MostPerformedProceduresChart", () => {
   beforeEach(() => {
@@ -29,20 +23,25 @@ describe("MostPerformedProceduresChart", () => {
   });
 
   it("renders empty message when no revenue", () => {
-    render(<MostPerformedProceduresChart revenue={[]} />);
+    const data = {
+      labels: [],
+      data: [],
+    };
+
+    render(<MostPerformedProceduresChart data={data} />);
 
     expect(screen.getByText("Sem dados para exibir")).toBeInTheDocument();
   });
 
   it("renders chart when there is revenue", () => {
-    (getMostPerformedProcedures as jest.Mock).mockReturnValue([
-      ["Limpeza", 3],
-      ["Extração", 2],
-    ]);
+    const data = {
+      labels: ["Limpeza"],
+      data: [3],
+    };
 
     render(
       <MostPerformedProceduresChart
-        revenue={[{ procedure: "Limpeza" } as any]}
+        data={data}
       />
     );
 
@@ -50,14 +49,14 @@ describe("MostPerformedProceduresChart", () => {
   });
 
   it("passes correct labels and data to chart", () => {
-    (getMostPerformedProcedures as jest.Mock).mockReturnValue([
-      ["Limpeza", 3],
-      ["Extração", 2],
-    ]);
+    const data = {
+      labels: ["Limpeza", "Extração"],
+      data: [3, 2],
+    };
 
     render(
       <MostPerformedProceduresChart
-        revenue={[{ procedure: "Limpeza" } as any]}
+        data={data}
       />
     );
 

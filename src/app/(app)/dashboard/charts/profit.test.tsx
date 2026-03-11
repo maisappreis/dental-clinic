@@ -21,12 +21,14 @@ describe("ProfitChart", () => {
   });
 
   it("renders empty message when no data", () => {
+    const data = {
+      labels: [],
+      data: [],
+    };
+
     render(
       <ProfitChart
-        profit={{
-          labels: [],
-          profit: [],
-        }}
+        data={data}
       />
     );
 
@@ -34,12 +36,14 @@ describe("ProfitChart", () => {
   });
 
   it("renders chart when data exists", () => {
+    const data = {
+      labels: ["Jan", "Fev"],
+      data: [1000, 2000],
+    };
+
     render(
       <ProfitChart
-        profit={{
-          labels: ["Jan", "Fev"],
-          profit: [1000, 2000],
-        }}
+        data={data}
       />
     );
 
@@ -47,12 +51,14 @@ describe("ProfitChart", () => {
   });
 
   it("passes correct labels and values to chart", () => {
+    const data = {
+      labels: ["Jan", "Fev"],
+      data: [1000, 2000],
+    };
+
     render(
       <ProfitChart
-        profit={{
-          labels: ["Jan", "Fev"],
-          profit: [1000, 2000],
-        }}
+        data={data}
       />
     );
 

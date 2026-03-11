@@ -22,28 +22,12 @@ jest.mock("@/app/(app)/dashboard/charts/profit", () => ({
   ProfitChart: () => <div>ProfitChart</div>,
 }));
 
-const fetchRevenue = jest.fn();
-const fetchExpenses = jest.fn();
-const fetchProfit = jest.fn();
+const fetchDataChart = jest.fn();
 
-jest.mock("@/hooks/useRevenue", () => ({
-  useRevenue: () => ({
-    revenue: [],
-    fetchRevenue,
-  }),
-}));
-
-jest.mock("@/hooks/useExpense", () => ({
-  useExpense: () => ({
-    expenses: [],
-    fetchExpenses,
-  }),
-}));
-
-jest.mock("@/hooks/useProfit", () => ({
-  useProfit: () => ({
-    profit: { labels: [], profit: [] },
-    fetchProfit,
+jest.mock("@/hooks/useDashboard", () => ({
+  useDashboard: () => ({
+    dataChart: [],
+    fetchDataChart,
   }),
 }));
 
@@ -64,8 +48,6 @@ describe("Dashboard", () => {
   it("calls fetch functions on mount", () => {
     render(<Dashboard />);
 
-    expect(fetchRevenue).toHaveBeenCalled();
-    expect(fetchExpenses).toHaveBeenCalled();
-    expect(fetchProfit).toHaveBeenCalled();
+    expect(fetchDataChart).toHaveBeenCalled();
   });
 });

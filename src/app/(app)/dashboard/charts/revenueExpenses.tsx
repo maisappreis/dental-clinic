@@ -2,25 +2,15 @@
 
 import { useMemo } from "react";
 import { Line } from "react-chartjs-2";
-import { Revenue } from "@/types/revenue";
-import { Expense } from "@/types/expense";
-import { MonthNames } from "@/types/chart";
-import { monthNames } from "@/constants/date";
-import { groupValuesByMonth } from "@/utils/charts";
+import { ChartRevenueExpense } from "@/types/chart";
 import { revenueExpensesLineChartOptions } from "@/constants/charts";
 import styles from "../Charts.module.css";
 import "@/utils/chart";
 
 
-export function RevenueExpensesChart({
-  revenue,
-  expenses,
-}: {
-  revenue: Revenue[];
-  expenses: Expense[];
-}) {
+export function RevenueExpensesChart({ data }: { data: ChartRevenueExpense }) {
   const chartData = useMemo(() => {
-    if (!revenue.length && !expenses.length) {
+    if (!data.labels.length) {
       return { labels: [], datasets: [] };
     }
 
@@ -28,40 +18,24 @@ export function RevenueExpensesChart({
     const revenueColor = style.getPropertyValue("--success-color");
     const expenseColor = style.getPropertyValue("--error-color");
 
-    const revenueByMonth = groupValuesByMonth(revenue);
-    const expensesByMonth = groupValuesByMonth(expenses);
-
-    const today = new Date();
-    const last12Months = Array.from({ length: 12 }, (_, i) => {
-      const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const year = date.getFullYear();
-      return `${year}-${month}`;
-    }).reverse();
-
-    const labels = last12Months.map(key => {
-      const [year, month] = key.split("-");
-      return `${monthNames[month as keyof MonthNames]} ${year}`;
-    });
-
     return {
-      labels,
+      labels: data.labels,
       datasets: [
         {
           label: "Receitas",
-          data: last12Months.map(key => revenueByMonth[key] || 0),
+          data: data.data.revenue,
           borderColor: revenueColor,
           backgroundColor: revenueColor
         },
         {
           label: "Despesas",
-          data: last12Months.map(key => expensesByMonth[key] || 0),
+          data: data.data.expense,
           borderColor: expenseColor,
           backgroundColor: expenseColor
         },
       ],
     };
-  }, [revenue, expenses]);
+  }, [data]);
 
   if (!chartData.labels.length) {
     return (
