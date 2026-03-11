@@ -41,7 +41,7 @@ export default function Reports() {
       gross_revenue: 0,
       net_revenue: 0,
       expenses: 0,
-      profit: 0,
+      net_profit: 0,
       other_revenue: 0,
       balance: 0,
     });
@@ -81,7 +81,7 @@ export default function Reports() {
     <div className="w-full h-full flex flex-col justify-between">
       {isLoading && <Spinner />}
 
-      <div className="flex justify-left w-full flex-wrap gap-3">
+      <div className="flex justify-between w-full flex-wrap gap-3">
         {!isLoading && monthClosing.length > 0 && (
           monthClosing.map((report) => (
             <div
