@@ -33,6 +33,8 @@ export const ExpenseForm = forwardRef<
   const installments = watch("installments");
   const hasInstallments = installments !== "";
 
+  const disableInstallments = !!defaultValues && !!defaultValues.installments;
+
   useEffect(() => {
     if (!defaultValues) return;
 
@@ -77,6 +79,7 @@ export const ExpenseForm = forwardRef<
       <Checkbox
         label="Possui parcelas?"
         checked={hasInstallments}
+        disabled={disableInstallments}
         onChange={(checked) => {
           if (!checked) {
             setValue("installments", "");
@@ -101,6 +104,7 @@ export const ExpenseForm = forwardRef<
             <Input
               label="Número de parcelas"
               value={field.value}
+              disabled={disableInstallments}
               onChange={field.onChange}
               error={fieldState.error?.message}
             />

@@ -81,7 +81,7 @@ export default function Reports() {
     <div className="w-full h-full flex flex-col justify-between">
       {isLoading && <Spinner />}
 
-      <div className="flex justify-between w-full flex-wrap gap-3">
+      <div className="flex justify-around w-full flex-wrap gap-3">
         {!isLoading && monthClosing.length > 0 && (
           monthClosing.map((report) => (
             <div

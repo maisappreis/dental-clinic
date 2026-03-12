@@ -38,7 +38,6 @@ export function CreateUpdateModal({
         year: expense.year!,
         month: expense.month!,
         is_paid: expense.is_paid!,
-        hasInstallments: data.hasInstallments
       };
 
       await onUpdate(updatePayload);
@@ -46,9 +45,11 @@ export function CreateUpdateModal({
       const createPayload: CreateExpenseDTO = {
         name: data.name,
         date: data.date,
+        year: data.year,
+        month: data.month,
         value: data.value,
+        is_paid: false,
         installments: data.installments,
-        hasInstallments: data.hasInstallments,
         notes: data.notes,
       };
 

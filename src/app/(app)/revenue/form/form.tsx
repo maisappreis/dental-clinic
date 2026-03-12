@@ -54,6 +54,12 @@ export const RevenueForm = forwardRef<
   };
 
   useEffect(() => {
+    if (hasInstallments) {
+      setValue("installments", installmentOptions[0]);
+    }
+  }, [hasInstallments, setValue]);
+
+  useEffect(() => {
     if (!defaultValues) return;
 
     reset(defaultValues);

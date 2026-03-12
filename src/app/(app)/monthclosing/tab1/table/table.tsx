@@ -97,7 +97,7 @@ export function TabOneTable({ data, actions }: TabOneTableProps) {
               type="number"
               className={styles.inputThin}
               onChange={(e) => actions.onInputChange(e, index)}
-              value={row.net_value}
+              value={row.net_value ?? 0}
               min="0.001"
               step="0.001"
               required

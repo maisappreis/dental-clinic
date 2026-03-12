@@ -21,6 +21,10 @@
   cursor: pointer;
 }
 
+.input:disabled {
+  cursor: not-allowed;
+}
+
 .label {
   font-size: 16px;
   font-weight: 500;

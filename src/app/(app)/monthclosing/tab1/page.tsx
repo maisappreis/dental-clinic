@@ -25,6 +25,7 @@ export default function TabOne() {
 
   const {
     closingRevenue,
+    setClosingRevenue,
     selectedMonthClosing,
     setSelectedMonthClosing
   } = useMonthClosingFlow();
@@ -60,6 +61,7 @@ export default function TabOne() {
 
     if (!response) return
     setSelectedMonthClosing(response.month_closing);
+    setClosingRevenue(revenueData);
   };
 
   const onRateChange = (rates: Rates) => {

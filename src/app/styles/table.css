@@ -26,61 +26,6 @@
   margin-top: 30px;
 }
 
-/* TODO: CSS da paginação, quando essa for feita */
-
-.pagination-button {
-  background-color: var(--red-darker);
-  color: white;
-  border: none;
-  padding: 5px 16px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 14px;
-  transition-duration: 0.4s;
-  cursor: pointer;
-  border-radius: 4px;
-  margin-right: 5px;
-}
-
-.pagination-button:hover,
-.pagination-button.active {
-  background-color: red;
-}
-
-.no-results {
-  color: red;
-  font-weight: bold;
-  font-size: 30px;
-}
-
-.total-items {
-  font-weight: bold;
-  font-size: 16px;
-  margin: 10px;
-}
-
-.pagination-items {
-  font-weight: bold;
-  font-size: 14px;
-  margin: 10px;
-}
-.align-right {
-  display: flex;
-  justify-content: flex-end;
-  margin-right: 15px;
-}
-
-.no-data {
-  font-size: 20px;
-  background-color: var(--red-lighter);
-  font-weight: bold;
-  margin: 70px 20px;
-  padding: 30px;
-  border-radius: 10px;
-  text-align: center;
-}
-
 @media only screen and (max-width: 1000px) {
   .table-icon {
     font-size: 15px;
