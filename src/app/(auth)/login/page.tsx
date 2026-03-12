@@ -44,10 +44,10 @@ export default function Login() {
       <div className={styles.box}>
         <div className="text-center">
           <h3 className="font-semibold">
-            Entrar na aplicação como usuário demo.
+            Entrar na aplicação como usuário demo
           </h3>
           <h4 className="text-sm mt-3">
-            Log in to the application as a demo user.
+            Log in to the application as a demo user
           </h4>
         </div>
 

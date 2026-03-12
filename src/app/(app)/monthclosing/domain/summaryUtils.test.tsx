@@ -6,7 +6,7 @@ describe("buildMonthClosingSummary", () => {
     gross_revenue: 10000,
     net_revenue: 8000,
     expenses: 3000,
-    profit: 5000,
+    net_profit: 5000,
     bank_value: 4000,
     cash_value: 2000,
     card_value: 3000,
@@ -21,7 +21,7 @@ describe("buildMonthClosingSummary", () => {
       { label: "Receita Bruta:", value: 10000 },
       { label: "Receita Líquida:", value: 8000 },
       { label: "Despesas:", value: 3000 },
-      { label: "Lucro Mirian:", value: 5000 },
+      { label: "Lucro Líq. Mirian:", value: 5000 },
     ]);
   });
 

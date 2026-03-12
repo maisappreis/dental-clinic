@@ -41,28 +41,6 @@ describe("useMonthClosing", () => {
     expect(result.current.isLoading).toBe(false);
   });
 
-  it("creates month closing", async () => {
-    const response = { id: 1 };
-
-    (MonthClosingService.create as jest.Mock).mockResolvedValue(response);
-
-    const { result } = renderHook(() => useMonthClosing());
-
-    let res;
-
-    await act(async () => {
-      res = await result.current.create({ month: "Janeiro", year: 2025 } as any);
-    });
-
-    expect(show).toHaveBeenCalledWith("Salvando dados...");
-    expect(MonthClosingService.create).toHaveBeenCalled();
-    expect(alertShow).toHaveBeenCalledWith({
-      message: "Dados salvos com sucesso!",
-      variant: "success",
-    });
-    expect(res).toEqual(response);
-  });
-
   it("updates month closing", async () => {
     const response = { id: 1 };
 

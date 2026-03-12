@@ -178,3 +178,14 @@ jest.mock("@/components/tooltip/tooltip", () => ({
 jest.mock("@/components/message/message", () => ({
   MessageCard: ({ title }: any) => <div>{title}</div>,
 }));
+
+jest.mock("next/navigation", () => ({
+  useRouter() {
+    return {
+      push: jest.fn(),
+      replace: jest.fn(),
+      refresh: jest.fn(),
+      back: jest.fn(),
+    };
+  },
+}));

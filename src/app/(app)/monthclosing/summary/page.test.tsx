@@ -21,6 +21,10 @@ jest.mock("@/utils/utils", () => ({
   formatValueToBRL: (v: number) => `R$ ${v}`,
 }));
 
+jest.mock("next/navigation", () => ({
+  useRouter: jest.fn(),
+}));
+
 const { useMonthClosingFlow } = require("@/app/(app)/monthclosing/provider/provider");
 const { buildMonthClosingSummary } = require("@/app/(app)/monthclosing/domain/summaryUtils");
 

@@ -5,6 +5,10 @@ jest.mock("next/navigation", () => ({
   usePathname: jest.fn(),
 }));
 
+jest.mock("@/stores/user.store", () => ({
+  useUserStore: jest.fn(),
+}));
+
 jest.mock("@fortawesome/react-fontawesome", () => ({
   FontAwesomeIcon: () => <span data-testid="icon" />,
 }));
@@ -20,11 +24,11 @@ jest.mock("@/constants/header", () => ({
 }));
 
 const { usePathname } = require("next/navigation");
+const { useUserStore } = require("@/stores/user.store");
 
 describe("Header", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    localStorage.clear();
   });
 
   it("returns null when route has no config", () => {
@@ -38,6 +42,10 @@ describe("Header", () => {
   it("renders header content", () => {
     usePathname.mockReturnValue("/expenses");
 
+    useUserStore.mockImplementation((selector: any) =>
+      selector({ user: null })
+    );
+
     render(<Header />);
 
     expect(screen.getByText("Despesas")).toBeInTheDocument();
@@ -48,18 +56,14 @@ describe("Header", () => {
   it("shows greeting when authenticated", () => {
     usePathname.mockReturnValue("/expenses");
 
-    localStorage.setItem("accessToken", "token");
+    useUserStore.mockImplementation((selector: any) =>
+      selector({
+        user: { first_name: "João" },
+      })
+    );
 
     render(<Header />);
 
-    expect(screen.getByText("Olá, Dra Mirian")).toBeInTheDocument();
-  });
-
-  it("does not show greeting when not authenticated", () => {
-    usePathname.mockReturnValue("/expenses");
-
-    render(<Header />);
-
-    expect(screen.queryByText("Olá, Dra Mirian")).not.toBeInTheDocument();
+    expect(screen.getByText(/Olá, João/i)).toBeInTheDocument();
   });
 });

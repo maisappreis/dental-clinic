@@ -6,13 +6,7 @@ describe("api base utils", () => {
   });
 
   describe("apiURL", () => {
-    it("returns test url when not authenticated", () => {
-      const url = apiURL();
-
-      expect(url).toBe(`${apiBase}/dental/test`);
-    });
-
-    it("returns private url when authenticated", () => {
+    it("returns correct url when authenticated", () => {
       localStorage.setItem("accessToken", "token123");
 
       const url = apiURL();

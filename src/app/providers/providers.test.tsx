@@ -18,6 +18,17 @@ jest.mock("@/components/loading/loading", () => ({
   Loading: ({ label }: any) => <div data-testid="loading">{label}</div>,
 }));
 
+jest.mock("next/navigation", () => ({
+  useRouter() {
+    return {
+      push: jest.fn(),
+      replace: jest.fn(),
+      refresh: jest.fn(),
+      back: jest.fn(),
+    };
+  },
+}));
+
 describe("Providers", () => {
   const hide = jest.fn();
 

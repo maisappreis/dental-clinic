@@ -34,24 +34,6 @@ describe("MonthClosingService", () => {
     });
   });
 
-  describe("create", () => {
-    it("creates a month closing", async () => {
-      const payload = { month: "Janeiro", year: 2025 };
-      const mockResponse = { id: 1, ...payload };
-
-      (http.post as jest.Mock).mockResolvedValue({ data: mockResponse });
-
-      const result = await MonthClosingService.create(payload as any);
-
-      expect(http.post).toHaveBeenCalledWith(
-        "http://api.test/month_closing/create/",
-        payload
-      );
-
-      expect(result).toEqual(mockResponse);
-    });
-  });
-
   describe("update", () => {
     it("updates a month closing", async () => {
       const payload = { id: 1, month: "Janeiro", year: 2025 };

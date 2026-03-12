@@ -25,10 +25,12 @@ describe("Login", () => {
 
     expect(screen.getByLabelText("Username")).toBeInTheDocument();
     expect(screen.getByLabelText("Senha")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Entrar" })).toBeInTheDocument();
+
+    const buttons = screen.getAllByRole("button", { name: "Entrar" });
+    expect(buttons).toHaveLength(2);
   });
 
-  it("submits form and redirects on success", async () => {
+  it("logs in with real user and redirects on success", async () => {
     login.mockResolvedValue(true);
 
     render(<Login />);
@@ -41,9 +43,11 @@ describe("Login", () => {
       target: { value: "123456" },
     });
 
-    const form = screen.getByRole("button", { name: "Entrar" }).closest("form")!;
+    const submitButton = screen.getAllByRole("button", { name: "Entrar" })[1];
 
-    fireEvent.submit(form);
+    await waitFor(() => expect(submitButton).not.toBeDisabled());
+
+    fireEvent.click(submitButton);
 
     await waitFor(() => {
       expect(login).toHaveBeenCalledWith({
@@ -68,14 +72,46 @@ describe("Login", () => {
       target: { value: "123456" },
     });
 
-    const form = screen.getByRole("button", { name: "Entrar" }).closest("form")!;
+    const submitButton = screen.getAllByRole("button", { name: "Entrar" })[1];
 
-    fireEvent.submit(form);
+    await waitFor(() => expect(submitButton).not.toBeDisabled());
+
+    fireEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(login).toHaveBeenCalled();
+      expect(login).toHaveBeenCalledWith({
+        username: "admin",
+        password: "123456",
+      });
     });
 
     expect(push).not.toHaveBeenCalled();
+  });
+
+  it("logs in with demo user", async () => {
+    login.mockResolvedValue(true);
+
+    render(<Login />);
+
+    const demoButton = screen.getAllByRole("button", { name: "Entrar" })[0];
+
+    fireEvent.click(demoButton);
+
+    await waitFor(() => {
+      expect(login).toHaveBeenCalledWith({
+        username: "demo",
+        password: "demo123",
+      });
+    });
+
+    expect(push).toHaveBeenCalledWith("/");
+  });
+
+  it("disables submit button when form is invalid", () => {
+    render(<Login />);
+
+    const submitButton = screen.getAllByRole("button", { name: "Entrar" })[1];
+
+    expect(submitButton).toBeDisabled();
   });
 });

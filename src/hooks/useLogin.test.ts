@@ -3,15 +3,19 @@ import { useLogin } from "./useLogin";
 import { LoginService } from "@/services/login.service";
 import { useLoadingStore } from "@/stores/loading.store";
 import { useAlertStore } from "@/stores/alert.store";
+import { useUserStore } from "@/stores/user.store";
+
 
 jest.mock("@/services/login.service");
 jest.mock("@/stores/loading.store");
 jest.mock("@/stores/alert.store");
+jest.mock("@/stores/user.store");
 
 describe("useLogin", () => {
   const show = jest.fn();
   const hide = jest.fn();
   const alertShow = jest.fn();
+  const setUser = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -21,9 +25,13 @@ describe("useLogin", () => {
       selector({ show, hide })
     );
 
-    (useAlertStore.getState as jest.Mock) = jest.fn().mockReturnValue({
-      show: alertShow,
-    });
+    (useAlertStore as unknown as jest.Mock).mockImplementation((selector) =>
+      selector({ show: alertShow })
+    );
+
+    (useUserStore as unknown as jest.Mock).mockImplementation((selector) =>
+      selector({ setUser })
+    );
 
     jest.spyOn(console, "error").mockImplementation(() => {});
   });
@@ -32,6 +40,7 @@ describe("useLogin", () => {
     (LoginService.login as jest.Mock).mockResolvedValue({
       access: "access123",
       refresh: "refresh123",
+      user: { id: 1, name: "Admin" },
     });
 
     const { result } = renderHook(() => useLogin());
@@ -45,10 +54,14 @@ describe("useLogin", () => {
       });
     });
 
+    expect(setUser).toHaveBeenCalledWith({
+      id: 1,
+      name: "Admin",
+    });
     expect(show).toHaveBeenCalledWith("Fazendo login...");
     expect(LoginService.login).toHaveBeenCalledWith({
       username: "admin",
-      password: "123456",
+      password: "123456"
     });
 
     expect(localStorage.getItem("accessToken")).toBe("access123");
@@ -60,7 +73,11 @@ describe("useLogin", () => {
     });
 
     expect(hide).toHaveBeenCalled();
-    expect(response).toBe(true);
+    expect(response).toStrictEqual({
+      access: "access123",
+      refresh: "refresh123",
+      user: { id: 1, name: "Admin" },
+    });
   });
 
   it("handles login error", async () => {
