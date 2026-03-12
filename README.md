@@ -31,7 +31,7 @@ It focuses on **state management, authentication flows and modular frontend stru
 
 ## 📸 Preview
 
-![dental](https://github.com/user-attachments/assets/5842745c-7d3a-4e9b-aa8b-5d392182b393)
+![dental](https://github.com/user-attachments/assets/4a2853b9-7495-47e3-b4fa-828989ef539a)
 
 ---
 
