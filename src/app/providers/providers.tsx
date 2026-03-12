@@ -1,41 +1,43 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useLogin } from "@/hooks/useLogin";
-
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Alert } from "@/components/alert/alert";
 import { Loading } from '@/components/loading/loading';
-
 import { useAlertStore } from "@/stores/alert.store";
 import { useLoadingStore } from '@/stores/loading.store';
+import { LoginService } from "@/services/login.service";
+import { useUserStore } from "@/stores/user.store";
+
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [authReady, setAuthReady] = useState(false);
-
   const { message, variant, autoCloseAfter, hide } = useAlertStore();
   const { isLoading, label } = useLoadingStore();
-  const { login } = useLogin();
+
+  const setUser = useUserStore((s) => s.setUser);
+  const router = useRouter();
 
   useEffect(() => {
-    const initAuth = async () => {
+    async function loadUser() {
       const token = localStorage.getItem("accessToken");
 
       if (!token) {
-        await login({
-          username: "demo",
-          password: "demo123",
-        });
+        router.push("/login");
+        return;
       }
 
-      setAuthReady(true);
-    };
+      try {
+        const response = await LoginService.profile();
+        setUser(response.user);
+      } catch {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        router.push("/login");
+      }
+    }
 
-    initAuth();
-  }, [login]);
-
-  if (!authReady) {
-    return <Loading label="Inicializando aplicação..." />;
-  }
+    loadUser();
+  }, [router, setUser]);
 
   return (
     <>
@@ -50,4 +52,4 @@ export function Providers({ children }: { children: React.ReactNode }) {
       />
     </>
   );
-}
+};

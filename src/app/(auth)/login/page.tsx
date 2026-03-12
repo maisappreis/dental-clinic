@@ -26,16 +26,55 @@ export default function Login() {
     },
   });
 
-  const onSubmit = async (data: LoginPayload) => {
+  const onSubmitRealUser = async (data: LoginPayload) => {
     const success = await login(data);
+    if (success) router.push("/");
+  };
+
+  const onSubmitDemoUser  = async () => {
+    const success = await login({
+      username: "demo",
+      password: "demo123",
+    });
     if (success) router.push("/");
   };
 
   return (
     <div className={styles.area}>
-      <div className={styles.form}>
+      <div className={styles.box}>
+        <div className="text-center">
+          <h3 className="font-semibold">
+            Entrar na aplicação como usuário demo.
+          </h3>
+          <h4 className="text-sm mt-3">
+            Log in to the application as a demo user.
+          </h4>
+        </div>
+
+        <div className="text-center">
+          <p>
+            Essa aplicação faz parte de um portfólio do Github,
+            por isso possibilita acesso no modo demostração.
+          </p>
+          <p className="text-sm mt-3">
+            This application is part of a Github portfolio,
+            therefore it allows access in demo mode.
+          </p>
+        </div>
+        
+        <div className={styles.button}>
+            <Button
+              label="Entrar"
+              variant="primary"
+              size="lg"
+              onClick={onSubmitDemoUser}
+            />
+          </div>
+      </div>
+
+      <div className={styles.box}>
         <FontAwesomeIcon icon={faTooth} className={styles.icon} style={{ color: "#86cafe" }} />
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form id="loginForm" onSubmit={handleSubmit(onSubmitRealUser)}>
           <Controller
             name="username"
             control={control}
@@ -62,9 +101,11 @@ export default function Login() {
               />
             )}
           />
+        </form>
 
-          <div className={styles.button}>
+        <div className={styles.button}>
             <Button
+              form="loginForm"
               type="submit"
               label="Entrar"
               variant="primary"
@@ -72,7 +113,6 @@ export default function Login() {
               disabled={!isValid}
             />
           </div>
-        </form>
       </div>
     </div>
   )

@@ -41,7 +41,6 @@ export function Sidebar() {
     clearUser();
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    window.location.reload();
 
     router.push("/login");
   };
