@@ -53,12 +53,12 @@ export default function Login() {
 
         <div className="text-center">
           <p>
-            Essa aplicação faz parte de um portfólio do Github,
-            por isso possibilita acesso no modo demostração.
+            Esta aplicação permite acesso em modo de demonstração para
+            usuários que desejam explorar suas funcionalidades.
           </p>
           <p className="text-sm mt-3">
-            This application is part of a Github portfolio,
-            therefore it allows access in demo mode.
+            This application provides access to a demonstration mode for
+            users who wish to explore its features.
           </p>
         </div>
         

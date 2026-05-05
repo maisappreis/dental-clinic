@@ -26,9 +26,9 @@ export function Appointments({
   return (
     <>
       <div className={styles.time}>{time}</div>
-      {slots.map((slot, index) => (
+      {slots.map((slot) => (
         <button
-          key={index}
+          key={`${slot.date}-${slot.time}`}
           className={styles.appointment}
           onClick={() => onOpen(slot)}>
           <div className="flex justify-center">
